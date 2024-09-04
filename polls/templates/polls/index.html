@@ -1,21 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questions</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
     {% if latest_question_list %}
         <ul>
             {% for q in latest_question_list %}
-                <li><a href="/polls/{{q.id}}/"> {{q.question_text}}</a></li>
+                <li><a href="{% url 'polls:detail' q.id %}">{{q.question_text}}</a></li>
             {% endfor %}
 
         </ul>
 
     {% else %}
         <p>No polls are available.</p>
-    {% endif %} 
-</body>
-</html>
+    {% endif %}
+
+{% endblock content %}
