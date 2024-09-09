@@ -1,6 +1,19 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'polls/style.css' %}">
+
+    <form action="." method="POST">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Got a question? Ask here!</legend>
+            {{ form|crispy }}
+        </fieldset>
+        <input type="submit" value="Post">
+    </form>
+
     {% if latest_question_list %}
         <ul>
             {% for q in latest_question_list %}
