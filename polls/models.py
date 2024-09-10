@@ -24,3 +24,13 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
+
+
+class Reply(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    reply_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField("date published")
+
+    def __str__(self) -> str:
+        return self.reply_text
+    

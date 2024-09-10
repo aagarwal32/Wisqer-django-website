@@ -18,4 +18,20 @@
         </fieldset>
         <input type="submit" value="Vote">
     </form>
+
+    <form action="{% url 'polls:detail' question.id %}" method="post">
+        {% csrf_token %}
+        {{reply_form}}
+        <input type="submit" value="Reply">
+    </form>
+
+    {% if latest_reply_list %}
+        <ul>
+            {% for reply in latest_reply_list %}
+                <li>{{reply.pub_date}} - {{reply.reply_text}}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No replies yet...</p>
+    {% endif %}
 {% endblock content %}

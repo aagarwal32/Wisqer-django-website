@@ -2,13 +2,13 @@ from typing import Any
 from django.db.models import F
 from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Choice, Question
-from .forms import QuestionForm
+from .models import Choice, Question, Reply
+from .forms import QuestionForm, ReplyForm
 
 # Create your views here.
 def index(request):
@@ -17,7 +17,7 @@ def index(request):
         ).order_by('-pub_date')[:100]
     
     if request.method == 'POST':
-        form = QuestionForm(request.POST or None)
+        form = QuestionForm(request.POST)
         if form.is_valid():
             new_question = form.save(commit=False)
             new_question.pub_date = timezone.now()
@@ -34,15 +34,32 @@ def index(request):
     return render(request, 'polls/index.html', context)
 
 
-class DetailView(generic.DetailView):
-    model = Question
-    template_name = "polls/detail.html"
-
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
+def detail(request, question_id):
+    main_question = get_object_or_404(
+        Question.objects.filter(pub_date__lte=timezone.now()),
+        pk=question_id)
+    
+    latest_reply_list = Reply.objects.filter(
+        pub_date__lte=timezone.now(),
+        question=main_question
+    ).order_by('-pub_date')[:20]
+        
+    if request.method == 'POST':
+        reply_form = ReplyForm(request.POST)
+        if reply_form.is_valid():
+            new_reply = reply_form.save(commit=False)
+            new_reply.question = main_question
+            new_reply.pub_date = timezone.now()
+            new_reply.save()
+            return HttpResponseRedirect(reverse('polls:detail', args=(main_question.id,)))
+    else:
+        reply_form = ReplyForm()
+    context = {
+        'question':main_question,
+        'reply_form':reply_form,
+        'latest_reply_list':latest_reply_list,
+    }
+    return render(request, "polls/detail.html", context)
 
 
 class ResultsView(generic.DetailView):
