@@ -168,6 +168,20 @@ def create_reply(reply_text, days):
         question=question)
 
 
+def create_replies_to_single_question_id(question, reply_text, days):
+    """
+    Allows the ability to create multiple replies tied to a 
+    single question with the given `reply_text` and published the 
+    given number of `days` offset to now (negative for replies published
+    in the past, positive for replies that have yet to be published).
+    """
+    time = timezone.now() + datetime.timedelta(days=days)
+    return Reply.objects.create(
+        reply_text=reply_text,
+        pub_date=time,
+        question=question)
+
+
 class ReplyDetailViewTests(TestCase):
     def test_no_replies(self):
         '''
@@ -179,4 +193,60 @@ class ReplyDetailViewTests(TestCase):
         self.assertContains(response, "No replies yet...")
         self.assertQuerySetEqual(response.context["latest_reply_list"], [],)
 
+
+    def test_past_reply(self):
+        '''
+        Replies with a pub_date in the past are displayed on the question
+        detail page.
+        '''
+        reply = create_reply(reply_text="Past Reply.", days=-5)
+        response = self.client.get(reverse('polls:detail', args=(reply.question.id,)))
+        self.assertQuerySetEqual(
+            response.context["latest_reply_list"], [reply],
+        )
+
+
+    def test_future_reply(self):
+        '''
+        Replies with a pub_date in the future are not displayed on the 
+        question detail page.
+        '''
+        reply = create_reply(reply_text="Future Reply.", days=5)
+        response = self.client.get(reverse('polls:detail', args=(reply.question.id,)))
+        self.assertQuerySetEqual(
+            response.context["latest_reply_list"], [],
+        )
+
+
+    def test_past_and_future_replies(self):
+        '''
+        Even if both past and future replies exist, only past replies are
+        displayed.
+        '''
+        question = create_question(question_text="Test Question", days=-5)
+        reply = create_replies_to_single_question_id(
+            question=question, reply_text="Past Reply.", days=-5)
+        create_replies_to_single_question_id(
+            question=question, reply_text="Future Reply.", days=5)
+        
+        response = self.client.get(reverse('polls:detail', args=(question.id,)))
+        self.assertQuerySetEqual(
+            response.context['latest_reply_list'], [reply],
+        )
+        
+
+    def test_two_past_replies(self):
+        '''
+        If two replies are in the past, both replies are displayed.
+        '''
+        question = create_question(question_text="Test Question", days=-5)
+        reply1 = create_replies_to_single_question_id(
+            question=question, reply_text="Past Reply 1.", days=-3)
+        reply2 = create_replies_to_single_question_id(
+            question=question, reply_text="Past Reply 2.", days=-5)
+        
+        response = self.client.get(reverse('polls:detail', args=(question.id,)))
+        self.assertQuerySetEqual(
+            response.context['latest_reply_list'], [reply1, reply2],
+        )
     

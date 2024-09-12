@@ -11,8 +11,8 @@ class QuestionForm(forms.ModelForm):
         widgets = {
             'question_text': forms.Textarea(attrs={
                 'placeholder':'Enter your question here',
-                'rows': '5',
-                'cols': '40',
+                'class':'form-control',
+                'rows':'5'
                 })
         }
 
@@ -27,7 +27,7 @@ class ReplyForm(forms.ModelForm):
         widgets = {
             'reply_text': forms.Textarea(attrs={
                 'placeholder':'Enter your reply here',
-                'rows': '3',
-                'cols': '80',
+                'class':'form-control',
+                'rows':'2',
                 })
         }

@@ -1,5 +1,17 @@
-ul {
-    list-style: none;
+.comment > span {
     margin: 0;
     padding: 0;
+    color: grey;
+    font-size: small;
+    margin-left: 24px;
+}
+
+.comment > a {
+    font-size: large;
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: blue;
 }

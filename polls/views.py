@@ -10,6 +10,7 @@ from django.utils import timezone
 from .models import Choice, Question, Reply
 from .forms import QuestionForm, ReplyForm
 
+
 # Create your views here.
 def index(request):
     latest_question_list = Question.objects.filter(

@@ -2,36 +2,62 @@
 
 {% block content %}
 
-    <form action="{% url 'polls:vote' question.id %}" method="post">
-        {% csrf_token %}
-        <fieldset>
-            <legend>{{question.pub_date}} - {{question.question_text}}</legend>
-            {% if error_message %}<p><strong>{{error_message}}
-            </strong></p>{%endif%}
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-sm text-black p">
+                <form action="{% url 'polls:vote' question.id %}" method="post">
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend class="comment">
+                            {{question.question_text}} <span>• {{question.pub_date}}
+                            </span>
+                        </legend>
+                        {% if error_message %}<p><strong>{{error_message}}
+                        </strong></p>{%endif%}
+            
+                        {% for choice in question.choice_set.all %}
+                            <input type="radio" name="choice" 
+                            id="choice{{forloop.counter}}" value="{{choice.id}}">
+                            <label for="choice{{ forloop.counter }}">
+                                {{choice.choice_text}}
+                            </label><br>
+                        {% endfor %}
+                    </fieldset>
+                    <button type="submit" class="btn btn-secondary mt-2">Vote</button>
+                </form>
+            </div>
+        </div>
 
-            {% for choice in question.choice_set.all %}
-                <input type="radio" name="choice" id="choice{{forloop.counter}}"
-                value="{{choice.id}}">
-                <label for="choice{{ forloop.counter }}">{{choice.choice_text}}
-                </label><br>
-            {% endfor %}
-        </fieldset>
-        <input type="submit" value="Vote">
-    </form>
+        <div class="row mt-5 mb-4">
+            <div class="col-sm">
+                <form action="{% url 'polls:detail' question.id %}" 
+                method="post" id="reply_form_id">
+                    {% csrf_token %}
+                    {{reply_form}}
+                </form>
+            </div>
+            <div class="col-sm">
+                <button type="submit" form="reply_form_id" class="btn btn-primary">
+                    Reply
+                </button>
+            </div>
+        </div>
 
-    <form action="{% url 'polls:detail' question.id %}" method="post">
-        {% csrf_token %}
-        {{reply_form}}
-        <input type="submit" value="Reply">
-    </form>
-
-    {% if latest_reply_list %}
-        <ul>
-            {% for reply in latest_reply_list %}
-                <li>{{reply.pub_date}} - {{reply.reply_text}}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No replies yet...</p>
-    {% endif %}
+        <div class="row">
+            <div class="col-sm">
+                {% if latest_reply_list %}
+                        {% for reply in latest_reply_list %}
+                            <div class="card mt-2">
+                                <div class="card-body comment">
+                                    <a>{{reply.reply_text}}</a>
+                                    <span>• {{reply.pub_date}}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                {% else %}
+                    <p>No replies yet...</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock content %}

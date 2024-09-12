@@ -1,29 +1,40 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
-{% load static %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-sm p-3">
+                <form action="." method="POST">
+                    {% csrf_token %}
+                    <fieldset>
+                        <legend>Got a question? Ask here!</legend>
+                        {{ form }}
+                    </fieldset>
+                    <button type="submit" class="btn btn-primary mt-2">
+                        Post
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-sm">
+                {% if latest_question_list %}
+                        {% for q in latest_question_list %}
+                            <div class="card mt-4">
+                                <div class="card-body comment">
+                                    <a href="{% url 'polls:detail' q.id %}"
+                                    class="stretched-link">{{q.question_text}}
+                                    </a>
+                                    <span>• {{q.pub_date}}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
 
-    <form action="." method="POST">
-        {% csrf_token %}
-        <fieldset>
-            <legend>Got a question? Ask here!</legend>
-            {{ form|crispy }}
-        </fieldset>
-        <input type="submit" value="Post">
-    </form>
-
-    {% if latest_question_list %}
-        <ul>
-            {% for q in latest_question_list %}
-                <li>{{q.pub_date}} - <a href="{% url 'polls:detail' q.id %}">{{q.question_text}}</a></li>
-            {% endfor %}
-
-        </ul>
-
-    {% else %}
-        <p>No polls are available.</p>
-    {% endif %}
+                {% else %}
+                    <p>No polls are available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
 {% endblock content %}
