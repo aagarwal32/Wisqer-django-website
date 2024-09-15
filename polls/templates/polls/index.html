@@ -22,10 +22,13 @@
                         {% for q in latest_question_list %}
                             <div class="card mt-4">
                                 <div class="card-body comment">
+                                    <!-- make username links to account profile later -->
+                                    <p class="username-style">{{q.user.username}} 
+                                        <span class="date-style">• {{q.pub_date}}</span>
+                                    </p>
                                     <a href="{% url 'polls:detail' q.id %}"
                                     class="stretched-link">{{q.question_text}}
                                     </a>
-                                    <span>• {{q.pub_date}}</span>
                                 </div>
                             </div>
                         {% endfor %}

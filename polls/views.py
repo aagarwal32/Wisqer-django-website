@@ -21,6 +21,7 @@ def index(request):
         form = QuestionForm(request.POST)
         if form.is_valid():
             new_question = form.save(commit=False)
+            new_question.user = request.user
             new_question.pub_date = timezone.now()
             new_question.save()
             return HttpResponseRedirect(reverse('polls:detail', args=(new_question.id,)))
@@ -31,6 +32,7 @@ def index(request):
     context = {
         'latest_question_list': latest_question_list,
         'form': form,
+        'title': 'wisqer',
     }
     return render(request, 'polls/index.html', context)
 
@@ -49,6 +51,7 @@ def detail(request, question_id):
         reply_form = ReplyForm(request.POST)
         if reply_form.is_valid():
             new_reply = reply_form.save(commit=False)
+            new_reply.user = request.user
             new_reply.question = main_question
             new_reply.pub_date = timezone.now()
             new_reply.save()
@@ -59,6 +62,7 @@ def detail(request, question_id):
         'question':main_question,
         'reply_form':reply_form,
         'latest_reply_list':latest_reply_list,
+        'title': f'{main_question.question_text}',
     }
     return render(request, "polls/detail.html", context)
 

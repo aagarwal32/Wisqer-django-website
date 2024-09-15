@@ -9,9 +9,12 @@
                     {% csrf_token %}
                     <fieldset>
                         <legend class="comment">
-                            {{question.question_text}} <span>• {{question.pub_date}}
-                            </span>
+                            <p class="username-style">{{question.user.username}}
+                                <span class="date-style">• {{question.pub_date}}</span>
+                            </p>
+                            {{question.question_text}}   
                         </legend>
+
                         {% if error_message %}<p><strong>{{error_message}}
                         </strong></p>{%endif%}
             
@@ -23,6 +26,7 @@
                             </label><br>
                         {% endfor %}
                     </fieldset>
+
                     <button type="submit" class="btn btn-secondary mt-2">Vote</button>
                 </form>
             </div>
@@ -49,8 +53,12 @@
                         {% for reply in latest_reply_list %}
                             <div class="card mt-2">
                                 <div class="card-body comment">
-                                    <a>{{reply.reply_text}}</a>
-                                    <span>• {{reply.pub_date}}</span>
+                                    <p class="username-style">{{reply.user.username}}
+                                        <span class="date-style">
+                                            • {{reply.pub_date}}
+                                        </span>
+                                    </p>
+                                    {{reply.reply_text}} 
                                 </div>
                             </div>
                         {% endfor %}
