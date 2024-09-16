@@ -1,1 +1,1 @@
-# Polls App w/ Django
+# Wisqer - A forum website built w/ Django
