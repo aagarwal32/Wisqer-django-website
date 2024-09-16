@@ -2,70 +2,80 @@
 
 {% block content %}
 
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <div class="col-sm text-black p">
-                <form action="{% url 'polls:vote' question.id %}" method="post">
-                    {% csrf_token %}
-                    <fieldset>
-                        <legend class="comment">
-                            <p class="username-style">{{question.user.username}}
-                                <span class="date-style">• {{question.pub_date}}</span>
-                            </p>
-                            {{question.question_text}}   
-                        </legend>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-sm text-black p">
+            <form action="{% url 'polls:vote' question.id %}" method="post">
+                {% csrf_token %}
+                <fieldset>
+                    <legend class="comment">
+                        <p class="username-style">{{question.user.username}}
+                            <span class="date-style">• {{question.pub_date}}</span>
+                        </p>
+                        {{question.question_text}}   
+                    </legend>
 
-                        {% if error_message %}<p><strong>{{error_message}}
-                        </strong></p>{%endif%}
-            
-                        {% for choice in question.choice_set.all %}
-                            <input type="radio" name="choice" 
-                            id="choice{{forloop.counter}}" value="{{choice.id}}">
-                            <label for="choice{{ forloop.counter }}">
-                                {{choice.choice_text}}
-                            </label><br>
-                        {% endfor %}
-                    </fieldset>
+                    {% if error_message %}
+                    <p><strong>{{error_message}}</strong></p>
+                    {%endif%}
+        
+                    {% for choice in question.choice_set.all %}
+                    <input type="radio" name="choice" 
+                    id="choice{{forloop.counter}}" value="{{choice.id}}">
+                    <label for="choice{{ forloop.counter }}">
+                        {{choice.choice_text}}
+                    </label><br>
+                    {% endfor %}
+                </fieldset>
 
-                    <button type="submit" class="btn btn-secondary mt-2">Vote</button>
-                </form>
-            </div>
-        </div>
-
-        <div class="row mt-5 mb-4">
-            <div class="col-sm">
-                <form action="{% url 'polls:detail' question.id %}" 
-                method="post" id="reply_form_id">
-                    {% csrf_token %}
-                    {{reply_form}}
-                </form>
-            </div>
-            <div class="col-sm">
-                <button type="submit" form="reply_form_id" class="btn btn-primary">
-                    Reply
-                </button>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm">
-                {% if latest_reply_list %}
-                        {% for reply in latest_reply_list %}
-                            <div class="card mt-2">
-                                <div class="card-body comment">
-                                    <p class="username-style">{{reply.user.username}}
-                                        <span class="date-style">
-                                            • {{reply.pub_date}}
-                                        </span>
-                                    </p>
-                                    {{reply.reply_text}} 
-                                </div>
-                            </div>
-                        {% endfor %}
-                {% else %}
-                    <p>No replies yet...</p>
-                {% endif %}
-            </div>
+                <button type="submit" class="btn btn-secondary mt-2">Vote</button>
+            </form>
         </div>
     </div>
+
+    <div class="row mt-5 mb-4">
+        <div class="col-sm">
+            {% if user.is_authenticated %}
+            <form action="{% url 'polls:detail' question.id %}" 
+            method="post" id="reply_form_id">
+                {% csrf_token %}
+                {{reply_form}}
+            </form>
+        </div>
+        <div class="col-sm">
+            <button type="submit" form="reply_form_id" class="btn btn-primary">
+                Reply
+            </button>
+        </div>
+        {% else %}
+        <p>You must 
+            <a href="{% url 'accounts:login' %}">login</a>
+            or
+            <a href="{% url 'accounts:register' %}">create an account</a>
+            to create replies.
+        </p>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-sm">
+            {% if latest_reply_list %}
+            {% for reply in latest_reply_list %}
+                <div class="card mt-2">
+                    <div class="card-body comment">
+                        <p class="username-style">{{reply.user.username}}
+                            <span class="date-style">
+                                • {{reply.pub_date}}
+                            </span>
+                        </p>
+                        {{reply.reply_text}} 
+                    </div>
+                </div>
+            {% endfor %}
+            {% else %}
+            <p>No replies yet...</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock content %}

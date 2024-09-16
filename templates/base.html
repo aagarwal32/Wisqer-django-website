@@ -23,23 +23,23 @@
             <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mynavbar">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item mx-1">
-                    <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
-                    </li>
-                    <li class="nav-item mx-1">
-                    <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
-                    </li>
-                    <li class="nav-item mx-1">
-                    <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
-                    </li>
-                </ul>
+                <ul class="navbar-nav me-auto"></ul>
                 <ul class="navbar-nav user-greeting">
-                    <li class="nav-item user-greeting">
                     {% if user.is_authenticated %}
+                    <li class="nav-item">
                         <a class="nav-link">Hi, {{ request.user.username }}</a>
-                    {% endif %}
                     </li>
+                    <li>
+                        <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

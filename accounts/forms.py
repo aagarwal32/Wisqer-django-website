@@ -1,11 +1,20 @@
-from django.forms import EmailField
+from typing import Any
+from django.forms import EmailField, CharField
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django import forms
 
 class UserCreationForm(UserCreationForm):
-    email = EmailField(label=_("Email address"), required=True,
-                       help_text=_("Required."))
+    email = EmailField(
+        label=_("Email address"), 
+        required=True,
+        help_text=_("Required."),
+        widget=forms.EmailInput(
+            attrs={'class':'form-control',
+                   'placeholder':'email@example.com',}
+        )
+        )
     
     class Meta:
         model = User
@@ -18,3 +27,25 @@ class UserCreationForm(UserCreationForm):
             user.save()
         return user
     
+    def __init__(self, *args, **kwargs):
+        super(UserCreationForm, self).__init__(*args, **kwargs)
+        placeholders = {
+            'username': 'Enter username',
+            'password1': 'Enter password',
+            'password2': 'Re-enter password',
+        }
+        for field_name, placeholder in placeholders.items():
+            self.fields[field_name].widget.attrs.update({
+                'class':'form-control',
+                'placeholder':placeholder,
+            })
+
+class AuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(AuthenticationForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Enter username'}
+            )
+        self.fields['password'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Enter password'}
+            )

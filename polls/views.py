@@ -1,11 +1,12 @@
 from typing import Any
 from django.db.models import F
 from django.db.models.query import QuerySet
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib import messages
 
 from .models import Choice, Question, Reply
 from .forms import QuestionForm, ReplyForm
@@ -18,14 +19,19 @@ def index(request):
         ).order_by('-pub_date')[:100]
     
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.warning(request, 
+                             "You must be logged in to create questions.")
+            return redirect(f'{reverse("accounts:login")}?next={request.path}')
+        
         form = QuestionForm(request.POST)
         if form.is_valid():
             new_question = form.save(commit=False)
             new_question.user = request.user
             new_question.pub_date = timezone.now()
             new_question.save()
-            return HttpResponseRedirect(reverse('polls:detail', args=(new_question.id,)))
-
+            return HttpResponseRedirect(reverse('polls:detail', 
+                                                args=(new_question.id,)))
     else:
         form = QuestionForm()
 
@@ -48,6 +54,11 @@ def detail(request, question_id):
     ).order_by('-pub_date')[:20]
         
     if request.method == 'POST':
+        if not request.user.is_authenticated:
+            messages.warning(request, 
+                             "You must be logged in to create a reply.")
+            return redirect(f'{reverse("accounts:login")}?next={request.path}')
+        
         reply_form = ReplyForm(request.POST)
         if reply_form.is_valid():
             new_reply = reply_form.save(commit=False)
@@ -55,7 +66,8 @@ def detail(request, question_id):
             new_reply.question = main_question
             new_reply.pub_date = timezone.now()
             new_reply.save()
-            return HttpResponseRedirect(reverse('polls:detail', args=(main_question.id,)))
+            return HttpResponseRedirect(reverse('polls:detail', 
+                                                args=(main_question.id,)))
     else:
         reply_form = ReplyForm()
     context = {

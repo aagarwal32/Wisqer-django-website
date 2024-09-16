@@ -1,20 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <p>login</p>
+<div class="shadow p-5 m-5 bg-body rounded">
+<h1 style="color: darkmagenta;">Log into your Wisqer account.</h1>
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form action="{% url 'accounts:login' %}" method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="text-danger">
+        {% for error in form.non_field_errors %}
+        {{ error }}
+        {% endfor %}
+    </div>
     {% endif %}
+    
+    {% for field in form %}
+    {% if field.errors %}
+    <div class="text-danger">
+        {{field.errors}}
+    </div>
+    {% endif %}
+    <div class="form-floating mt-3 mb-3">
+        {{field}}
+        <label for="{{field.id_for_label}}">{{field.label}}</label>
+    </div>
+    {% endfor %}
 
-    <form action="{% url 'accounts:login' %}" method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Login</button>
-    </form>
+    <input type="hidden" name="next" value="{{next}}">
+    <button type="submit" class="btn btn-primary mb-5">Login</button>
+</form>
+
+<h6>Don't have an account? 
+    <a href="{% url 'accounts:register' %}">Register here</a>.
+</h6>
+</div>
 
 {% endblock content %}

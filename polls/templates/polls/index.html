@@ -1,43 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <div class="col-sm p-3">
-                <form action="." method="POST">
-                    {% csrf_token %}
-                    <fieldset>
-                        <legend>Got a question? Ask here!</legend>
-                        {{ form }}
-                    </fieldset>
-                    <button type="submit" class="btn btn-primary mt-2">
-                        Post
-                    </button>
-                </form>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-sm">
-                {% if latest_question_list %}
-                        {% for q in latest_question_list %}
-                            <div class="card mt-4">
-                                <div class="card-body comment">
-                                    <!-- make username links to account profile later -->
-                                    <p class="username-style">{{q.user.username}} 
-                                        <span class="date-style">• {{q.pub_date}}</span>
-                                    </p>
-                                    <a href="{% url 'polls:detail' q.id %}"
-                                    class="stretched-link">{{q.question_text}}
-                                    </a>
-                                </div>
-                            </div>
-                        {% endfor %}
-
-                {% else %}
-                    <p>No polls are available.</p>
-                {% endif %}
-            </div>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-sm p-3">
+            {% if user.is_authenticated %}
+            <form action="." method="POST">
+                {% csrf_token %}
+                <fieldset>
+                    <legend>Got a question? Ask here!</legend>
+                    {{ form }}
+                </fieldset>
+                <button type="submit" class="btn btn-primary mt-2">
+                    Post
+                </button>
+            </form>
+            {% else %}
+            <p>You must 
+                <a href="{% url 'accounts:login' %}">login</a>
+                or
+                <a href="{% url 'accounts:register' %}">create an account</a>
+                to create questions.
+            </p>
+            {% endif %}
         </div>
     </div>
+    <div class="row mt-4">
+        <div class="col-sm">
+            {% if latest_question_list %}
+            {% for q in latest_question_list %}
+                <div class="card mt-4">
+                    <div class="card-body comment">
+                        <!-- make username links to account profile later -->
+                        <p class="username-style">{{q.user.username}} 
+                            <span class="date-style">• {{q.pub_date}}</span>
+                        </p>
+                        <a href="{% url 'polls:detail' q.id %}"
+                        class="stretched-link">{{q.question_text}}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% else %}
+            <p>No polls are available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
 {% endblock content %}

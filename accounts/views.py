@@ -1,13 +1,10 @@
-from django.db.models.query import QuerySet
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
-from django.views import generic
-from django.utils import timezone
 
 from accounts.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from accounts.forms import AuthenticationForm
+from django.contrib.auth import login, logout
 from django.contrib import messages
 
 
@@ -29,19 +26,24 @@ def register_user(request):
 
 
 def login_user(request):
+    get_url = request.GET.get('next', reverse('polls:index'))
+
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             print(f"Logging in user: {user.username}, {user.email}")
-            return HttpResponseRedirect(reverse('polls:index'))
+            submit_url = request.POST.get('next', reverse('polls:index'))
+            return HttpResponseRedirect(submit_url)
 
     else:
         form = AuthenticationForm()
 
-    return render(request, 'accounts/login.html', {'form':form})
+    return render(request, 'accounts/login.html', {'form':form, 'next':get_url})
 
 
 def logout_user(request):
-    pass
+    logout(request)
+    messages.success(request, "Logged out successfully.")
+    return redirect(reverse('accounts:login'))
