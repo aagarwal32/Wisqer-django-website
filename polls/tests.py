@@ -1,9 +1,24 @@
 import datetime
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.utils import timezone
 from django.urls import reverse
 from .models import Question, Reply
+from django.contrib.auth.models import User
 # Create your tests here.
+
+
+def create_and_login_user(username="abcd1234", 
+                          email="abcd@gmail.com", 
+                          password="pass12345"):
+    client = Client()
+    user = User.objects.create_user(
+        username=username, 
+        email=email,
+        password=password,
+        )
+    
+    client.login(username=username, password=password)
+    return user
 
 
 class QuestionModelTests(TestCase):
@@ -13,8 +28,9 @@ class QuestionModelTests(TestCase):
         whose pub_date is in the future.
         """
 
+        user = create_and_login_user()
         time = timezone.now() + datetime.timedelta(days=30)
-        future_question = Question(pub_date=time)
+        future_question = Question(pub_date=time, user=user)
         self.assertIs(future_question.was_published_recently(), False)
 
 
@@ -23,9 +39,9 @@ class QuestionModelTests(TestCase):
         was_published_recently() returns False for questions
         whose pub_date is older than 1 day.
         """
-
+        user = create_and_login_user()
         time = timezone.now() - datetime.timedelta(days=1, seconds=1)
-        old_question = Question(pub_date=time)
+        old_question = Question(pub_date=time, user=user)
         self.assertIs(old_question.was_published_recently(), False)
     
 
@@ -34,14 +50,14 @@ class QuestionModelTests(TestCase):
         was_published_recently() returns True for questions 
         whose pub_date is within the last day.
         """
-
+        user = create_and_login_user()
         time = timezone.now() - \
             datetime.timedelta(hours=23, minutes=59, seconds=59)
-        recent_question = Question(pub_date=time)
+        recent_question = Question(pub_date=time, user=user)
         self.assertIs(recent_question.was_published_recently(), True)
 
 
-def create_question(question_text, days):
+def create_question(user, question_text, days):
     """
     Create a question with the given `question_text` and published 
     the given number of `days` offset to now (negative for questions 
@@ -51,7 +67,7 @@ def create_question(question_text, days):
 
     time = timezone.now() + datetime.timedelta(days=days)
     return Question.objects.create(question_text=question_text, 
-                                    pub_date=time)
+                                    pub_date=time, user=user)
     
 
 class QuestionIndexViewTests(TestCase):
@@ -72,8 +88,8 @@ class QuestionIndexViewTests(TestCase):
         Questions with a pub_date in the past are displayed on
         the index page.
         """
-
-        question = create_question(question_text="Past question.",
+        user = create_and_login_user()
+        question = create_question(user, question_text="Past question.",
                                    days=-30)
         response = self.client.get(reverse("polls:index"))
         self.assertQuerySetEqual(
@@ -86,7 +102,8 @@ class QuestionIndexViewTests(TestCase):
         Questions with a pub_date in the future aren't displayed
         on the index page.
         """
-        create_question(question_text="Future question.", days=30)
+        user = create_and_login_user()
+        create_question(user, question_text="Future question.", days=30)
         response = self.client.get(reverse("polls:index"))
         self.assertContains(response, "No polls are available.")
         self.assertQuerySetEqual(
@@ -99,9 +116,11 @@ class QuestionIndexViewTests(TestCase):
         Even if both past and future questions exist, only past
         questions are displayed.
         """
-        question = create_question(question_text="Past question.",
+        user1 = create_and_login_user()
+        user2 = create_and_login_user("1234abcd", "user@example.com", "1234pass")
+        question = create_question(user1, question_text="Past question.",
                                    days=-30)
-        create_question(question_text="Future question.", days=30)
+        create_question(user2, question_text="Future question.", days=30)
         response = self.client.get(reverse("polls:index"))
         self.assertQuerySetEqual(
             response.context["latest_question_list"], [question],
@@ -110,9 +129,12 @@ class QuestionIndexViewTests(TestCase):
 
     def test_two_past_questions(self):
         """The questions index page may display multiple questions."""
-        question1 = create_question(question_text="Past question 1.",
+
+        user1 = create_and_login_user()
+        user2 = create_and_login_user("1234abcd", "user@example.com", "1234pass")
+        question1 = create_question(user1, question_text="Past question 1.",
                                     days=-30)
-        question2 = create_question(question_text="Past question 2.",
+        question2 = create_question(user2, question_text="Past question 2.",
                                     days=-5)
         response = self.client.get(reverse("polls:index"))
         self.assertQuerySetEqual(
@@ -126,7 +148,9 @@ class QuestionDetailViewTests(TestCase):
         The detail view of a question with a pub_date in the future
         returns a 404 not found.
         """
+        user = create_and_login_user()
         future_question = create_question(
+            user,
             question_text="Future question.",
             days=5)
         
@@ -140,7 +164,9 @@ class QuestionDetailViewTests(TestCase):
         The detail view of a question with a pub_date in the past
         displays the question's text.
         """
+        user = create_and_login_user()
         past_question = create_question(
+            user,
             question_text="Past question.",
             days=-5
         )
@@ -149,7 +175,7 @@ class QuestionDetailViewTests(TestCase):
         self.assertContains(response, past_question.question_text)
 
 
-def create_reply(reply_text, days):
+def create_reply(user, reply_text, days):
     """
     Create a reply tied to a question with the given `reply_text` 
     and published the given number of `days` offset to now 
@@ -158,17 +184,20 @@ def create_reply(reply_text, days):
     """
 
     time = timezone.now() + datetime.timedelta(days=days)
+    op_user = create_and_login_user("1234abcd", "user@example.com", "1234pass")
     question = create_question(
+        user=op_user,
         question_text="test question for replies",
         days=-5,
         )
     return Reply.objects.create(
+        user=user,
         reply_text=reply_text,
         pub_date=time,
         question=question)
 
 
-def create_replies_to_single_question_id(question, reply_text, days):
+def create_replies_to_single_question_id(user, question, reply_text, days):
     """
     Allows the ability to create multiple replies tied to a 
     single question with the given `reply_text` and published the 
@@ -177,6 +206,7 @@ def create_replies_to_single_question_id(question, reply_text, days):
     """
     time = timezone.now() + datetime.timedelta(days=days)
     return Reply.objects.create(
+        user=user,
         reply_text=reply_text,
         pub_date=time,
         question=question)
@@ -187,7 +217,8 @@ class ReplyDetailViewTests(TestCase):
         '''
         If no replies exist, an appropriate message is displayed.
         '''
-        question = create_question(question_text="test", days=-5)
+        user = create_and_login_user()
+        question = create_question(user, question_text="test", days=-5)
         response = self.client.get(reverse('polls:detail', args=(question.id,)))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No replies yet...")
@@ -199,7 +230,8 @@ class ReplyDetailViewTests(TestCase):
         Replies with a pub_date in the past are displayed on the question
         detail page.
         '''
-        reply = create_reply(reply_text="Past Reply.", days=-5)
+        user = create_and_login_user()
+        reply = create_reply(user, reply_text="Past Reply.", days=-5)
         response = self.client.get(reverse('polls:detail', args=(reply.question.id,)))
         self.assertQuerySetEqual(
             response.context["latest_reply_list"], [reply],
@@ -211,7 +243,8 @@ class ReplyDetailViewTests(TestCase):
         Replies with a pub_date in the future are not displayed on the 
         question detail page.
         '''
-        reply = create_reply(reply_text="Future Reply.", days=5)
+        user = create_and_login_user()
+        reply = create_reply(user, reply_text="Future Reply.", days=5)
         response = self.client.get(reverse('polls:detail', args=(reply.question.id,)))
         self.assertQuerySetEqual(
             response.context["latest_reply_list"], [],
@@ -223,11 +256,15 @@ class ReplyDetailViewTests(TestCase):
         Even if both past and future replies exist, only past replies are
         displayed.
         '''
-        question = create_question(question_text="Test Question", days=-5)
+        user1 = create_and_login_user()
+        user2 = create_and_login_user("1234abcd", "user2@example.com", "1234pass")
+        user3 = create_and_login_user("5678abcd", "user3@example.com", "5678pass")
+
+        question = create_question(user1, question_text="Test Question", days=-5)
         reply = create_replies_to_single_question_id(
-            question=question, reply_text="Past Reply.", days=-5)
+            user2, question=question, reply_text="Past Reply.", days=-5)
         create_replies_to_single_question_id(
-            question=question, reply_text="Future Reply.", days=5)
+            user3, question=question, reply_text="Future Reply.", days=5)
         
         response = self.client.get(reverse('polls:detail', args=(question.id,)))
         self.assertQuerySetEqual(
@@ -239,11 +276,14 @@ class ReplyDetailViewTests(TestCase):
         '''
         If two replies are in the past, both replies are displayed.
         '''
-        question = create_question(question_text="Test Question", days=-5)
+        user1 = create_and_login_user()
+        user2 = create_and_login_user("1234abcd", "user2@example.com", "1234pass")
+        user3 = create_and_login_user("5678abcd", "user3@example.com", "5678pass")
+        question = create_question(user1, question_text="Test Question", days=-5)
         reply1 = create_replies_to_single_question_id(
-            question=question, reply_text="Past Reply 1.", days=-3)
+            user2, question=question, reply_text="Past Reply 1.", days=-3)
         reply2 = create_replies_to_single_question_id(
-            question=question, reply_text="Past Reply 2.", days=-5)
+            user3, question=question, reply_text="Past Reply 2.", days=-5)
         
         response = self.client.get(reverse('polls:detail', args=(question.id,)))
         self.assertQuerySetEqual(
