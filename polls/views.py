@@ -21,6 +21,7 @@ class QuestionListView(ListView):
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
     model = Question
+    paginate_by = 10
 
     def get_queryset(self):
         query = super().get_queryset()
