@@ -77,7 +77,7 @@ class QuestionIndexViewTests(TestCase):
         """
         response = self.client.get(reverse("polls:index"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No polls are available.")
+        self.assertContains(response, "No questions are available.")
         self.assertQuerySetEqual(
             response.context["latest_question_list"],[],
             )
@@ -105,7 +105,7 @@ class QuestionIndexViewTests(TestCase):
         user = create_and_login_user()
         create_question(user, question_text="Future question.", days=30)
         response = self.client.get(reverse("polls:index"))
-        self.assertContains(response, "No polls are available.")
+        self.assertContains(response, "No questions are available.")
         self.assertQuerySetEqual(
             response.context["latest_question_list"], [],
         )
@@ -290,3 +290,38 @@ class ReplyDetailViewTests(TestCase):
             response.context['latest_reply_list'], [reply1, reply2],
         )
     
+
+class QuestionFormValidationTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="secretpass123",
+            email="testuser@example.com"
+        )
+
+    def test_user_create_question_with_no_text(self):
+        self.client.login(username='testuser', password='secretpass123')
+        url = reverse('polls:index')
+        form = {
+            'question_text': "",
+            'pub_date': timezone.now()
+        }
+        response = self.client.post(url, form)
+        response = self.client.get(reverse('polls:index'))
+        self.assertQuerySetEqual(
+            response.context['latest_question_list'], [],
+        )
+
+    def test_user_create_question_with_text(self):
+        self.client.login(username='testuser', password='secretpass123')
+        url = reverse('polls:create_question')
+        form = {
+            'question_text': "test",
+            'pub_date': timezone.now() + datetime.timedelta(days=-1)
+        }
+        response = self.client.post(url, form, follow=True)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Question.objects.filter(question_text="test").exists())
+        self.assertContains(response, "test")

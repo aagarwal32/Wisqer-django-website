@@ -5,7 +5,14 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-sm text-black p">
-            <form action="{% url 'polls:vote' question.id %}" method="post">
+            <span class="back-link">
+                <a href="{% url 'polls:index' %}">Home /</a>
+                <a href="{% url 'polls:detail' question.id %}">
+                    {{question.question_text|truncatechars:40}}
+                </a>
+            </span>
+            <form action="{% url 'polls:vote' question.id %}" method="post" 
+            class="question-display-form">
                 {% csrf_token %}
                 <fieldset>
                     <legend class="comment">
@@ -36,8 +43,8 @@
     <div class="row mt-5 mb-4">
         <div class="col-sm">
             {% if user.is_authenticated %}
-            <form action="{% url 'polls:detail' question.id %}" 
-            method="post" id="reply_form_id">
+            <form action="{% url 'polls:create_reply' question.id %}" 
+            method="post" id="reply_form_id" novalidate>
                 {% csrf_token %}
                 {{reply_form}}
             </form>

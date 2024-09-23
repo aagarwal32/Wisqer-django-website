@@ -22,6 +22,16 @@
     font-weight: 300;
 }
 
+.back-link > a{
+    font-size: 12px;
+    color: rgb(45, 45, 45);
+    text-decoration: none;
+}
+
+.question-display-form {
+    margin-top: 18px;
+}
+
 .user-greeting {
     margin-left: auto;
 }

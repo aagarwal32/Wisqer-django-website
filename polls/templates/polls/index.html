@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-sm p-3">
             {% if user.is_authenticated %}
-            <form action="." method="POST">
+            <form action="post/" method="POST" novalidate>
                 {% csrf_token %}
                 <fieldset>
                     <legend>Got a question? Ask here!</legend>
@@ -43,7 +43,7 @@
             {% endfor %}
 
             {% else %}
-            <p>No polls are available.</p>
+            <p>No questions are available.</p>
             {% endif %}
         </div>
     </div>
