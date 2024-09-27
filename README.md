@@ -2,7 +2,21 @@
 
 This README outlines the development timeline and features for the Wisqer Forum application. This project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance user experience.
 
-## Django App Development Timeline
+## Wisqer Current Progress (Shown via screenshots)
+
+### Register Page
+![wisqer_register](https://github.com/user-attachments/assets/9165a927-8f40-42ff-aa68-6c69c2b98db7)
+
+### Login Page
+![wisqer_log_in](https://github.com/user-attachments/assets/31387a93-624a-4dc4-97b1-e0b6aee07bef)
+
+### Home Page
+![wisqer_question_view](https://github.com/user-attachments/assets/9f8cd8ce-f319-4b22-9a4e-a64b77ec1ef7)
+
+### Question Detail Page
+![wisqer_question_detail](https://github.com/user-attachments/assets/b6fa7532-c778-4d15-afe8-91ef246e1804)
+
+## Wisqer Forum Development Timeline
 
 ---
 
