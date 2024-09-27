@@ -1,16 +1,16 @@
-from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect, Http404
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
+from django.db.models.query import QuerySet
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import F
 from typing import Any
 
+from django.views.generic.edit import FormView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import FormView
 from django.views import View
 
 from .models import Choice, Question, Reply
@@ -83,6 +83,21 @@ class QuestionReplyView(TemplateView):
 
         context['title'] = question_obj.question_text
         return context
+
+
+class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
+    login_url = reverse_lazy('accounts:login')
+
+    def post(self, request, pk):
+        question = get_object_or_404(Question, pk=pk)
+        if question.user != request.user:
+            return HttpResponseForbidden("Unable to delete question")
+        question.delete()
+        return HttpResponseRedirect(reverse('polls:index'))
+    
+    def test_func(self):
+        question = get_object_or_404(Question, pk=self.kwargs['pk'])
+        return self.request.user == question.user
 
 
 class ReplyCreateView(LoginRequiredMixin, FormView):

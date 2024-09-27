@@ -11,7 +11,7 @@
     
     {% load bootstrap5 %}
     {% bootstrap_css %}
-    {% bootstrap_javascript %}
+    {% block extra_css %}{% endblock %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 </head>
@@ -49,5 +49,8 @@
         {% block content %}
         {% endblock content %}
     </div>
+
+    {% bootstrap_javascript %}
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
