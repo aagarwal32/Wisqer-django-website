@@ -47,12 +47,12 @@ This README outlines the development timeline and features for the Wisqer Forum 
 
 ### Upcoming Features
 
-#### Saturday 9/28
+#### Tuesday 10/01
 - [ ] **Add the ability to delete questions and replies via a menu** (e.g., under three dots for more options).
 - [ ] **Allow users to delete their accounts** from the user settings.
 - [ ] **Implement email verification** during user registration.
 - [ ] **Create a site demonstration video** to showcase features.
-- [ ] **Remove the results view** and redirect back to the detail view with results displayed.
+- [ ] **Remove the results view** and redirect back to the detail view with the results displayed.
 
 ---
 
@@ -60,7 +60,7 @@ This README outlines the development timeline and features for the Wisqer Forum 
 
 - **Options to create polls, tags, and body text** along with questions. Polls will only be visible if created.
 - **Migrate the database to PostgreSQL** for enhanced performance and security.
-- **User account page** where users can delete their accounts and view their past replies and questions.
+- **User account page** where users can delete their accounts and view past replies and questions.
 - **Rating system** for questions and replies, and display the number of comments.
 - **Comment sorting and filtering capabilities** to improve user interaction.
 - **Expand navigation options** with categories like Search, Top, Hot, and other relevant filters.
