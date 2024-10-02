@@ -2,7 +2,21 @@
 
 This README outlines the development timeline and features for the Wisqer Forum application. This project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance user experience.
 
-## Django App Development Timeline
+## Wisqer Current Progress (Shown via screenshots)
+
+### Register Page
+![wisqer_register](https://github.com/user-attachments/assets/9165a927-8f40-42ff-aa68-6c69c2b98db7)
+
+### Login Page
+![wisqer_log_in](https://github.com/user-attachments/assets/31387a93-624a-4dc4-97b1-e0b6aee07bef)
+
+### Home Page
+![wisqer_question_view](https://github.com/user-attachments/assets/9f8cd8ce-f319-4b22-9a4e-a64b77ec1ef7)
+
+### Question Detail Page
+![wisqer_question_detail](https://github.com/user-attachments/assets/b6fa7532-c778-4d15-afe8-91ef246e1804)
+
+## Wisqer Forum Development Timeline
 
 ---
 
@@ -33,12 +47,12 @@ This README outlines the development timeline and features for the Wisqer Forum 
 
 ### Upcoming Features
 
-#### Saturday 9/28
+#### Tuesday 10/01
 - [ ] **Add the ability to delete questions and replies via a menu** (e.g., under three dots for more options).
 - [ ] **Allow users to delete their accounts** from the user settings.
 - [ ] **Implement email verification** during user registration.
 - [ ] **Create a site demonstration video** to showcase features.
-- [ ] **Remove the results view** and redirect back to the detail view with results displayed.
+- [ ] **Remove the results view** and redirect back to the detail view with the results displayed.
 
 ---
 
@@ -46,7 +60,7 @@ This README outlines the development timeline and features for the Wisqer Forum 
 
 - **Options to create polls, tags, and body text** along with questions. Polls will only be visible if created.
 - **Migrate the database to PostgreSQL** for enhanced performance and security.
-- **User account page** where users can delete their accounts and view their past replies and questions.
+- **User account page** where users can delete their accounts and view past replies and questions.
 - **Rating system** for questions and replies, and display the number of comments.
 - **Comment sorting and filtering capabilities** to improve user interaction.
 - **Expand navigation options** with categories like Search, Top, Hot, and other relevant filters.
