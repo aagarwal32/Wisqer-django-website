@@ -14,7 +14,7 @@ This README outlines the development timeline and features for the Wisqer Forum 
 ![wisqer_question_view](https://github.com/user-attachments/assets/9f8cd8ce-f319-4b22-9a4e-a64b77ec1ef7)
 
 ### Question Detail Page
-![wisqer_question_detail](https://github.com/user-attachments/assets/b6fa7532-c778-4d15-afe8-91ef246e1804)
+![wisqer_question_detail_2](https://github.com/user-attachments/assets/076ad249-9c84-4f05-82ff-b6b8b5d5ce9f)
 
 ## Wisqer Forum Development Timeline
 
@@ -43,16 +43,17 @@ This README outlines the development timeline and features for the Wisqer Forum 
 - [x] **Enable users to delete their questions.**
 - [x] **Add additional tests** to check authentication and deletion of objects (ensure cascade deletion works).
 
+#### Tuesday 10/01
+- [x] **Add the ability to delete questions and replies via a menu** (under three dots for more options).
+
 ---
 
 ### Upcoming Features
 
-#### Tuesday 10/01
-- [x] **Add the ability to delete questions and replies via a menu** (e.g., under three dots for more options).
+#### Sunday 10/06
 - [ ] **Allow users to delete their accounts** from the user settings.
 - [ ] **Implement email verification** during user registration.
-- [ ] **Create a site demonstration video** to showcase features.
-- [ ] **Remove the results view** and redirect back to the detail view with the results displayed.
+- [ ] **Remove the results view** view results in the detail page.
 
 ---
 
