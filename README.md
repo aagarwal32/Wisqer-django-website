@@ -48,7 +48,7 @@ This README outlines the development timeline and features for the Wisqer Forum 
 ### Upcoming Features
 
 #### Tuesday 10/01
-- [ ] **Add the ability to delete questions and replies via a menu** (e.g., under three dots for more options).
+- [x] **Add the ability to delete questions and replies via a menu** (e.g., under three dots for more options).
 - [ ] **Allow users to delete their accounts** from the user settings.
 - [ ] **Implement email verification** during user registration.
 - [ ] **Create a site demonstration video** to showcase features.
