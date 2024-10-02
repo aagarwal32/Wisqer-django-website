@@ -36,8 +36,15 @@
     margin-left: auto;
 }
 
-.card-body.comment:hover {
+.card.comment:hover, .card-body.comment:hover {
     background-color: rgb(250, 250, 250);
+}
+
+.card-footer {
+    background-color: white;
+    border: none;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .btn-primary {

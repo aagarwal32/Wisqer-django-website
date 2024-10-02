@@ -98,6 +98,22 @@ class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         question = get_object_or_404(Question, pk=self.kwargs['pk'])
         return self.request.user == question.user
+    
+
+class ReplyDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
+    login_url = reverse_lazy('accounts:login')
+
+    def post(self, request, pk):
+        reply = get_object_or_404(Reply, pk=pk)
+        question = reply.question
+        if reply.user != request.user:
+            return HttpResponseForbidden("Unable to delete reply")
+        reply.delete()
+        return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+    
+    def test_func(self):
+        reply = get_object_or_404(Reply, pk=self.kwargs['pk'])
+        return self.request.user == reply.user
 
 
 class ReplyCreateView(LoginRequiredMixin, FormView):
