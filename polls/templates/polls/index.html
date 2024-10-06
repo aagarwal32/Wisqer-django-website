@@ -5,17 +5,26 @@
 <div class="container-fluid mt-4">
     <div class="row">
         <div class="col-sm p-3">
+            <div class="d-flex">
             {% if user.is_authenticated %}
-            <form action="post/" method="POST" novalidate>
+            <div class="d-inline-block">
+            <form action="{% url 'polls:create_question' %}" 
+            method="POST" id="question_form_id" novalidate>
                 {% csrf_token %}
                 <fieldset>
-                    <legend>Got a question? Ask here!</legend>
-                    {{ form }}
+                <legend>Got a question? Ask here!</legend>
+                {{ form }}
                 </fieldset>
-                <button type="submit" class="btn btn-primary mt-2">
-                    Post
-                </button>
             </form>
+            </div>
+
+            <div class="d-inline-block d-flex align-items-end mx-3">
+            <button type="submit" form="question_form_id" class="btn btn-primary">
+                Post
+            </button>
+            </div>
+
+            </div>
             {% else %}
             <p>You must 
                 <a href="{% url 'accounts:login' %}">login</a>
@@ -26,6 +35,28 @@
             {% endif %}
         </div>
     </div>
+
+    {% block extra_js %}
+    <script>
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+
+        document.addEventListener('input', function (event) {
+            if (event.target.classList.contains('autoExpand')) {
+                autoResizeTextarea(event.target);
+            }
+        }, false);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var textareas = document.querySelectorAll('textarea.autoExpand');
+            textareas.forEach(function (textarea) {
+                autoResizeTextarea(textarea);
+            });
+        });
+    </script>
+    {% endblock %}
 
 <!--Question List-->
     <div class="row mt-4">
@@ -39,7 +70,7 @@
                             <span class="date-style">• {{q.pub_date}}</span>
                         </p>
                         <a href="{% url 'polls:detail' q.id %}"
-                        class="stretched-link">{{q.question_text}}
+                        class="stretched-link">{{q.question_text|linebreaksbr}}
                         </a>
                     </div>
                 </div>

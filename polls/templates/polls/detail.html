@@ -20,7 +20,7 @@
                             <span class="date-style">• {{question.pub_date}}</span>
                         </p>
                         <div class="d-flex">
-                            <div class="d-inline-block">{{question.question_text}}</div>
+                            <div class="d-inline-block">{{question.question_text|linebreaksbr}}</div>
                             <div class="d-inline-block dropdown mx-3">
                             <button type="button" class="btn"
                             data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></button>
@@ -60,17 +60,21 @@
 
     <div class="row mt-5 mb-4">
         <div class="col-sm">
+            <div class="d-flex">
             {% if user.is_authenticated %}
+            <div class="d-inline-block">
             <form action="{% url 'polls:create_reply' question.id %}" 
             method="post" id="reply_form_id" novalidate>
                 {% csrf_token %}
                 {{reply_form}}
             </form>
-        </div>
-        <div class="col-sm">
+            </div>
+            <div class="d-inline-block mx-3">
             <button type="submit" form="reply_form_id" class="btn btn-primary">
                 Reply
             </button>
+            </div>
+            </div>
         </div>
         {% else %}
         <p>You must 
@@ -81,6 +85,28 @@
         </p>
         {% endif %}
     </div>
+
+    {% block extra_js %}
+    <script>
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+
+        document.addEventListener('input', function (event) {
+            if (event.target.classList.contains('autoExpand')) {
+                autoResizeTextarea(event.target);
+            }
+        }, false);
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var textareas = document.querySelectorAll('textarea.autoExpand');
+            textareas.forEach(function (textarea) {
+                autoResizeTextarea(textarea);
+            });
+        });
+    </script>
+    {% endblock %}
 
     <div class="row">
         <div class="col-sm">
@@ -96,7 +122,7 @@
                             </p>
                         </div>
                     </div>
-                    {{reply.reply_text}} 
+                    {{reply.reply_text|linebreaksbr}} 
                 </div>
                     
                     <div class="card-body text-end my-0 py-0">
