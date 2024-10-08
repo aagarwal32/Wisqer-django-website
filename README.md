@@ -50,7 +50,7 @@ This README outlines the development timeline and features for the Wisqer Forum 
 
 ### Upcoming Features
 
-#### Sunday 10/06
+#### Tuesday 10/08
 - [ ] **Allow users to delete their accounts** from the user settings.
 - [ ] **Implement email verification** during user registration.
 - [ ] **Remove the results view** view results in the detail page.
