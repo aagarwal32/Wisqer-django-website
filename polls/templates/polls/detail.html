@@ -21,13 +21,16 @@
                         </p>
                         <div class="d-flex">
                             <div class="d-inline-block">{{question.question_text|linebreaksbr}}</div>
+                            {% if user.is_authenticated %}
                             <div class="d-inline-block dropdown mx-3">
                             <button type="button" class="btn"
                             data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></button>
                             <ul class="dropdown-menu">
+                            {% if user.is_authenticated and user != question.user %}
                             <li>
                             <a class="dropdown-item" href="#"><i class="bi bi-flag-fill mx-3"></i>Report</a>
                             </li>
+                            {% endif %}
                             {% if user.is_authenticated and user == question.user %}
                             <li>
                             <a class="dropdown-item" data-bs-toggle="modal" 
@@ -36,7 +39,8 @@
                             </li>
                             {% endif %}
                             </ul>
-                            </div>   
+                            </div>
+                            {% endif %}  
                         </div>       
                     </legend>
 
@@ -69,7 +73,7 @@
                 {{reply_form}}
             </form>
             </div>
-            <div class="d-inline-block mx-3">
+            <div class="d-inline-block d-flex align-items-end mx-3">
             <button type="submit" form="reply_form_id" class="btn btn-primary">
                 Reply
             </button>
@@ -126,13 +130,16 @@
                 </div>
                     
                     <div class="card-body text-end my-0 py-0">
+                    {% if user.is_authenticated %}
                     <div class="dropdown mx-3">
                     <button type="button" class="btn m-0 p-0"
                     data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></button>
                     <ul class="dropdown-menu">
+                    {% if user.is_authenticated and user != reply.user %}
                     <li>
                     <a class="dropdown-item" href="#"><i class="bi bi-flag-fill mx-3"></i>Report</a>
                     </li>
+                    {% endif %}
                     {% if user.is_authenticated and user == reply.user %}
                     <li>
                     <a class="dropdown-item" data-bs-toggle="modal" 
@@ -142,6 +149,7 @@
                     {% endif %}
                     </ul>
                     </div>
+                    {% endif %}
                     </div>
             </div>
                 <!-- DELETE REPLY MODAL -->

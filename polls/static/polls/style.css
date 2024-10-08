@@ -44,7 +44,8 @@ textarea.autoExpand {
 }
 
 .card.comment:hover, .card-body.comment:hover {
-    background-color: rgb(250, 250, 250);
+    background-color: rgb(255, 250, 255);
+    transition: background-color 200ms;
 }
 
 .card-footer {
@@ -63,6 +64,12 @@ textarea.autoExpand {
     background-color: rgb(220, 0, 220);
     border-color: rgb(220, 0, 220);
 }
+
+.form-control:focus, button:focus{
+    -webkit-box-shadow: none;
+    box-shadow: none !important;
+    outline: 0 !important;
+  }
 
 
 /* PAGINATION */

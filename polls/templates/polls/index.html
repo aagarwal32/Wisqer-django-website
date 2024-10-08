@@ -24,7 +24,6 @@
             </button>
             </div>
 
-            </div>
             {% else %}
             <p>You must 
                 <a href="{% url 'accounts:login' %}">login</a>
@@ -33,6 +32,30 @@
                 to create questions.
             </p>
             {% endif %}
+
+            <div class="sorting-options d-inline-block d-flex align-items-end mx-3">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                        Sort by: {{current_sort_option|capfirst}}
+                    </button>
+                <ul class="dropdown-menu">
+                {% for sorting_option, label in sorting_labels.items %}
+                <li>
+                    <a href="?sort_by={{sorting_option}}" class="dropdown-item">
+                        {% if label == "Oldest" %}
+                        <i class="bi bi-sort-down mx-3"></i>
+                        {% else %}
+                        <i class="bi bi-sort-up mx-3"></i>
+                        {% endif %}
+                        {{label}}
+                    </a>
+                </li>
+                {% endfor %}
+                </ul>
+                </div>
+            </div>
+
+            </div>
         </div>
     </div>
 
@@ -95,7 +118,7 @@
                 {% if page_obj.has_previous %}
                 <li class="page-item">
                     <a class="page-link" 
-                    href="?page={{ page_obj.previous_page_number }}"
+                    href="?sort_by={{current_sort_option}}&page={{ page_obj.previous_page_number }}"
                     tabindex="-1">Previous</a>
                 </li>
                 
@@ -115,7 +138,7 @@
                         </li>
                         {% else %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            <a class="page-link" href="?sort_by={{current_sort_option}}&page={{ num }}">{{ num }}</a>
                         </li>
                         {% endif %}
                     {% endif %}
@@ -125,7 +148,7 @@
                 <!-- Next Page -->
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a class="page-link" href="?sort_by={{current_sort_option}}&page={{ page_obj.next_page_number }}">Next</a>
                 </li>
                 {% else %}
                 <li class="page-item disabled">

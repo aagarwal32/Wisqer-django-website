@@ -24,16 +24,23 @@ class QuestionListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        query = super().get_queryset()
-        return query.filter(
-            pub_date__lte=timezone.now()
-            ).order_by('-pub_date')
+        # query = super().get_queryset()
+        # return query.filter(
+        #     pub_date__lte=timezone.now()
+        #     ).order_by('-pub_date')
+        query = super().get_queryset().filter(pub_date__lte=timezone.now())
+        sort_by = self.request.GET.get('sort_by', 'newest')
+        sorting_options = {'newest': '-pub_date', 'oldest': 'pub_date',}
+        selected_sort = sorting_options.get(sort_by, '-pub_date')
+        return query.order_by(selected_sort)
     
     def get_context_data(self, **kwargs):
         # Add the form to the context data for the GET request
         context = super().get_context_data(**kwargs)
         context['form'] = kwargs.get('form', QuestionForm())
         context['title'] = 'wisqer'
+        context['current_sort_option'] = self.request.GET.get('sort_by', 'newest')
+        context['sorting_labels'] = {'newest': 'Newest', 'oldest':'Oldest',}
         return context
 
 

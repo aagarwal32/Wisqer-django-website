@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 class Question(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question_text = models.CharField(max_length=200)
+    question_body = models.CharField(max_length=2000, blank=True)
     pub_date = models.DateTimeField("date published")
 
     def was_published_recently(self):
@@ -32,6 +33,7 @@ class Reply(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     reply_text = models.CharField(max_length=200)
+    reply_body = models.CharField(max_length=2000, blank=True)
     pub_date = models.DateTimeField("date published")
 
     def __str__(self) -> str:
