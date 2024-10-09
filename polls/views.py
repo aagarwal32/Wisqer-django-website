@@ -24,10 +24,6 @@ class QuestionListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        # query = super().get_queryset()
-        # return query.filter(
-        #     pub_date__lte=timezone.now()
-        #     ).order_by('-pub_date')
         query = super().get_queryset().filter(pub_date__lte=timezone.now())
         sort_by = self.request.GET.get('sort_by', 'newest')
         sorting_options = {'newest': '-pub_date', 'oldest': 'pub_date',}

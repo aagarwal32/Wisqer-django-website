@@ -32,8 +32,7 @@ class Choice(models.Model):
 class Reply(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    reply_text = models.CharField(max_length=200)
-    reply_body = models.CharField(max_length=2000, blank=True)
+    reply_text = models.CharField(max_length=1000)
     pub_date = models.DateTimeField("date published")
 
     def __str__(self) -> str:

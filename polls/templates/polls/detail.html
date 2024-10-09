@@ -20,7 +20,7 @@
                             <span class="date-style">• {{question.pub_date}}</span>
                         </p>
                         <div class="d-flex">
-                            <div class="d-inline-block">{{question.question_text|linebreaksbr}}</div>
+                            <div class="d-inline-block">{{question.question_text}}</div>
                             {% if user.is_authenticated %}
                             <div class="d-inline-block dropdown mx-3">
                             <button type="button" class="btn"
@@ -41,7 +41,11 @@
                             </ul>
                             </div>
                             {% endif %}  
-                        </div>       
+                        </div>
+
+                        {% if question.question_body %}
+                        <div class="text-body mt-3">{{question.question_body|linebreaksbr}}</div>
+                        {% endif %}      
                     </legend>
 
                     {% if error_message %}

@@ -13,7 +13,16 @@
                 {% csrf_token %}
                 <fieldset>
                 <legend>Got a question? Ask here!</legend>
-                {{ form }}
+                <div>
+                {{ form.question_text }}
+                </div>
+
+                <div class="collapse" id="questionBodyCollapse">
+                    <div class="mt-3">
+                    {{ form.question_body }}
+                    </div>
+                </div>
+                
                 </fieldset>
             </form>
             </div>
@@ -61,23 +70,33 @@
 
     {% block extra_js %}
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var questionTextInput = document.getElementById(
+            '{{form.question_text.id_for_label}}');
+        var questionBodyCollapse = new bootstrap.Collapse(
+            document.getElementById('questionBodyCollapse'), {
+                toggle: false
+            });
+        
+        // show question body upon question text input focus
+        questionTextInput.addEventListener('focus', function() {
+            questionBodyCollapse.show();
+        });
+
+        // auto-resize textareas
         function autoResizeTextarea(textarea) {
             textarea.style.height = 'auto';
             textarea.style.height = (textarea.scrollHeight) + 'px';
         }
-
-        document.addEventListener('input', function (event) {
-            if (event.target.classList.contains('autoExpand')) {
-                autoResizeTextarea(event.target);
-            }
-        }, false);
-
-        document.addEventListener('DOMContentLoaded', function () {
-            var textareas = document.querySelectorAll('textarea.autoExpand');
-            textareas.forEach(function (textarea) {
+        var textareas = document.querySelectorAll('textarea.autoExpand');
+        textareas.forEach(function(textarea) {
+            textarea.addEventListener('input', function() {
                 autoResizeTextarea(textarea);
             });
+            // adjust height on page load
+            autoResizeTextarea(textarea);
         });
+    });
     </script>
     {% endblock %}
 
@@ -93,7 +112,7 @@
                             <span class="date-style">• {{q.pub_date}}</span>
                         </p>
                         <a href="{% url 'polls:detail' q.id %}"
-                        class="stretched-link">{{q.question_text|linebreaksbr}}
+                        class="stretched-link">{{q.question_text}}
                         </a>
                     </div>
                 </div>
