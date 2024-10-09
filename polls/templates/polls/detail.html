@@ -2,7 +2,8 @@
 
 {% block content %}
 
-<div class="container-fluid mt-4">
+<!--Question display and vote form-->
+<div class="container-fluid mt-7">
     <div class="row">
         <div class="col-sm text-black p">
             <span class="back-link">
@@ -66,6 +67,7 @@
         </div>
     </div>
 
+    <!--Reply Form-->
     <div class="row mt-5 mb-4">
         <div class="col-sm">
             <div class="d-flex">
@@ -116,6 +118,7 @@
     </script>
     {% endblock %}
 
+    <!--Reply List-->
     <div class="row">
         <div class="col-sm">
             {% if latest_reply_list %}

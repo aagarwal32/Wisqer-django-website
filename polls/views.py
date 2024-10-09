@@ -63,6 +63,7 @@ class QuestionCreateView(LoginRequiredMixin, FormView):
         ).order_by('-pub_date')
         context = self.get_context_data(form=form)
         context['latest_question_list'] = latest_question_list
+        context['errors'] = form.errors
         return render(self.request, 'polls/index.html', context)
 
 
