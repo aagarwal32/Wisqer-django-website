@@ -2,19 +2,9 @@
 
 This README outlines the development timeline and features for the Wisqer Forum application. This project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance user experience.
 
-## Wisqer Current Progress (Shown via screenshots)
+## Current Progress Video DEMO
 
-### Register Page
-![wisqer_register](https://github.com/user-attachments/assets/9165a927-8f40-42ff-aa68-6c69c2b98db7)
-
-### Login Page
-![wisqer_log_in](https://github.com/user-attachments/assets/31387a93-624a-4dc4-97b1-e0b6aee07bef)
-
-### Home Page
-![wisqer_question_view](https://github.com/user-attachments/assets/9f8cd8ce-f319-4b22-9a4e-a64b77ec1ef7)
-
-### Question Detail Page
-![wisqer_question_detail_2](https://github.com/user-attachments/assets/076ad249-9c84-4f05-82ff-b6b8b5d5ce9f)
+https://github.com/user-attachments/assets/f8557abf-1c35-42ef-a3b4-b4c972b3cef4
 
 ## Wisqer Forum Development Timeline
 
@@ -46,14 +36,18 @@ This README outlines the development timeline and features for the Wisqer Forum 
 #### Tuesday 10/01
 - [x] **Add the ability to delete questions and replies via a menu** (under three dots for more options).
 
+#### Tuesday 10/08
+- [x] **Added ability to create optional body text** for more detailed questions.
+- [x] **Added sorting functionality** for questions.
+
 ---
 
 ### Upcoming Features
 
-#### Tuesday 10/08
+#### Thursday 10/10
 - [ ] **Allow users to delete their accounts** from the user settings.
 - [ ] **Implement email verification** during user registration.
-- [ ] **Remove the results view** view results in the detail page.
+- [ ] **Remove the results view** -- view results in the detail page.
 
 ---
 
