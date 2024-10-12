@@ -7,8 +7,10 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import F
 from typing import Any
+from reversion.models import Version
+import reversion
 
-from django.views.generic.edit import FormView, DeleteView
+from django.views.generic.edit import FormView, DeleteView, UpdateView
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import TemplateView
 from django.views import View
@@ -48,10 +50,13 @@ class QuestionCreateView(LoginRequiredMixin, FormView):
     redirect_field_name = 'next'
 
     def form_valid(self, form):
-        new_question = form.save(commit=False)
-        new_question.user = self.request.user
-        new_question.pub_date = timezone.now()
-        new_question.save()
+        with reversion.create_revision():
+            new_question = form.save(commit=False)
+            new_question.user = self.request.user
+            new_question.pub_date = timezone.now()
+            new_question.save()
+
+            reversion.set_user(self.request.user)
 
         return HttpResponseRedirect(
             reverse('polls:detail', args=(new_question.id,))
@@ -91,6 +96,7 @@ class QuestionReplyView(TemplateView):
 
 class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url = reverse_lazy('accounts:login')
+    redirect_field_name = 'next'
 
     def post(self, request, pk):
         question = get_object_or_404(Question, pk=pk)
@@ -102,6 +108,32 @@ class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
     def test_func(self):
         question = get_object_or_404(Question, pk=self.kwargs['pk'])
         return self.request.user == question.user
+    
+
+# class QuestionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+#     model = Question
+#     form_class = QuestionForm
+#     login_url = reverse_lazy('accounts:login')
+#     redirect_field_name = 'next'
+
+#     def form_valid(self, form):
+#         question = self.get_object()
+#         with reversion.create_revision():
+#             question = form.save(commit=False)
+#             question.user = self.request.user
+#             question.pub_date = timezone.now()
+#             question.save()
+
+#             reversion.set_user(self.request.user)
+
+#         return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+    
+#     def form_invalid(self, form):
+#         return super().form_invalid(form)
+    
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)     
+
     
 
 class ReplyDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
