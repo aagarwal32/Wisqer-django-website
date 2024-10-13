@@ -2,7 +2,7 @@
 
 This README outlines the current development progress and upcoming features for Wisqer. This project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance user experience.
 
-# Below are video demos showcasing the current progress of Wisqer:
+## Below are video demos showcasing the current progress of Wisqer:
 
 ## Register and Login
 - Users can view questions, replies, and edit histories without an account. Additionally, they can also sort questions and report.
