@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
 <!--Question display and vote form-->
@@ -20,6 +20,14 @@
                         <p class="username-style">{{question.user.username}}
                             <span class="date-style">• {{question.pub_date}}</span>
                         </p>
+                        {% if versions|length > 1 %}
+                        <div class="d-flex mb-4">
+                            <div class="d-inline-block edited-label"><i class="bi bi-info-circle"></i>
+                                This question has been edited - <a data-bs-toggle="modal" 
+                                data-bs-target="#viewModalQuestionHistory" href="#">view history.</a>
+                            </div>
+                        </div>
+                        {% endif %}
                         <div class="d-flex">
                             <div class="d-inline-block">{{question.question_text}}</div>
                             {% if user.is_authenticated %}
@@ -32,11 +40,17 @@
                             <a class="dropdown-item" href="#"><i class="bi bi-flag-fill mx-3"></i>Report</a>
                             </li>
                             {% endif %}
+                        
                             {% if user.is_authenticated and user == question.user %}
+                            <li>
+                            <a class="dropdown-item" data-bs-toggle="modal"
+                            href="#" data-bs-target="#updateModalQuestion">
+                            <i class="bi bi-pencil-square mx-3"></i>Edit</a>
+                            </li>
                             <li>
                             <a class="dropdown-item" data-bs-toggle="modal" 
                             href="#" data-bs-target="#deleteModalQuestion">
-                            <i class="bi bi-trash-fill mx-3"></i>Delete</a>
+                            <i class="bi bi-trash mx-3"></i>Delete</a>
                             </li>
                             {% endif %}
                             </ul>
@@ -95,28 +109,6 @@
         </p>
         {% endif %}
     </div>
-
-    {% block extra_js %}
-    <script>
-        function autoResizeTextarea(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = (textarea.scrollHeight) + 'px';
-        }
-
-        document.addEventListener('input', function (event) {
-            if (event.target.classList.contains('autoExpand')) {
-                autoResizeTextarea(event.target);
-            }
-        }, false);
-
-        document.addEventListener('DOMContentLoaded', function () {
-            var textareas = document.querySelectorAll('textarea.autoExpand');
-            textareas.forEach(function (textarea) {
-                autoResizeTextarea(textarea);
-            });
-        });
-    </script>
-    {% endblock %}
 
     <!--Reply List-->
     <div class="row">
@@ -205,4 +197,57 @@
     </div>
   </div>
 
+<!-- UPDATE QUESTION MODAL -->
+<div class="modal fade" id="updateModalQuestion" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+            <!-- Modal Header -->
+             <form id="updateModalForm" data-url="{% url 'polls:question_update' question.id %}"
+             data-csrf-token="{{csrf_token}}">
+                <div class="modal-body text-center">
+                    Edit your question:
+                </div>
+                {{question_update_form.as_p}}
+                <div class="modal-footer d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+             </form>
+        </div>
+    </div>
+</div>
+
+<!-- VIEW QUESTION HISTORY MODAL -->
+<div class="modal fade" id="viewModalQuestionHistory" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalQuestionHistoryLabel">Edit history of {{question.user}}'s question:</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                {% for version in versions %}
+                <div class="card comment mt-3">
+                    <div class="card-body">
+                        Date: {{version.revision.date_created}}<br>
+                        <strong>{{version.field_dict.question_text}}</strong><br>
+                        {% if version.field_dict.question_body %}
+                        {{version.field_dict.question_body|linebreaksbr}}<br>
+                        {% else %}
+                        No body text provided.<br>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'polls/detail_script.js' %}"></script>
+{% endblock %}
