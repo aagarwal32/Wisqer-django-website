@@ -1,65 +1,46 @@
-# Wisqer - A forum website built w/ Django
+# Wisqer - A social media question-and-answer website built with Django.
 
-This README outlines the development timeline and features for the Wisqer Forum application. This project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance user experience.
+This README outlines the current development progress and upcoming features for Wisqer. This project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance user experience.
 
-## Current Progress Video DEMO
+# Below are video demos showcasing the current progress of Wisqer:
 
-https://github.com/user-attachments/assets/f8557abf-1c35-42ef-a3b4-b4c972b3cef4
+## Register and Login
+- Users can view questions, replies, and edit histories without an account. Additionally, they can also sort questions and report.
+- To create, update, or delete questions and replies the user must have an account and be logged in.
 
-## Wisqer Forum Development Timeline
+https://github.com/user-attachments/assets/c3f3a9c5-d927-4999-a6ec-e1ee2ec3b44b
 
----
+## Checking Edit History and Replying
+- The edit history is only shown to users when a question has been modified. The newest edit is shown first in the modal.
+- Logged in users can leave replies in the detailed question view.
 
-### Completed Features
+https://github.com/user-attachments/assets/01debe2c-b168-4d9c-bf19-eac31dddf405
 
-#### Saturday 9/14
-- [x] **Create a simple top navigation bar** with links to signup and login.
-- [x] **Associate users with their questions and replies** via the database and frontend.
-- [x] **Add user registration and login functionality.**
+## Creating Questions and Sorting
+- Logged in users can create questions. A question title is required but the body text (description) is optional.
+- All users can sort questions and switch to different pages.
 
-#### Sunday 9/15
-- [x] **Restrict non-logged-in users** from creating questions and replies (they can still view them).
-- [x] **Apply Bootstrap styling** to the entire application for a consistent look and feel.
+https://github.com/user-attachments/assets/c6938742-1526-43cf-b9af-9be10f874f0c
 
-#### Tuesday 9/17
-- [x] **Add a back button** for improved navigation.
-- [x] **Revise and fix test cases** for the poll app to ensure reliability.
+## Updating (Editing) Questions
+- Logged in users can only update (edit) their questions. Upon updating, previous edits can be viewed in the edit history.
 
-#### Sunday 9/22
-- [x] **Switch to class-based views** and adhere to RESTful practices. Run and fix test cases as needed.
-- [x] **Implement pagination** to improve data handling and user experience on list views.
+https://github.com/user-attachments/assets/75ab370c-50cf-4283-ad2b-9c1553bf934d
 
-#### Thursday 9/26
-- [x] **Enable users to delete their questions.**
-- [x] **Add additional tests** to check authentication and deletion of objects (ensure cascade deletion works).
+## Deleting Questions and Replies
+- Logged in users can only delete their questions and/or replies.
+- Deleting a question also deletes all the replies to it.
 
-#### Tuesday 10/01
-- [x] **Add the ability to delete questions and replies via a menu** (under three dots for more options).
+https://github.com/user-attachments/assets/66787f23-f23f-4e3d-8034-9a0fd9ac06de
 
-#### Tuesday 10/08
-- [x] **Added ability to create optional body text** for more detailed questions.
-- [x] **Added sorting functionality** for questions.
-
----
-
-### Upcoming Features
-
-#### Thursday 10/10
-- [ ] **Allow users to delete their accounts** from the user settings.
-- [ ] **Implement email verification** during user registration.
-- [ ] **Remove the results view** -- view results in the detail page.
-
----
-
-### Future Enhancements
-
-- **Options to create polls, tags, and body text** along with questions. Polls will only be visible if created.
-- **Migrate the database to PostgreSQL** for enhanced performance and security.
-- **User account page** where users can delete their accounts and view past replies and questions.
-- **Rating system** for questions and replies, and display the number of comments.
-- **Comment sorting and filtering capabilities** to improve user interaction.
-- **Expand navigation options** with categories like Search, Top, Hot, and other relevant filters.
-- **Integrate an AI model for content classification and categorization** to enhance content organization.
-- **Home landing page view** to welcome users and highlight key features.
-- **Deploy the site using Docker** for consistent and efficient deployment across different environments.
-- **Implement a React frontend** to create a more dynamic and responsive user interface.
+# Upcoming Features
+1. Options to create polls, tags, and body text along with questions. Polls will only be visible if created.
+2. Migrate the database to PostgreSQL for enhanced performance and security.
+3. User account page where users can delete their accounts and view past replies and questions.
+4. Rating system for questions and replies, and display the number of comments.
+5. Comment sorting and filtering capabilities to improve user interaction.
+6. Expand navigation options with categories like Search, Top, Hot, and other relevant filters.
+7. Integrate an AI model for content classification and categorization to enhance content organization.
+8. Home landing page view to welcome users and highlight key features.
+9. Deploy the site using Docker for consistent and efficient deployment across different environments.
+10. Implement a React frontend to create a more dynamic and responsive user interface.
