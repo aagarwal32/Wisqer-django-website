@@ -5,6 +5,7 @@ from .views import (
     QuestionCreateView,
     QuestionReplyView,
     QuestionDeleteView,
+    QuestionUpdateView,
     ReplyCreateView,
     ReplyDeleteView
     )
@@ -16,6 +17,7 @@ urlpatterns = [
     path("post/", QuestionCreateView.as_view(), name="create_question"),
     path("post/<int:question_id>/", QuestionReplyView.as_view(), name="detail"),
     path("post/<int:pk>/delete/", QuestionDeleteView.as_view(), name="question_delete"),
+    path("post/<int:pk>/update/", QuestionUpdateView.as_view(), name="question_update"),
     path("reply/<int:pk>/delete/", ReplyDeleteView.as_view(), name="reply_delete"),
     path("reply/<int:question_id>/", ReplyCreateView.as_view(), name="create_reply"),
     path("post/<int:pk>/results/", views.ResultsView.as_view(), name="results"),

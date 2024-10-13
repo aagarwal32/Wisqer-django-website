@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden
+from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden, JsonResponse
 from django.urls import reverse, reverse_lazy
 from django.db.models.query import QuerySet
 from django.contrib import messages
@@ -83,6 +83,9 @@ class QuestionReplyView(TemplateView):
                 ), pk=kwargs["question_id"]
         )
         context['question'] = question_obj
+        context['question_update_form'] = QuestionForm(instance=question_obj)
+        versions = Version.objects.get_for_object(question_obj)
+        context['versions'] = versions
         context['reply_form'] = ReplyForm()
 
         context['latest_reply_list'] = Reply.objects.filter(
@@ -110,31 +113,37 @@ class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
         return self.request.user == question.user
     
 
-# class QuestionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-#     model = Question
-#     form_class = QuestionForm
-#     login_url = reverse_lazy('accounts:login')
-#     redirect_field_name = 'next'
+class QuestionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Question
+    form_class = QuestionForm
+    login_url = reverse_lazy('accounts:login')
+    redirect_field_name = 'next'
 
-#     def form_valid(self, form):
-#         question = self.get_object()
-#         with reversion.create_revision():
-#             question = form.save(commit=False)
-#             question.user = self.request.user
-#             question.pub_date = timezone.now()
-#             question.save()
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
-#             reversion.set_user(self.request.user)
+    def form_valid(self, form):
+        with reversion.create_revision():
+            question = form.save(commit=False)
+            question.user = self.request.user
+            question.pub_date = question.pub_date
+            question.save()
+            reversion.set_user(self.request.user)
 
-#         return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+        return JsonResponse({'success':True, 'message': 'Question updated successfully.'})
     
-#     def form_invalid(self, form):
-#         return super().form_invalid(form)
+    def form_invalid(self, form):
+        return JsonResponse({'success':False, 'errors': form.errors}, status=400)
     
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)     
+    def test_func(self):
+        question = self.get_object()
+        return question.user == self.request.user    
 
-    
 
 class ReplyDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url = reverse_lazy('accounts:login')
@@ -175,6 +184,8 @@ class ReplyCreateView(LoginRequiredMixin, FormView):
         question = get_object_or_404(Question, pk=self.kwargs['question_id'])
         context = self.get_context_data(form=form)
         context['question'] = question
+        versions = Version.objects.get_for_object(question)
+        context['versions'] = versions
         context['reply_form'] = form
 
         latest_reply_list = Reply.objects.filter(

@@ -36,12 +36,15 @@ body {
     color: darkmagenta;
 }
 
-.comment .date-style{
+.comment .date-style, .edited-label{
     margin: 0;
     padding: 0;
     color: grey;
     font-size: 12px;
-    margin-left: 8px;
+}
+
+.comment .edited-label > a {
+    text-decoration: none;
 }
 
 .logo {
@@ -59,7 +62,7 @@ body {
     background-color: rgb(250, 250, 250);
     font-size: medium;
     padding: 24px;
-    width: 75%;
+    width: 60%;
     border-radius: 30px;
 }
 
@@ -74,13 +77,13 @@ body {
 }
 
 textarea.autoExpand {
-    overflow: hidden;
     resize: none;
     min-height: 38px;
     max-height: 300px;
 }
 
 textarea {
+    overflow-y: scroll;
     resize: none;
     min-height: 38px;
 }
