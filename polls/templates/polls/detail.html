@@ -17,7 +17,8 @@
                 {% csrf_token %}
                 <fieldset>
                     <legend class="comment">
-                        <p class="username-style">{{question.user.username}}
+                        <p class="username-style">
+                            <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
                             <span class="date-style">• {{question.pub_date}}</span>
                         </p>
                         {% if versions|length > 1 %}
@@ -120,7 +121,7 @@
                     <div class="d-flex">
                         <div class="d-inline-block">
                             <p class="username-style">
-                                {{reply.user.username}}
+                                <a href="{% url 'accounts:user_account' reply.user.id %}">{{reply.user.username}}</a> 
                                 <span class="date-style">• {{reply.pub_date}}</span>
                             </p>
                         </div>

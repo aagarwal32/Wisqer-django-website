@@ -1,33 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if account_user.username == '[deleted]' %}
+<h5 class="mt-7">This account has been deleted.</h1>
+<hr>
+<p>Profile details are unavailable.</p>
+
+{% else %}
+
+{% if user.is_authenticated and user.id == account_user.id %}
 <h1 class="mt-7">Your Account</h1>
-<hr>
-<h5>Your Recent Questions</h2>
-<ul>
-    {% for question in user_question_list %}
-    <li>{{question.question_text}}</li>
-    {% endfor %}
-</ul>
-<hr>
-<h5>Your Recent Replies</h2>
-<ul>
-    {% for reply in user_reply_list %}
-    <li>{{reply.reply_text}}</li>
-    {% endfor %}
-</ul>
-
-{% if user.is_authenticated and user.id == account_user_id %}
-<h1 class="mt-7">Manage Your Account</h1>
-<hr>
-<h5>Delete Account</h5>
-<p><i style="color: red;" class="bi bi-exclamation-diamond-fill"></i> Warning: Account deletion is permanent. You cannot recover your account after
-    deleting!
-</p>
-
-<button class="btn btn-danger mt-2" data-bs-toggle="modal" 
-data-bs-target="#deleteAccountModal" href="#">Delete Account</button>
+{% else %}
+<h1 class="mt-7">{{account_user.username}}'s Account</h1>
 {% endif %}
+
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs mt-5">
+    <li class="nav-item">
+      <a class="nav-link active" data-bs-toggle="tab" href="#question_list">Questions</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#reply_list">Replies</a>
+    </li>
+    {% if user.is_authenticated and user.id == account_user.id %}
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#settings">Settings</a>
+    </li>
+    {% endif %}
+</ul>
+  
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane container active" id="question_list"><br>
+        {% for question in user_question_list %}
+        <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' question.id %}" 
+        onclick="window.location.href=this.dataset.url">
+            <div class="card-body comment py-2">
+                <p class="username-style">
+                    <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
+                    <span class="date-style">• {{question.pub_date}}</span>
+                </p>
+                <p class="question-body">{{question.question_text}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="tab-pane container fade" id="reply_list"><br>
+        <ul>
+            {% for reply in user_reply_list %}
+            <li>{{reply.reply_text}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% if user.is_authenticated and user.id == account_user.id %}
+    <div class="tab-pane container fade" id="settings"><br>
+        <h5><i style="color: red;" class="bi bi-exclamation-diamond-fill"></i> Delete Account</h5>
+        <p>Warning: Account deletion is permanent. You cannot recover your account after
+            deleting!
+        </p>
+
+        <button class="btn btn-danger mt-2 mb-5" data-bs-toggle="modal" 
+        data-bs-target="#deleteAccountModal" href="#">Delete Account</button>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+<div class="mb-5"></div>
+
 
 <!-- Delete Account Modal -->
 <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModal" aria-hidden="true">

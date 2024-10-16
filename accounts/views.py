@@ -57,27 +57,27 @@ def logout_user(request):
     return redirect(reverse('accounts:login'))
 
 
-class AccountPageView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('accounts:login')
-    redirect_field_name = 'next'
+class AccountPageView(TemplateView):
     template_name = "accounts/account_page.html"
 
     def get_context_data(self, **kwargs):
+        user = get_object_or_404(User, pk=kwargs['pk'])
+
         context = super().get_context_data(**kwargs)
         user_questions = Question.objects.filter(
                 pub_date__lte=timezone.now(),
-                user=self.request.user
+                user=user.id
         ).order_by('-pub_date')
         
         user_replies = Reply.objects.filter(
             pub_date__lte=timezone.now(),
-            user=self.request.user
+            user=user.id
         ).order_by('-pub_date')
         
-        context['account_user_id'] = kwargs['pk']
+        context['account_user'] = user
         context['user_question_list'] = user_questions
         context['user_reply_list'] = user_replies
-        context['title'] = f"{self.request.user}'s Account Page"
+        context['title'] = f"{user.username}'s Account Page"
         return context
 
 
