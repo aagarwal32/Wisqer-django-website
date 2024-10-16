@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mt-7">Your Account</h1>
+<hr>
+<h5>Your Recent Questions</h2>
+<ul>
+    {% for question in user_question_list %}
+    <li>{{question.question_text}}</li>
+    {% endfor %}
+</ul>
+<hr>
+<h5>Your Recent Replies</h2>
+<ul>
+    {% for reply in user_reply_list %}
+    <li>{{reply.reply_text}}</li>
+    {% endfor %}
+</ul>
+
+{% if user.is_authenticated and user.id == account_user_id %}
+<h1 class="mt-7">Manage Your Account</h1>
+<hr>
+<h5>Delete Account</h5>
+<p><i style="color: red;" class="bi bi-exclamation-diamond-fill"></i> Warning: Account deletion is permanent. You cannot recover your account after
+    deleting!
+</p>
+
+<button class="btn btn-danger mt-2" data-bs-toggle="modal" 
+data-bs-target="#deleteAccountModal" href="#">Delete Account</button>
+{% endif %}
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header d-flex align-items-center justify-content-center">
+            <h5 class="modal-title">Delete Account</h5>
+        </div>
+        <form action="{% url 'accounts:user_account_delete' %}" method="post">
+            {% csrf_token %}
+        
+        <div class="modal-body text-center">
+            <p>Are you sure you want to delete your account?</p>
+            <p style="color: red;">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer d-flex align-items-center justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-danger">Delete Account</button>
+        </div>
+        </form>
+    </div>
+    </div>
+</div>
+
+{% endblock content %}

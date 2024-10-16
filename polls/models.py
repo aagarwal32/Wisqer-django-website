@@ -1,13 +1,22 @@
 from django.db import models
+from django.conf import settings
 import reversion
 import datetime
 from django.utils import timezone
 from django.contrib.auth.models import User
 
 # Create your models here.
+def get_deleted_user():
+    return User.objects.get(username='[deleted]').id
+
+
 @reversion.register()
 class Question(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_DEFAULT,
+        default=get_deleted_user,
+    )
     question_text = models.CharField(max_length=200)
     question_body = models.CharField(max_length=2000, blank=True)
     pub_date = models.DateTimeField("date published")
@@ -30,7 +39,11 @@ class Choice(models.Model):
 
 @reversion.register()
 class Reply(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_DEFAULT,
+        default=get_deleted_user,
+    )
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     reply_text = models.CharField(max_length=1000)
     pub_date = models.DateTimeField("date published")

@@ -29,7 +29,7 @@
                 <ul class="navbar-nav user-greeting">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link navbar-text">Hi, {{ request.user.username }}</a>
+                        <a class="nav-link navbar-text" href="{% url 'accounts:user_account' request.user.id %}">Hi, {{ request.user.username }}</a>
                     </li>
                     <li>
                         <a class="nav-link navbar-text" href="{% url 'accounts:logout' %}">Logout</a>
