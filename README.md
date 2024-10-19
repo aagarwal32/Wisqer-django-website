@@ -36,12 +36,11 @@ https://github.com/user-attachments/assets/66787f23-f23f-4e3d-8034-9a0fd9ac06de
 
 ## Upcoming Features
 1. Options to create polls, tags, and body text along with questions. Polls will only be visible if created.
-2. Migrate the database to PostgreSQL for enhanced performance and security.
-3. User account page where users can delete their accounts and view past replies and questions.
-4. Rating system for questions and replies, and display the number of comments.
-5. Comment sorting and filtering capabilities to improve user interaction.
-6. Expand navigation options with categories like Search, Top, Hot, and other relevant filters.
-7. Integrate an AI model for content classification and categorization to enhance content organization.
-8. Home landing page view to welcome users and highlight key features.
-9. Deploy the site using Docker for consistent and efficient deployment across different environments.
-10. Implement a React frontend to create a more dynamic and responsive user interface.
+2. User account page where users can delete their accounts and view past replies and questions.
+3. Rating system for questions and replies, and display the number of comments.
+4. Comment sorting and filtering capabilities to improve user interaction.
+5. Expand navigation options with categories like Search, Top, Hot, and other relevant filters.
+6. Integrate an AI model for content classification and categorization to enhance content organization.
+7. Home landing page view to welcome users and highlight key features.
+8. Deploy the site using Docker for consistent and efficient deployment across different environments.
+9. Implement a React frontend to create a more dynamic and responsive user interface.
