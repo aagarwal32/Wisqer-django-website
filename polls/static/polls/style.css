@@ -84,6 +84,14 @@ body {
     margin-top: 18px;
 }
 
+.selected-question {
+    font-size: x-small; 
+    color: rgb(240, 180, 30);
+    background-color: rgb(245, 245, 245);
+    padding: 4px 8px;
+    border-radius: 15px;
+}
+
 textarea.autoExpand {
     resize: none;
     min-height: 38px;
