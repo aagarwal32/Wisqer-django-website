@@ -47,16 +47,23 @@
         {% endfor %}
     </div>
     <div class="tab-pane container fade" id="reply_list"><br>
-        <ul>
-            {% for reply in user_reply_list %}
-            <li>{{reply.reply_text}}</li>
-            {% endfor %}
-        </ul>
+        {% for reply in user_reply_list %}
+        <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' reply.question.id %}?reply_id={{reply.id}}" 
+        onclick="window.location.href=this.dataset.url">
+            <div class="card-body comment py-2">
+                <p class="username-style">
+                    <a href="{% url 'accounts:user_account' reply.user.id %}">{{reply.user.username}}</a> 
+                    <span class="date-style">• {{reply.pub_date}}</span>
+                </p>
+                <p class="question-body">{{reply.reply_text}}</p>
+            </div>
+        </div>
+        {% endfor %}
     </div>
     {% if user.is_authenticated and user.id == account_user.id %}
     <div class="tab-pane container fade" id="settings"><br>
-        <h5><i style="color: red;" class="bi bi-exclamation-diamond-fill"></i> Delete Account</h5>
-        <p>Warning: Account deletion is permanent. You cannot recover your account after
+        <h5>Delete Account</h5>
+        <p><i style="color: red;" class="bi bi-exclamation-diamond-fill"></i> Warning: Account deletion is permanent. You cannot recover your account after
             deleting!
         </p>
 

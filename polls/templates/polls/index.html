@@ -105,15 +105,12 @@
     </div>
 
 
-
-
-
-<!--PAGINATION-->
+<!--PAGINATION (REMOVED FEATURE)
     <div class="row mt-5 mb-5">
         <div class="col-sm">
             <nav aria-label="page navigation">
             <ul class="pagination justify-content-center">
-                <!-- Previous Page -->
+                </-- Previous Page --/>
                 {% if page_obj.has_previous %}
                 <li class="page-item">
                     <a class="page-link" 
@@ -127,7 +124,7 @@
                 </li>
                 {% endif %}
 
-                <!-- Page Numbers -->
+                <!/-- Page Numbers --/>
                 {% if paginator.num_pages > 1 %}
                     {% for num in paginator.page_range %}
                     {% if num >= page_obj.number|add:'-5' and num <= page_obj.number|add:'4' %}
@@ -144,7 +141,7 @@
                     {% endfor %}
                 {% endif %}
                 
-                <!-- Next Page -->
+                <!/-- Next Page --/>
                 {% if page_obj.has_next %}
                 <li class="page-item">
                     <a class="page-link" href="?sort_by={{current_sort_option}}&page={{ page_obj.next_page_number }}">Next</a>
@@ -158,6 +155,7 @@
             </nav>
         </div>
     </div>
+-->
 </div>
 
 {% endblock content %}

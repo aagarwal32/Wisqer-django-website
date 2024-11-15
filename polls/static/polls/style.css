@@ -67,8 +67,11 @@ body {
     background-color: rgb(250, 250, 250);
     font-size: medium;
     padding: 24px;
-    width: 60%;
     border-radius: 30px;
+    overflow-wrap: break-word;  /* Ensures long words break within the container */
+    word-wrap: break-word;      /* For older browser support */
+    white-space: pre-wrap;      /* Maintains line breaks */
+    max-width: 100%;
 }
 
 .back-link > a{

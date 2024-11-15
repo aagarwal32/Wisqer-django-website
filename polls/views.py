@@ -23,7 +23,6 @@ class QuestionListView(ListView):
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
     model = Question
-    paginate_by = 10
 
     def get_queryset(self):
         query = super().get_queryset().filter(pub_date__lte=timezone.now())
@@ -88,11 +87,21 @@ class QuestionReplyView(TemplateView):
         context['versions'] = versions
         context['reply_form'] = ReplyForm()
 
-        context['latest_reply_list'] = Reply.objects.filter(
+        highlighted_reply_id = self.request.GET.get('reply_id')
+
+        latest_reply_list = list(Reply.objects.filter(
         pub_date__lte=timezone.now(),
         question=question_obj
-        ).order_by('-pub_date')
+        ).exclude(id=highlighted_reply_id).order_by('-pub_date'))
 
+        if highlighted_reply_id:
+            highlighted_reply = get_object_or_404(
+                Reply, id=highlighted_reply_id, question=question_obj
+                )
+            context['highlighted_reply_id'] = highlighted_reply.id
+            latest_reply_list.insert(0, highlighted_reply)
+
+        context['latest_reply_list'] = latest_reply_list
         context['title'] = question_obj.question_text
         return context
 
