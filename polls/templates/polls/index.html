@@ -55,8 +55,8 @@
 
             <div class="sorting-options d-inline-block d-flex align-items-end mx-3">
                 <div class="dropdown">
-                    <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-                        Sort by: {{current_sort_option|capfirst}}
+                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
+                        {{current_sort_option|capfirst}}
                     </button>
                 <ul class="dropdown-menu">
                 {% for sorting_option, label in sorting_labels.items %}
@@ -86,7 +86,7 @@
         <div class="col-sm">
             {% if latest_question_list %}
             {% for q in latest_question_list %}
-                <div class="card card-clickable mt-4" data-url="{% url 'polls:detail' q.id %}" 
+                <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' q.id %}" 
                 onclick="window.location.href=this.dataset.url">
                     <div class="card-body comment">
                         <p class="username-style">

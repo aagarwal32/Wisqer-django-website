@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 def get_deleted_user():
-    return User.objects.get(username='[deleted]').id
+    user, created = User.objects.get_or_create(username='[deleted]')
+    return user.id
 
 
 @reversion.register()

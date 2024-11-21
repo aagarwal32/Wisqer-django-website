@@ -330,8 +330,8 @@ class CheckDeletionOfObjects(TestCase):
 
     def test_user_deletion_question_cascade(self):
         '''
-        Creates a user that creates a question then deletes user
-        to verify the question are also deleted
+        Creates a user that creates a question then deletes user.
+        Verifies question exists under [deleted] user.
         '''
         user = Helper.create_and_login_user()
         question = Helper.create_question(
@@ -345,15 +345,15 @@ class CheckDeletionOfObjects(TestCase):
         user.delete()
         # verify deletion of user
         self.assertFalse(User.objects.filter(id=user.id).exists())
-        # verify existence of question is false
-        self.assertFalse(Question.objects.filter(id=question.id).exists())
+        # verify existence of question is true (under [deleted] user)
+        self.assertTrue(Question.objects.filter(id=question.id).exists())
 
 
     def test_user_deletion_reply_cascade(self):
         '''
         Creates a user1 that creates replies to another user's question 
-        then deletes user1 to verify only user1's replies are deleted and
-        not the other user's question.
+        then deletes user1 to verify user1's replies exist under [deleted] and
+        the other user's question still exists.
         '''
         user = Helper.create_and_login_user()
         question = Helper.create_question(
@@ -380,15 +380,15 @@ class CheckDeletionOfObjects(TestCase):
         self.assertFalse(User.objects.filter(id=user1.id).exists())
         # verify existence of question
         self.assertTrue(Question.objects.filter(id=question.id).exists())
-        # verify existence of user1's replies are false
-        self.assertEqual(Reply.objects.filter(question=question.id).count(), 0)
+        # verify existence of user1's replies exist under [deleted]
+        self.assertEqual(Reply.objects.filter(question=question.id).count(), 3)
 
 
     def test_user_deletion_question_and_reply_cascade(self):
         '''
         Creates a user that creates a question with replies then
-        deletes the user to verify that the question and replies are also
-        deleted.
+        deletes the user to verify that the question and replies still exist
+        under [deleted].
         '''
         user = Helper.create_and_login_user()
         question = Helper.create_question(
@@ -409,10 +409,10 @@ class CheckDeletionOfObjects(TestCase):
         user.delete()
         # verify deletion of user
         self.assertFalse(User.objects.filter(id=user.id).exists())
-        # verify user's replies are deleted
-        self.assertEqual(Reply.objects.filter(question=question.id).count(), 0)
-        # verify user's question is also deleted
-        self.assertFalse(Question.objects.filter(id=question.id).exists())
+        # verify user's replies exist under [deleted]
+        self.assertEqual(Reply.objects.filter(question=question.id).count(), 3)
+        # verify user's question exist under [deleted]
+        self.assertTrue(Question.objects.filter(id=question.id).exists())
 
 
     def test_user1_cannot_delete_user2_question(self):

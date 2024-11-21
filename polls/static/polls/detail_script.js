@@ -4,16 +4,14 @@ function autoResizeTextarea(textarea) {
     textarea.style.height = (textarea.scrollHeight) + 'px';
 }
 
-document.addEventListener('click', function (event) {
-    if (event.target.classList.contains('autoExpand')) {
-        autoResizeTextarea(event.target);
-    }
-}, false);
-
 document.addEventListener('DOMContentLoaded', function () {
-    var textareas = document.querySelectorAll('textarea.autoExpand');
+    const textareas = document.querySelectorAll('textarea.autoExpand');
+
     textareas.forEach(function (textarea) {
-        autoResizeTextarea(textarea);
+        autoResizeTextarea(textarea); // initial resize
+        textarea.addEventListener('input', function () {
+            autoResizeTextarea(textarea);
+        });
     });
 });
 
