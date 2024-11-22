@@ -1,15 +1,12 @@
-FROM python:3
+FROM python:3.9.13-slim-buster
 
 ENV PYTHONUNBUFFERED=1
+COPY . /app
+WORKDIR /app
+RUN python3 -m venv /opt/djangoenv
 
-WORKDIR /code
+RUN /opt/djangoenv/bin/pip install pip --upgrade && \
+    /opt/djangoenv/bin/pip install -r requirements.txt && \
+    chmod +x entrypoint.sh
 
-COPY requirements.txt .
-
-RUN pip install -r requirements.txt
-
-COPY . .
-
-EXPOSE 8000
-
-CMD ["python3", "manage.py", "runserver"]
+CMD ["/app/entrypoint.sh"]
