@@ -1,12 +1,36 @@
 services:
-  web:
-    build: .
-    command: python ./manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-  db:
+  # web:
+    # depends_on:
+    #   - postgres_db
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    # image: djangodocker:v1
+    # environment:
+    #   - PORT=8020
+    # env_file:
+    #   - ./.env
+    # ports:
+    #   - "8001:8020"
+    # command: sh -c "chmod +x /app/migrate.sh && sh /app/migrate.sh && /app/entrypoint.sh"
+    # volumes:
+    #   - staticfiles:/app/staticfiles/
+  postgres_db:
     image: postgres
+    restart: always
+    command: -p 5433
+    env_file:
+      - ./.env
+    expose:
+      - 5433
+    ports:
+      - "5433:5433"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+
+
+volumes:
+  # staticfiles:
+  #   external: true
+  postgres_data:
