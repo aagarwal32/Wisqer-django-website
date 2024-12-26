@@ -24,7 +24,7 @@ kubectl create secret generic django-wisqer-web-prod-env --from-env-file=djangod
 
 5. Update Deployment
 ```
-kubectl apply -f wisqer/apps/django-wisqer-web.yaml
+kubectl apply -f wisqer-deployment/apps/django-wisqer-web.yaml
 ```
 
 6. Wait for Rollout to Finish
