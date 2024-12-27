@@ -1,3 +1,5 @@
+0. Login to Registry via Docker % DO API KEY
+
 1. Test Django
 ```
 python manage.py test
