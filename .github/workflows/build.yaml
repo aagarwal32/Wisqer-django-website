@@ -59,7 +59,7 @@ jobs:
         POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
         POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
         EOF
-        kubectl delete django-wisqer-web-prod-env
+        kubectl delete secret django-wisqer-web-prod-env
         kubectl create secret generic django-wisqer-web-prod-env --from-env-file=./.env.prod
 
     - name: Update deployment image
