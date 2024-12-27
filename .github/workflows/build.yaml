@@ -1,0 +1,21 @@
+name: Build Docker Container & Push to DO Registry
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test_django_job:
+    uses: aagarwal32/Wisqer-django-website/.github/workflows/test-wisqer.yaml@main
+  docker_build:
+    runs-on: ubuntu-latest
+    needs: [test_django_job]
+    env:
+      DJANGO_SECRET_KEY: temporary-test-key
+
+    steps:
+    - uses: actions/checkout@v4
