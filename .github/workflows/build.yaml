@@ -36,3 +36,16 @@ jobs:
     - name: Push image
       run: |
         docker push registry.digitalocean.com/django-wisqer-pcr/djangodocker --all-tags
+    - name: Wisqer cluster kubeconfig file w/ short lived creds
+      run: |
+        doctl kubernetes cluster kubeconfig save --expiry-seconds 600 django-wisqer
+    - name: Update deployment image
+      run: |
+        kubectl set image deployment/django-wisqer-web-deployment djangodocker=registry.digitalocean.com/django-wisqer-pcr/djangodocker:${GITHUB_SHA::7}
+    - name: Wait for rollout to finish
+      run: |
+        kubectl rollout status deployment/django-wisqer-web-deployment
+    - name: Migrate database
+      run: |
+        export SINGLE_POD_NAME=$(kubectl get pod -l app=django-wisqer-web-deployment -o jsonpath="{.items[0].metadata.name}")
+        kubectl exec -it $SINGLE_POD_NAME -- bash /app/migrate.sh
