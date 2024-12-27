@@ -2,7 +2,7 @@
 /.env.prod
 .DS_Store
 
-# local database
+# local database for testing and development
 db.sqlite3
 
 # Byte-compiled / optimized / DLL files
