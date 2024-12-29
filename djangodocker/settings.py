@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -162,6 +163,7 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "polls/static",
     BASE_DIR / "accounts/static",
+    BASE_DIR / "staticfiles",
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -170,8 +172,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 STATIC_ROOT = BASE_DIR / "staticfiles-cdn"
 
-STATICFILES_DIRS = [
-    BASE_DIR / "staticfiles"
-]
-
 from .cdn.conf import * # noqa
+
+if "test" in sys.argv:
+    # override static file storage when testing
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+    print("Using local static files and file storage for testing.")
