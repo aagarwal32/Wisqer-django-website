@@ -1,0 +1,25 @@
+name: Rollout Wisqer Deployment
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  rollout:
+    runs-on: ubuntu-latest
+    env:
+      CLUSTER_NAME: django-wisqer
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DO_API_TOKEN_KEY }}
+    - name: Wisqer cluster kubeconfig file w/ short lived creds
+      run: |
+        doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ env.CLUSTER_NAME }}
+    - name: Run rollout on Deployment
+      run: |
+        kubectl rollout restart deployment/django-wisqer-web-deployment

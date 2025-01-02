@@ -105,7 +105,7 @@ DB_IS_AVAIL = all([
 
 DB_IGNORE_SSL=os.environ.get("DB_IGNORE_SSL") == "true"
 
-if DB_IS_AVAIL:
+if DB_IS_AVAIL and not DEBUG:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
