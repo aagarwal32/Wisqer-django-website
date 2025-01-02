@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="center-content">
 {% if account_user.username == '[deleted]' %}
-<h5 class="mt-7">This account has been deleted.</h1>
+<h5 class="mt-7">This account has been deleted.</h5>
 <hr>
 <p>Profile details are unavailable.</p>
 
 {% else %}
 
 {% if user.is_authenticated and user.id == account_user.id %}
-<h1 class="mt-7">Your Account</h1>
+<h2 class="mt-7">Your Account</h2>
 {% else %}
-<h1 class="mt-7">{{account_user.username}}'s Account</h1>
+<h2 class="mt-7">{{account_user.username}}'s Account</h2>
 {% endif %}
 
 
@@ -98,5 +99,5 @@
     </div>
     </div>
 </div>
-
+</div>
 {% endblock content %}

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="shadow p-5 mx-20 mt-7 bg-body rounded">
+<div class="center-content-auth">
+<div class="shadow p-5 mt-7 bg-body rounded">
 <h1 style="color: darkmagenta;">Let's get started.</h1>
 
 <form action="{% url 'accounts:register' %}" method="post" novalidate>
@@ -19,5 +20,6 @@
     {% endfor %}
     <button type="submit" class="btn btn-primary">Register</button>
 </form>
+</div>
 </div>
 {% endblock content %}

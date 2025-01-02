@@ -160,19 +160,27 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [
-    BASE_DIR / "polls/static",
-    BASE_DIR / "accounts/static",
-    BASE_DIR / "staticfiles",
-]
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        BASE_DIR / "polls/static",
+        BASE_DIR / "accounts/static",
+    ]
+else:
+    STATICFILES_DIRS = [
+        BASE_DIR / "polls/static",
+        BASE_DIR / "accounts/static",
+        BASE_DIR / "staticfiles",
+    ]
+    STATIC_ROOT = BASE_DIR / "staticfiles-cdn"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-STATIC_ROOT = BASE_DIR / "staticfiles-cdn"
-
-from .cdn.conf import * # noqa
+if not DEBUG:
+    from .cdn.conf import * # noqa
 
 if "test" in sys.argv:
     # override static file storage when testing
