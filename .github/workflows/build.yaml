@@ -49,6 +49,9 @@ jobs:
         DJANGO_SUPERUSER_EMAIL=${{ secrets.DJANGO_SUPERUSER_EMAIL }}
         DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
 
+        EMAIL_ID=${{ secrets.EMAIL_ID }}
+        EMAIL_PW=${{ secrets.EMAIL_PW }}
+
         AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
