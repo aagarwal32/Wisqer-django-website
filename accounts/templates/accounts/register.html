@@ -5,6 +5,12 @@
 <div class="shadow p-5 mt-7 bg-body rounded">
 <h1 style="color: darkmagenta;">Let's get started.</h1>
 
+{% if messages %}
+    {% for message in messages %}
+    <div class="text-danger">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
 <form action="{% url 'accounts:register' %}" method="post" novalidate>
     {% csrf_token %}
     {% for field in form %}

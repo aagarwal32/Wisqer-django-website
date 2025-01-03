@@ -5,14 +5,21 @@ from django.urls import reverse, reverse_lazy
 from accounts.forms import UserCreationForm
 from accounts.forms import AuthenticationForm
 from django.contrib.auth import login, logout, get_user_model
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage, send_mail
 from django.contrib import messages
 from django.utils import timezone
+from djangodocker import settings
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.base import TemplateView
 from django.views import View
 
 from polls.models import Question, Reply
+from . tokens import generate_token
 User = get_user_model()
 
 
@@ -21,16 +28,63 @@ def register_user(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.full_clean()
+            # ensure no email duplicates
+            email = form.cleaned_data['email']
+            if User.objects.filter(email=email).exists():
+                messages.error(request, "An account with this email already exists.")
+                return render(request, 'accounts/register.html', {'form': form})
+            
+            # save user if all checks pass
             user = form.save()
-            print(f"User created: {user.username}, {user.email}")
-            messages.success(request, "Your account has been successfully created. Please login.")
+            user.is_active = False
+            user.save()
+            print(f"User registered. User active? {user.is_active}")
+
+            try:
+                # Send the verification link for account activation
+                current_site = get_current_site(request)
+                subject = "Confirm your email to activate your WISQER account"
+                message = render_to_string("accounts/email_confirmation.html", {
+                    'username': user.username,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': generate_token.make_token(user)
+                })
+                email_confirmation = EmailMessage(
+                    subject,
+                    message,
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                )
+                email_confirmation.fail_silently = True
+                email_confirmation.send()
+                messages.success(request, "Your account has been successfully created. Please check your email to activate your account.")
+
+            except Exception as e:
+                messages.error(request, f"An error occurred: {str(e)}")
+
             return HttpResponseRedirect(reverse('accounts:login'))
-    
-    else: 
+    else:
         form = UserCreationForm()
 
-    return render(request, 'accounts/register.html', {'form':form})
+    return render(request, 'accounts/register.html', {'form': form})
+
+
+def activate(request, uidb64, token):
+    print("In activate view")
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and generate_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return HttpResponseRedirect(reverse('polls:index'))
+    else:
+        return render(request, 'accounts/activation_failed.html')
 
 
 def login_user(request):
@@ -40,11 +94,16 @@ def login_user(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
+            print(f"User logged in. User active? {user.is_active}")
+
+            # check if user is active (user confirmed email)
+            if not user.is_active:
+                messages.error(request, "Please confirm your email to log in.")
+                return redirect(reverse('accounts:login'))
+
             login(request, user)
-            print(f"Logging in user: {user.username}, {user.email}")
             submit_url = request.POST.get('next', reverse('polls:index'))
             return HttpResponseRedirect(submit_url)
-
     else:
         form = AuthenticationForm()
 

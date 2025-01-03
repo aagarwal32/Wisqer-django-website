@@ -11,3 +11,4 @@ django-bootstrap-icons
 django-reversion
 django-storages
 boto3
+six
