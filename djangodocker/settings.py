@@ -26,9 +26,13 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get("DEBUG")) == "1"
 ENV_ALLOWED_HOST=os.environ.get("ENV_ALLOWED_HOST")
+ENV_ALLOWED_HOST_2=os.environ.get("ENV_ALLOWED_HOST_2")
+ENV_ALLOWED_HOST_3=os.environ.get("ENV_ALLOWED_HOST_3")
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
-if ENV_ALLOWED_HOST:
+if all([ENV_ALLOWED_HOST, ENV_ALLOWED_HOST_2, ENV_ALLOWED_HOST_3]):
     ALLOWED_HOSTS.append(ENV_ALLOWED_HOST)
+    ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_2)
+    ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_3)
 
 
 
