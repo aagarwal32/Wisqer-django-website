@@ -1,46 +1,43 @@
 # WISQER
 ## A social media question-and-answer website built with Django.
 
-This README outlines the current development progress and upcoming features for Wisqer. This project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance user experience.
+This README outlines the features, deployment process, and CI/CD workflows for Wisqer. The project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance the user experience.
 
-## Below are video demos showcasing the current progress of Wisqer:
+### WISQER is now live at www.wisqer.com !
 
-### Register and Login
-- Users can view questions, replies, and edit histories without an account. Additionally, they can also sort questions and report.
-- To create, update, or delete questions and replies the user must have an account and be logged in.
+## Features:
 
-https://github.com/user-attachments/assets/c3f3a9c5-d927-4999-a6ec-e1ee2ec3b44b
+#### Create Account, Email Verification, and Login
+- Users can view questions, replies, and edit histories without an account.
+- To create, update, or delete questions and replies, the user must have an account and be logged in.
+- The user must verify their email in order to activate their account and log in.
 
-### Checking Edit History and Replying
-- The edit history is only shown to users when a question has been modified. The newest edit is shown first in the modal.
-- Logged in users can leave replies in the detailed question view.
-
-https://github.com/user-attachments/assets/01debe2c-b168-4d9c-bf19-eac31dddf405
-
-### Creating Questions and Sorting
+#### Creating/Deleting Questions and Replies
 - Logged in users can create questions. A question title is required but the body text (description) is optional.
-- All users can sort questions and switch to different pages.
+- Logged in users can also create replies to questions. Both questions and replies can be deleted by their respective author.
+- Deleting a question also deletes all replies associated with it.
 
-https://github.com/user-attachments/assets/c6938742-1526-43cf-b9af-9be10f874f0c
+#### Updating Questions and Edit History
+- The edit history for a question becomes available when it has been modified. The newest edit is shown first in the modal.
 
-### Updating (Editing) Questions
-- Logged in users can only update (edit) their questions. Upon updating, previous edits can be viewed in the edit history.
+#### Account Page and Account Deletion Handling
+- Each user has their own account page that is viewable by anyone. The account page displays their past questions and replies.
+- The account page can also be used to delete your account which deletes your user but re-assigns your posts under a common "deleted" user.
 
-https://github.com/user-attachments/assets/75ab370c-50cf-4283-ad2b-9c1553bf934d
+## DEMO
 
-### Deleting Questions and Replies
-- Logged in users can only delete their questions and/or replies.
-- Deleting a question also deletes all the replies to it.
+https://github.com/user-attachments/assets/0804d25a-5df0-4add-9f73-221df2098bed
 
-https://github.com/user-attachments/assets/66787f23-f23f-4e3d-8034-9a0fd9ac06de
 
-## Upcoming Features
-1. Options to create polls, tags, and body text along with questions. Polls will only be visible if created.
-2. User account page where users can delete their accounts and view past replies and questions.
-3. Rating system for questions and replies, and display the number of comments.
-4. Comment sorting and filtering capabilities to improve user interaction.
-5. Expand navigation options with categories like Search, Top, Hot, and other relevant filters.
-6. Integrate an AI model for content classification and categorization to enhance content organization.
-7. Home landing page view to welcome users and highlight key features.
-8. Deploy the site using Docker for consistent and efficient deployment across different environments.
-9. Implement a React frontend to create a more dynamic and responsive user interface.
+## Deployment Process
+- The Wisqer app is packaged into a Docker container that is distributed across clusters orchestrated via Kubernetes.
+- DigitalOcean provides an abstraction to these deployment tools and also provides a connection to an online PostgreSQL database where user created data is securely held.
+- Static files are served via DigitalOcean Spaces that operates via AWS S3 API
+
+## CI/CD workflows for automated deployments via GitHub Actions
+- In the actions tab, workflow scripts automatically...
+  1. Run Django tests to check proper functionality.
+  2. Build and push docker image to DigitalOcean's Private Container Registery.
+  3. Access secret production environment variables via GitHub secrets.
+  4. Updates the deployment image and waits for Kubernetes to terminate old pods.
+  5. Finally, the workflow accesses a single pod and performs migrations and collectstatic operations.
