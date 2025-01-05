@@ -3,6 +3,6 @@ Hello {{username}}, welcome to WISQER!
 
 Please confirm your email by clicking the link below to activate your account.
 
-Confirmation Link: http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
+Confirmation Link: https://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
 
 {% endautoescape %}
