@@ -44,5 +44,9 @@ spec:
       protocol: TCP
       port: 80
       targetPort: 8002
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 8002
   selector:
     app: django-wisqer-web-deployment
