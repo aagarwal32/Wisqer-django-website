@@ -34,14 +34,22 @@ if all([ENV_ALLOWED_HOST, ENV_ALLOWED_HOST_2, ENV_ALLOWED_HOST_3]):
     ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_2)
     ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_3)
 
-# if not DEBUG:
-#     SECURE_SSL_REDIRECT=True
-#     SECURE_HSTS_SECONDS=31536000 # 1 year in seconds
-#     SECURE_HSTS_INCLUDE_SUBDOMAINS=True
-#     SECURE_BROWSER_XSS_FILTER=True
-#     SECURE_CONTENT_TYPE_NOSNIFF=True
-# else:
-#     SECURE_SSL_REDIRECT=False
+if not DEBUG:
+    SECURE_SSL_REDIRECT=True
+    SECURE_HSTS_SECONDS=31536000 # 1 year in seconds
+    SECURE_HSTS_INCLUDE_SUBDOMAINS=True
+    SECURE_BROWSER_XSS_FILTER=True
+    SECURE_CONTENT_TYPE_NOSNIFF=True
+    CSRF_COOKIE_SECURE = True  # Ensure the CSRF cookie is only sent over HTTPS
+    SESSION_COOKIE_SECURE = True  # Ensure session cookies are also sent only over HTTPS
+
+    CSRF_TRUSTED_ORIGINS = [
+    'https://www.wisqer.com',
+    'https://wisqer.com',
+    ]
+
+else:
+    SECURE_SSL_REDIRECT=False
 
 
 # Application definition
