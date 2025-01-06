@@ -37,6 +37,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: django-wisqer-web-service
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "https"
+    service.beta.kubernetes.io/do-loadbalancer-certificate-id: "13e9c948-965f-4029-ae35-2bae30c3bc45"
+    service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https: "true"
 spec:
   type: LoadBalancer
   ports:
