@@ -185,12 +185,12 @@ STATIC_URL = "static/"
 if DEBUG:
     STATICFILES_DIRS = [
         BASE_DIR / "polls/static",
-        BASE_DIR / "accounts/static",
+        #BASE_DIR / "accounts/static",
     ]
 else:
     STATICFILES_DIRS = [
         BASE_DIR / "polls/static",
-        BASE_DIR / "accounts/static",
+        #BASE_DIR / "accounts/static",
         BASE_DIR / "staticfiles",
     ]
     STATIC_ROOT = BASE_DIR / "staticfiles-cdn"
