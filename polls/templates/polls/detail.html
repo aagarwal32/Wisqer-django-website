@@ -8,7 +8,7 @@
         <div class="col-sm text-black p">
             <span class="back-link">
                 <a href="{% url 'polls:index' %}">Home /</a>
-                <a href="{% url 'polls:detail' question.id %}">
+                <a href="{% url 'polls:detail' question.id question.question_text|urlencode %}">
                     {{question.question_text|truncatechars:40}}
                 </a>
             </span>
@@ -85,20 +85,24 @@
     <!--Reply Form-->
     <div class="row mt-5 mb-4">
         <div class="col-sm">
-            <div class="d-flex">
             {% if user.is_authenticated %}
-            <div class="d-inline-block">
-            <form action="{% url 'polls:create_reply' question.id %}" 
-            method="post" id="reply_form_id" novalidate>
-                {% csrf_token %}
-                {{reply_form}}
-            </form>
-            </div>
-            <div class="d-inline-block d-flex align-items-end mx-3">
-            <button type="submit" form="reply_form_id" class="btn btn-primary">
-                Reply
-            </button>
-            </div>
+            <div class="card">
+                <div class="d-flex justify-content-between align-items-end card-body comment">
+                <div class="d-inline-block">
+                <form action="{% url 'polls:create_reply' question.id question.question_text|urlencode %}" 
+                method="post" id="reply_form_id" novalidate>
+                    {% csrf_token %}
+                    <div class="question-inputs-border">
+                        {{reply_form}}
+                    </div>
+                </form>
+                </div>
+                <div class="d-inline-block d-flex align-items-end mx-3">
+                <button type="submit" form="reply_form_id" class="btn btn-primary">
+                    Reply
+                </button>
+                </div>
+                </div>
             </div>
             {% else %}
         <p>You must 
@@ -186,7 +190,7 @@
 <div class="modal fade" id="deleteModalQuestion" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
-        <form method="post" action="{% url 'polls:question_delete' question.id %}">
+        <form method="post" action="{% url 'polls:question_delete' question.id question.question_text|urlencode %}">
           {% csrf_token %}
           
           <div class="modal-body text-center">
@@ -206,12 +210,14 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-3">
             <!-- Modal Header -->
-             <form id="updateModalForm" data-url="{% url 'polls:question_update' question.id %}"
+             <form id="updateModalForm" data-url="{% url 'polls:question_update' question.id question.question_text|urlencode %}"
              data-csrf-token="{{csrf_token}}">
                 <div class="modal-body text-center">
                     Edit your question:
                 </div>
-                {{question_update_form.as_p}}
+                <div class="question-inputs-border">
+                    {{question_update_form.as_p}}
+                </div>
                 <div class="modal-footer d-flex align-items-center justify-content-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -223,7 +229,7 @@
 
 <!-- VIEW QUESTION HISTORY MODAL -->
 <div class="modal fade" id="viewModalQuestionHistory" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewModalQuestionHistoryLabel">Edit history of {{question.user}}'s question:</h5>
@@ -232,8 +238,24 @@
             <div class="modal-body">
                 <ul>
                 {% for version in versions %}
-                <div class="card comment mt-3">
-                    <div class="card-body">
+                <div class="card mt-3">
+                    <div class="card-body comment">
+                        <div class="d-flex">
+                            <div class="d-inline-block">
+                                <p class="username-style">
+                                    <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
+                                    <span class="date-style">• {{version.revision.date_created}}</span>
+                                </p>
+                            </div>
+                        </div>
+                        {{version.field_dict.question_text}}<br>
+                        {% if version.field_dict.question_body %}
+                        <div class="modal-history-question-body mt-2">
+                            {{version.field_dict.question_body|linebreaksbr}}
+                        </div>
+                        {% endif %}
+
+                        <!--
                         Date: {{version.revision.date_created}}<br>
                         <strong>{{version.field_dict.question_text}}</strong><br>
                         {% if version.field_dict.question_body %}
@@ -241,6 +263,7 @@
                         {% else %}
                         No body text provided.<br>
                         {% endif %}
+                    -->
                     </div>
                 </div>
                 {% endfor %}

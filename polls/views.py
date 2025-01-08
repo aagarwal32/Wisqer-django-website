@@ -6,6 +6,7 @@ from django.db.models.query import QuerySet
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import F
+from urllib.parse import urlencode, quote
 from typing import Any
 from reversion.models import Version
 import reversion
@@ -56,9 +57,9 @@ class QuestionCreateView(LoginRequiredMixin, FormView):
             new_question.save()
 
             reversion.set_user(self.request.user)
-
+        encoded_question = quote(new_question.question_text)
         return HttpResponseRedirect(
-            reverse('polls:detail', args=(new_question.id,))
+            reverse('polls:detail', args=(new_question.id, encoded_question,))
         )
     
     def form_invalid(self, form):
@@ -110,7 +111,7 @@ class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url = reverse_lazy('accounts:login')
     redirect_field_name = 'next'
 
-    def post(self, request, pk):
+    def post(self, request, pk, question_text):
         question = get_object_or_404(Question, pk=pk)
         if question.user != request.user:
             return HttpResponseForbidden("Unable to delete question")
@@ -163,7 +164,8 @@ class ReplyDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
         if reply.user != request.user:
             return HttpResponseForbidden("Unable to delete reply")
         reply.delete()
-        return HttpResponseRedirect(reverse('polls:detail', args=(question.id,)))
+        encoded_question = quote(question.question_text)
+        return HttpResponseRedirect(reverse('polls:detail', args=(question.id, encoded_question,)))
     
     def test_func(self):
         reply = get_object_or_404(Reply, pk=self.kwargs['pk'])
@@ -177,7 +179,7 @@ class ReplyCreateView(LoginRequiredMixin, FormView):
     redirect_field_name = 'next'
 
     def get_success_url(self):
-        return reverse_lazy('polls:detail', args=(self.kwargs['question_id'],))
+        return reverse_lazy('polls:detail', args=(self.kwargs['question_id'], self.kwargs['question_text'],))
 
     def form_valid(self, form):
         question = get_object_or_404(Question, pk=self.kwargs['question_id'])

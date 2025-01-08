@@ -11,12 +11,12 @@ class QuestionForm(forms.ModelForm):
         }
         widgets = {
             'question_text': forms.Textarea(attrs={
-                'placeholder':'Question title',
-                'class':'form-control',
+                'placeholder':'Question Title',
+                'class':'form-control autoExpand',
                 'rows':'1'
                 }),
             'question_body': forms.Textarea(attrs={
-                'placeholder':'Question body -- optional',
+                'placeholder':'Body (Optional)',
                 'class':'form-control autoExpand',
                 'rows':'1'
                 })

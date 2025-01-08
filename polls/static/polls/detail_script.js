@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     textareas.forEach(function (textarea) {
         autoResizeTextarea(textarea); // initial resize
+        textarea.addEventListener('click', function () {
+            autoResizeTextarea(textarea);
+        });
         textarea.addEventListener('input', function () {
             autoResizeTextarea(textarea);
         });
