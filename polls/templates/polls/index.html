@@ -90,7 +90,7 @@
         <div class="col-sm">
             {% if latest_question_list %}
             {% for q in latest_question_list %}
-                <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' q.id q.question_text|urlencode %}" 
+                <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' q.id q.question_text %}" 
                 onclick="window.location.href=this.dataset.url">
                     <div class="card-body comment">
                         <p class="username-style">

@@ -1,4 +1,5 @@
 import datetime
+from urllib.parse import quote
 from django.test import TestCase, Client
 from django.utils import timezone
 from django.urls import reverse
@@ -154,7 +155,8 @@ class QuestionDetailViewTests(TestCase):
             question_text="Future question.",
             days=5)
         
-        url = reverse("polls:detail", args=(future_question.id,))
+        encoded_question = quote(future_question.question_text)
+        url = reverse("polls:detail", args=(future_question.id, encoded_question))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
@@ -170,7 +172,8 @@ class QuestionDetailViewTests(TestCase):
             question_text="Past question.",
             days=-5
         )
-        url = reverse("polls:detail", args=(past_question.id,))
+        encoded_question = quote(past_question.question_text)
+        url = reverse("polls:detail", args=(past_question.id, encoded_question,))
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
 
@@ -219,7 +222,8 @@ class ReplyDetailViewTests(TestCase):
         '''
         user = create_and_login_user()
         question = create_question(user, question_text="test", days=-5)
-        response = self.client.get(reverse('polls:detail', args=(question.id,)))
+        encoded_question = quote(question.question_text)
+        response = self.client.get(reverse('polls:detail', args=(question.id, encoded_question,)))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No replies yet...")
         self.assertQuerySetEqual(response.context["latest_reply_list"], [],)
@@ -232,7 +236,8 @@ class ReplyDetailViewTests(TestCase):
         '''
         user = create_and_login_user()
         reply = create_reply(user, reply_text="Past Reply.", days=-5)
-        response = self.client.get(reverse('polls:detail', args=(reply.question.id,)))
+        encoded_question = quote(reply.question.question_text)
+        response = self.client.get(reverse('polls:detail', args=(reply.question.id, encoded_question)))
         self.assertQuerySetEqual(
             response.context["latest_reply_list"], [reply],
         )
@@ -245,7 +250,8 @@ class ReplyDetailViewTests(TestCase):
         '''
         user = create_and_login_user()
         reply = create_reply(user, reply_text="Future Reply.", days=5)
-        response = self.client.get(reverse('polls:detail', args=(reply.question.id,)))
+        encoded_question = quote(reply.question.question_text)
+        response = self.client.get(reverse('polls:detail', args=(reply.question.id, encoded_question)))
         self.assertQuerySetEqual(
             response.context["latest_reply_list"], [],
         )
@@ -261,12 +267,13 @@ class ReplyDetailViewTests(TestCase):
         user3 = create_and_login_user("5678abcd", "user3@example.com", "5678pass")
 
         question = create_question(user1, question_text="Test Question", days=-5)
+        encoded_question = quote(question.question_text)
         reply = create_replies_to_single_question_id(
             user2, question=question, reply_text="Past Reply.", days=-5)
         create_replies_to_single_question_id(
             user3, question=question, reply_text="Future Reply.", days=5)
         
-        response = self.client.get(reverse('polls:detail', args=(question.id,)))
+        response = self.client.get(reverse('polls:detail', args=(question.id, encoded_question,)))
         self.assertQuerySetEqual(
             response.context['latest_reply_list'], [reply],
         )
@@ -280,12 +287,13 @@ class ReplyDetailViewTests(TestCase):
         user2 = create_and_login_user("1234abcd", "user2@example.com", "1234pass")
         user3 = create_and_login_user("5678abcd", "user3@example.com", "5678pass")
         question = create_question(user1, question_text="Test Question", days=-5)
+        encoded_question = quote(question.question_text)
         reply1 = create_replies_to_single_question_id(
             user2, question=question, reply_text="Past Reply 1.", days=-3)
         reply2 = create_replies_to_single_question_id(
             user3, question=question, reply_text="Past Reply 2.", days=-5)
         
-        response = self.client.get(reverse('polls:detail', args=(question.id,)))
+        response = self.client.get(reverse('polls:detail', args=(question.id, encoded_question)))
         self.assertQuerySetEqual(
             response.context['latest_reply_list'], [reply1, reply2],
         )

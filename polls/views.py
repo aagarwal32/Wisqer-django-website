@@ -57,9 +57,9 @@ class QuestionCreateView(LoginRequiredMixin, FormView):
             new_question.save()
 
             reversion.set_user(self.request.user)
-        encoded_question = quote(new_question.question_text)
+        #encoded_question = quote(new_question.question_text)
         return HttpResponseRedirect(
-            reverse('polls:detail', args=(new_question.id, encoded_question,))
+            reverse('polls:detail', args=(new_question.id, new_question.question_text,))
         )
     
     def form_invalid(self, form):
@@ -164,8 +164,8 @@ class ReplyDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
         if reply.user != request.user:
             return HttpResponseForbidden("Unable to delete reply")
         reply.delete()
-        encoded_question = quote(question.question_text)
-        return HttpResponseRedirect(reverse('polls:detail', args=(question.id, encoded_question,)))
+        #encoded_question = quote(question.question_text)
+        return HttpResponseRedirect(reverse('polls:detail', args=(question.id, question.question_text,)))
     
     def test_func(self):
         reply = get_object_or_404(Reply, pk=self.kwargs['pk'])
@@ -179,7 +179,8 @@ class ReplyCreateView(LoginRequiredMixin, FormView):
     redirect_field_name = 'next'
 
     def get_success_url(self):
-        return reverse_lazy('polls:detail', args=(self.kwargs['question_id'], self.kwargs['question_text'],))
+        question = get_object_or_404(Question, pk=self.kwargs['question_id'])
+        return reverse_lazy('polls:detail', args=(self.kwargs['question_id'], question.question_text,))
 
     def form_valid(self, form):
         question = get_object_or_404(Question, pk=self.kwargs['question_id'])

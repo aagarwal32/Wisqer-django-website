@@ -1,4 +1,5 @@
 import datetime
+from urllib.parse import quote
 from django.test import TestCase, Client
 from django.utils import timezone
 from django.urls import reverse
@@ -133,8 +134,9 @@ class FormPostAuthenticationCheck(TestCase):
             days=-1)
 
         # check Reply post (logged in)
+        encoded_question = quote(question.question_text)
         response = self.client.post(
-            reverse('polls:create_reply', args=(question.id,)),
+            reverse('polls:create_reply', args=(question.id, encoded_question,)),
             data={
                 'reply_text':'Test?',
                 'pub_date':timezone.now()
@@ -179,13 +181,13 @@ class FormPostAuthenticationCheck(TestCase):
         '''
         question = Helper.create_question(
             user=self.user, 
-            question_text="Hello?", 
+            question_text="Hello", 
             days=-1)
-
+        
         response = self.client.post(
-            reverse('polls:create_reply', args=(question.id,)),
+            reverse('polls:create_reply', args=(question.id, question.question_text,)),
             data={
-                'reply_text':'Test?',
+                'reply_text':'Test',
                 'pub_date':timezone.now()
             }
         )
@@ -194,10 +196,10 @@ class FormPostAuthenticationCheck(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
             response, 
-            f"{reverse('accounts:login')}?next={reverse('polls:create_reply', args=(question.id,))}")
+            f"{reverse('accounts:login')}?next={reverse('polls:create_reply', args=(question.id, question.question_text,))}")
         
-        self.assertTrue(Question.objects.filter(question_text="Hello?").exists())
-        response = self.client.get(reverse('polls:detail', args=(question.id,)))
+        self.assertTrue(Question.objects.filter(question_text="Hello").exists())
+        response = self.client.get(reverse('polls:detail', args=(question.id, question.question_text,)))
         self.assertQuerySetEqual(
             response.context['latest_reply_list'], [],
         )

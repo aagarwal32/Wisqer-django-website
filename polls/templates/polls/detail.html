@@ -8,7 +8,7 @@
         <div class="col-sm text-black p">
             <span class="back-link">
                 <a href="{% url 'polls:index' %}">Home /</a>
-                <a href="{% url 'polls:detail' question.id question.question_text|urlencode %}">
+                <a href="{% url 'polls:detail' question.id question.question_text %}">
                     {{question.question_text|truncatechars:40}}
                 </a>
             </span>
@@ -89,7 +89,7 @@
             <div class="card">
                 <div class="d-flex justify-content-between align-items-end card-body comment">
                 <div class="d-inline-block">
-                <form action="{% url 'polls:create_reply' question.id question.question_text|urlencode %}" 
+                <form action="{% url 'polls:create_reply' question.id question.question_text %}" 
                 method="post" id="reply_form_id" novalidate>
                     {% csrf_token %}
                     <div class="question-inputs-border">
@@ -190,7 +190,7 @@
 <div class="modal fade" id="deleteModalQuestion" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
-        <form method="post" action="{% url 'polls:question_delete' question.id question.question_text|urlencode %}">
+        <form method="post" action="{% url 'polls:question_delete' question.id question.question_text %}">
           {% csrf_token %}
           
           <div class="modal-body text-center">
@@ -210,7 +210,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-3">
             <!-- Modal Header -->
-             <form id="updateModalForm" data-url="{% url 'polls:question_update' question.id question.question_text|urlencode %}"
+             <form id="updateModalForm" data-url="{% url 'polls:question_update' question.id question.question_text %}"
              data-csrf-token="{{csrf_token}}">
                 <div class="modal-body text-center">
                     Edit your question:
