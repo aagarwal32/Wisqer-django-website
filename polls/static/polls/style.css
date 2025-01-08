@@ -261,9 +261,12 @@ textarea {
 }
 
 .form-control:focus, button:focus{
-    -webkit-box-shadow: none;
+    -webkit-box-shadow: none !important;
     box-shadow: none !important;
-    outline: 0 !important;
+    outline: none !important;
+    color: inherit;
+    border-color: inherit;
+    background-color: inherit;
 }
 
 

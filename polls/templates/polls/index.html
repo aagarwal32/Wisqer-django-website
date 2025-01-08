@@ -59,7 +59,8 @@
                 <div class="sorting-options d-flex align-items-center mx-1">
                     <div class="dropdown">
                         <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                            {{current_sort_option|capfirst}}
+                            <!--{{current_sort_option|capfirst}}-->
+                            <i class="bi bi-funnel-fill"></i>
                         </button>
                     <ul class="dropdown-menu mt-3">
                     {% for sorting_option, label in sorting_labels.items %}
