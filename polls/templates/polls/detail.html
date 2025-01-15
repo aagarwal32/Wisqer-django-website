@@ -12,8 +12,7 @@
                     {{question.question_text|truncatechars:40}}
                 </a>
             </span>
-            <form action="{% url 'polls:vote' question.id %}" method="post" 
-            class="question-display-form">
+            <div class="question-display-form">
                 {% csrf_token %}
                 <fieldset>
                     <legend class="comment">
@@ -64,26 +63,34 @@
                         {% endif %}      
                     </legend>
 
-                    {% if error_message %}
-                    <p><strong>{{error_message}}</strong></p>
-                    {%endif%}
-        
-                    {% for choice in question.choice_set.all %}
-                    <input type="radio" name="choice" 
-                    id="choice{{forloop.counter}}" value="{{choice.id}}">
-                    <label for="choice{{ forloop.counter }}">
-                        {{choice.choice_text}}
-                    </label><br>
-                    {% endfor %}
+                    <!-- RATING -->
+                    {% if not user.is_authenticated %}
+                    <form action="{% url 'accounts:login' %}?next={{request.path}}">
+                        <button type="submit" class="remove-default-btn mt-3">
+                            <i class="bi bi-hand-thumbs-up"></i> <span class="rating-count">{{ question.rating.all.count }}</span>
+                        </button>
+                    </form>
+                    
+                    {% else %}
+                    <form class="ratingForm" data-url="{% url 'polls:question_rating' question.id question.question_text %}" 
+                    data-question-id="{{question.id}}" data-csrf-token="{{csrf_token}}">
+                        <button class="remove-default-btn mt-3" type="submit">
+                            {% if user in question.rating.all %}
+                            <i id="icon-{{ question.id }}" class="bi bi-hand-thumbs-up-fill"></i>
+                            {% else %}
+                            <i id="icon-{{ question.id }}" class="bi bi-hand-thumbs-up"></i>
+                            {% endif %}
+                            <span class="rating-count">{{ question.rating.all.count }}</span>
+                        </button>
+                    </form>
+                    {% endif %}
                 </fieldset>
-
-                <!--<button type="submit" class="btn btn-secondary mt-2">Vote</button> !-->
-            </form>
+            </div>
         </div>
     </div>
 
     <!--Reply Form-->
-    <div class="row mt-5 mb-4">
+    <div class="row mt-4 mb-4">
         <div class="col-sm">
             {% if user.is_authenticated %}
             <div class="card">
@@ -159,7 +166,7 @@
                     {% endif %}
                     </div>
             </div>
-                <!-- DELETE REPLY MODAL -->
+            <!-- DELETE REPLY MODAL -->
             <div class="modal fade" id="deleteModalReply{{reply.id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{reply.id}}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-sm">
                 <div class="modal-content">
@@ -277,4 +284,5 @@
 
 {% block extra_js %}
 <script src="{% static 'polls/detail_script.js' %}"></script>
+<script src="{% static 'polls/post_functions.js' %}"></script>
 {% endblock %}

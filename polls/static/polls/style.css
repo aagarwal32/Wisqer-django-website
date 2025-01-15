@@ -261,12 +261,19 @@ textarea {
 }
 
 .form-control:focus, button:focus{
-    -webkit-box-shadow: none !important;
+    -webkit-box-shadow: none;
     box-shadow: none !important;
-    outline: none !important;
-    color: inherit;
-    border-color: inherit;
-    background-color: inherit;
+    outline: 0 !important;
+}
+
+.remove-default-btn {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
 }
 
 
@@ -285,13 +292,74 @@ textarea {
     cursor: pointer;
 }
 
-.card-clickable a {
-    pointer-events: auto;
+.card-clickable a,
+.card-clickable button {
+    pointer-events: auto; /* Allow links and buttons to be clickable */
 }
 
-.card-clickable *:not(a) {
+/* Prevent pointer events on everything else inside the clickable card */
+.card-clickable *:not(a):not(button) {
     pointer-events: none;
 }
+
+
+/* CUSTOM RATE BUTTON */
+/* From Uiverse.io by catraco */ 
+/*------ Settings ------*/
+.container {
+    --color: #a5a5b0;
+    --size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    font-size: var(--size);
+    user-select: none;
+    fill: var(--color);
+  }
+  
+  .container .thumbs-up-regular {
+    position: absolute;
+    animation: keyframes-fill .5s;
+  }
+  
+  .container .thumbs-up-solid {
+    position: absolute;
+    display: none;
+    animation: keyframes-fill .5s;
+  }
+  
+  /* ------ On check event ------ */
+  .container input:checked ~ .thumbs-up-regular {
+    display: none;
+  }
+  
+  .container input:checked ~ .thumbs-up-solid {
+    display: block;
+  }
+  
+  /* ------ Hide the default checkbox ------ */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* ------ Animation ------ */
+  @keyframes keyframes-fill {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+  
+    50% {
+      transform: scale(1.2) rotate(-10deg);
+    }
+  }
+
 
 
 /* PAGINATION (NOT CURRENTLY IN USE)*/

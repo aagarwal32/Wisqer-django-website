@@ -91,14 +91,83 @@
         <div class="col-sm">
             {% if latest_question_list %}
             {% for q in latest_question_list %}
-                <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' q.id q.question_text %}" 
+                <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' q.id q.question_text %}"
                 onclick="window.location.href=this.dataset.url">
                     <div class="card-body comment">
                         <p class="username-style">
                             <a href="{% url 'accounts:user_account' q.user.id %}">{{q.user.username}}</a> 
                             <span class="date-style">• {{q.pub_date}}</span>
                         </p>
-                        <p class="question-body">{{q.question_text}}</p>
+                        <p class="question-body"><strong>{{q.question_text}}</strong></p>
+                        {% if q.question_body %}
+                        <p class="question-body"> {{q.question_body|truncatechars:240}}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-body d-flex justify-content-end align-items-center my-0 py-0">
+                        <!-- RATING -->
+                        {% if not user.is_authenticated %}
+                        <form action="{% url 'accounts:login' %}?next={{request.path}}">
+                            <button type="submit" class="remove-default-btn" onclick="event.stopPropagation();">
+                                <i class="bi bi-hand-thumbs-up"></i> <span class="rating-count">{{ q.rating.all.count }}</span>
+                            </button>
+                        </form>
+                        
+                        {% else %}
+                        <form class="ratingForm" data-url="{% url 'polls:question_rating' q.id q.question_text %}"
+                        data-question-id="{{q.id}}" data-csrf-token="{{csrf_token}}">
+                            <button class="remove-default-btn" type="submit" onclick="event.stopPropagation();">
+                                {% if user in q.rating.all %}
+                                <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up-fill"></i>
+                                {% else %}
+                                <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up"></i>
+                                {% endif %}
+                                <span class="rating-count">{{ q.rating.all.count }}</span>
+                            </button>
+                        </form>
+                        {% endif %}
+
+                        <!-- THREE DOT MENU -->
+                        <div class="dropdown mx-3">
+                            <button type="button" class="btn m-0 p-0" data-bs-toggle="dropdown" onclick="event.stopPropagation();">
+                                <i class="bi bi-three-dots"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                {% if user != q.user %}
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="event.stopPropagation();">
+                                            <i class="bi bi-flag-fill mx-3"></i>Report
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if user.is_authenticated and user == q.user %}
+                                    <li>
+                                        <a class="dropdown-item" data-bs-toggle="modal" href="#" data-bs-target="#deleteModalQuestion{{q.id}}" onclick="event.stopPropagation();">
+                                            <i class="bi bi-trash-fill mx-3"></i>Delete
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <!-- END CARD OPTIONS -->
+                    </div>
+                </div>
+                <!-- DELETE QUESTION MODAL -->
+                <div class="modal fade" id="deleteModalQuestion{{q.id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{q.id}}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-sm">
+                        <div class="modal-content">
+                            <form method="post" action="{% url 'polls:question_delete' q.id q.question_text %}">
+                              {% csrf_token %}
+                              
+                              <div class="modal-body text-center">
+                                Do want to delete this question?
+                              </div>
+                              <div class="modal-footer d-flex align-items-center justify-content-center">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Delete</button>
+                              </div>
+                            </form>
+                          </div>
                     </div>
                 </div>
             {% endfor %}
@@ -167,4 +236,5 @@
 
 {% block extra_js %}
 <script src="{% static 'polls/index_script.js' %}"></script>
+<script src="{% static 'polls/post_functions.js' %}"></script>
 {% endblock %}

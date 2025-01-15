@@ -333,3 +333,91 @@ class QuestionFormValidationTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Question.objects.filter(question_text="test").exists())
         self.assertContains(response, "test")
+
+
+# class RatingValidationTests(TestCase):
+#     def setUp(self):
+#         self.client = Client()
+#         self.user = User.objects.create_user(
+#             username="testuser",
+#             password="secretpass123",
+#             email="testuser@example.com"
+#         )
+#         self.user2 = User.objects.create_user(
+#             username="testuser2",
+#             password="secretpass123",
+#             email="testuser2@example.com"
+#         )
+#         self.create_question_url = reverse('polls:create_question')
+
+#     def test_add_rating_to_own_question_ajax(self):
+#         '''
+#         A user can add an up-rating to their own question via an AJAX request.
+#         '''
+#         self.client.login(username='testuser', password='secretpass123')
+        
+#         # Create a question
+#         form = {
+#             'question_text': "test",
+#             'pub_date': timezone.now() + datetime.timedelta(days=-1)
+#         }
+#         response = self.client.post(self.create_question_url, form)
+#         self.assertEqual(response.status_code, 201)  # Assuming 201 for successful creation
+        
+#         # Retrieve the created question
+#         question = Question.objects.last()
+#         self.assertEqual(question.question_text, "test")
+        
+#         # Add rating via AJAX
+#         question_rating_url = reverse('polls:question_rating', args=[question.id])
+#         response = self.client.post(
+#             question_rating_url,
+#             {'action': 'like'},
+#             HTTP_X_REQUESTED_WITH='XMLHttpRequest'  # Simulate an AJAX request
+#         )
+        
+#         # Check the JSON response
+#         self.assertEqual(response.status_code, 200)
+#         json_response = response.json()
+#         self.assertEqual(json_response['status'], 'success')
+#         self.assertEqual(json_response['message'], 'Rating updated successfully.')
+#         self.assertIn(self.user, question.likes.all())
+
+#     def test_add_rating_to_another_question_ajax(self):
+#         '''
+#         A user can add an up-rating to another user's question via an AJAX request.
+#         '''
+#         self.client.login(username='testuser', password='secretpass123')
+        
+#         # Create a question
+#         form = {
+#             'question_text': "test",
+#             'pub_date': timezone.now() + datetime.timedelta(days=-1)
+#         }
+#         response = self.client.post(self.create_question_url, form)
+#         self.assertEqual(response.status_code, 201)  # Assuming 201 for successful creation
+        
+#         # Retrieve the created question
+#         question = Question.objects.last()
+#         self.assertEqual(question.question_text, "test")
+        
+#         self.client.logout()
+#         self.client.login(username='testuser2', password='secretpass123')
+        
+#         # Add rating via AJAX
+#         question_rating_url = reverse('polls:question_rating', args=[question.id])
+#         response = self.client.post(
+#             question_rating_url,
+#             {'action': 'like'},
+#             HTTP_X_REQUESTED_WITH='XMLHttpRequest'  # Simulate an AJAX request
+#         )
+        
+#         # Check the JSON response
+#         self.assertEqual(response.status_code, 200)
+#         json_response = response.json()
+#         self.assertEqual(json_response['status'], 'success')
+#         self.assertEqual(json_response['message'], 'Rating updated successfully.')
+#         self.assertIn(self.user2, question.likes.all())
+
+
+    

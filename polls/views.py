@@ -107,6 +107,18 @@ class QuestionReplyView(TemplateView):
         return context
 
 
+class QuestionRatingView(View):
+    def post(self, request, pk, *args, **kwargs):
+        question = get_object_or_404(Question, pk=pk)
+
+        if question.rating.filter(id=request.user.id).exists():
+            question.rating.remove(request.user)
+            return JsonResponse({"status": "remove_rating", "message": "removed rating from question"})
+        else:
+            question.rating.add(request.user)
+            return JsonResponse({"status": "add_rating", "message": "added rating to question"})
+
+
 class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url = reverse_lazy('accounts:login')
     redirect_field_name = 'next'
