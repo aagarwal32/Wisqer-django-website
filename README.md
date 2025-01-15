@@ -24,10 +24,6 @@ This README outlines the features, deployment process, and CI/CD workflows for W
 - Each user has their own account page that is viewable by anyone. The account page displays their past questions and replies.
 - The account page can also be used to delete your account which deletes your user but re-assigns your posts under a common "deleted" user.
 
-## DEMO
-
-https://github.com/user-attachments/assets/0804d25a-5df0-4add-9f73-221df2098bed
-
 
 ## Deployment Process
 - The Wisqer app is packaged into a Docker container that is distributed across clusters orchestrated via Kubernetes.
