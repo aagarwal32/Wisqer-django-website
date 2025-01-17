@@ -16,7 +16,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import TemplateView
 from django.views import View
 
-from .models import Choice, Question, Reply
+from .models import Question, Reply
 from .forms import QuestionForm, ReplyForm
 
 
@@ -220,28 +220,3 @@ class ReplyCreateView(LoginRequiredMixin, FormView):
         context['latest_reply_list'] = latest_reply_list
         context['title'] = f"Could not reply to {question.question_text}"
         return self.render_to_response(context)
-
-
-class ResultsView(DetailView):
-    model = Question
-    template_name = "polls/results.html"
-
-
-def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    try:
-        selected_choice = question.choice_set.get(
-            pk=request.POST["choice"])
-        
-    except (KeyError, Choice.DoesNotExist):
-        # redisplay the question voting form.
-        context = {
-            "question":question,
-            "error_message": "You didn't select a choice.",
-        }
-        return render(request, "polls/detail.html", context)
-    else:
-        selected_choice.votes = F("votes") + 1
-        selected_choice.save()
-        return HttpResponseRedirect(reverse("polls:results", \
-                                            args=(question.id,)))

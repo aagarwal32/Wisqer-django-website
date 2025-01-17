@@ -22,6 +22,7 @@ class Question(models.Model):
     question_body = models.CharField(max_length=2000, blank=True)
     pub_date = models.DateTimeField("date published")
     rating = models.ManyToManyField(User, blank=True, related_name="question_rating")
+    bookmark = models.ManyToManyField(User, blank=True, related_name="question_bookmark")
 
     def was_published_recently(self):
         now = timezone.now()
@@ -51,6 +52,7 @@ class Reply(models.Model):
     reply_text = models.CharField(max_length=1000)
     pub_date = models.DateTimeField("date published")
     rating = models.ManyToManyField(User, blank=True, related_name="reply_rating")
+    bookmark = models.ManyToManyField(User, blank=True, related_name="reply_bookmark")
 
     def __str__(self) -> str:
         return self.reply_text
