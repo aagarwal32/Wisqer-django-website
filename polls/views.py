@@ -70,6 +70,13 @@ class QuestionCreateView(LoginRequiredMixin, FormView):
         context['latest_question_list'] = latest_question_list
         context['errors'] = form.errors
         return render(self.request, 'polls/index.html', context)
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            path = reverse('polls:index')
+            login_url = f"{reverse_lazy('accounts:login')}?next={path}"
+            return redirect(login_url)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class QuestionReplyView(TemplateView):
@@ -182,7 +189,7 @@ class ReplyRatingView(View):
 class ReplyDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url = reverse_lazy('accounts:login')
 
-    def post(self, request, pk):
+    def post(self, request, pk, *args, **kwargs):
         reply = get_object_or_404(Reply, pk=pk)
         question = reply.question
         if reply.user != request.user:
@@ -232,3 +239,11 @@ class ReplyCreateView(LoginRequiredMixin, FormView):
         context['latest_reply_list'] = latest_reply_list
         context['title'] = f"Could not reply to {question.question_text}"
         return self.render_to_response(context)
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            question = get_object_or_404(Question, pk=self.kwargs['question_id'])
+            path = reverse('polls:detail', args=(question.id, question.question_text,))
+            login_url = f"{reverse_lazy('accounts:login')}?next={path}"
+            return redirect(login_url)
+        return super().dispatch(request, *args, **kwargs)

@@ -13,5 +13,5 @@ urlpatterns = [
     path("post/<int:pk>/<str:question_text>/update/", QuestionUpdateView.as_view(), name="question_update"),
     path("reply/<int:question_id>/<str:question_text>/", ReplyCreateView.as_view(), name="create_reply"),
     path("reply/<int:pk>/<str:reply_text>/rate", ReplyRatingView.as_view(), name="reply_rating"),
-    path("reply/<int:pk>/delete/", ReplyDeleteView.as_view(), name="reply_delete"),
+    path("reply/<int:pk>/<str:reply_text>/delete/", ReplyDeleteView.as_view(), name="reply_delete"),
 ]

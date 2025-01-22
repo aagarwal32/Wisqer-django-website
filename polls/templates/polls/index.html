@@ -6,9 +6,17 @@
 <div class="container-fluid mt-7 center-content">
     <div class="row">
         <div class="col-sm">
+            {% if not user.is_authenticated %}
+            <div class="mb-2">To create questions and access other features please
+                <a style="text-decoration: none;" href="{% url 'accounts:login' %}">login</a>
+                or
+                <a style="text-decoration: none;" href="{% url 'accounts:register' %}">register</a>
+            </div>
+            {% endif %}
+
             <div class="card">
             <div class="d-flex justify-content-between align-items-end card-body comment">
-            {% if user.is_authenticated %}
+            
             <div class="left-section">
             <form action="{% url 'polls:create_question' %}" 
             method="POST" id="question_form_id" novalidate>
@@ -39,23 +47,13 @@
             </form>
             </div>
 
-            {% else %}
-            <div>To create questions and access other features please
-                <a href="{% url 'accounts:login' %}">login</a>
-                or
-                <a href="{% url 'accounts:register' %}">register</a>
-            </div>
-            {% endif %}
-
             <div class="right-section d-flex justify-content-end">
-                {% if user.is_authenticated %}
                 <div class="d-flex align-items-center mx-2">
                     <button type="submit" form="question_form_id" class="btn btn-primary">
                         Post
                     </button>
                 </div>
-                {% endif %}
-
+                
                 <div class="sorting-options d-flex align-items-center mx-1">
                     <div class="dropdown">
                         <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
@@ -98,17 +96,17 @@
                             <a href="{% url 'accounts:user_account' q.user.id %}">{{q.user.username}}</a> 
                             <span class="date-style">• {{q.pub_date}}</span>
                         </p>
-                        <p class="question-body">{{q.question_text}}</p>
+                        <p class="question-body mt-1">{{q.question_text}}</p>
                         {% if q.question_body %}
                         <p class="question-body-2 mt-2"> {{q.question_body|truncatechars:240}}</p>
                         {% endif %}
                     </div>
 
-                    <div class="card-body d-flex justify-content-end align-items-center my-0 py-0">
+                    <div class="card-body card-options d-flex justify-content-end align-items-center my-0 py-0">
                         <!-- RATING -->
                         {% if not user.is_authenticated %}
                         <form action="{% url 'accounts:login' %}?next={{request.path}}">
-                            <button type="submit" class="remove-default-btn" onclick="event.stopPropagation();">
+                            <button type="submit" class="remove-default-btn rating-btn" onclick="event.stopPropagation();">
                                 <i class="bi bi-hand-thumbs-up"></i> <span class="question-rating-count">{{ q.rating.all.count }}</span>
                             </button>
                         </form>
@@ -116,7 +114,7 @@
                         {% else %}
                         <form class="ratingForm" data-url="{% url 'polls:question_rating' q.id q.question_text %}"
                         data-question-id="{{q.id}}" data-csrf-token="{{csrf_token}}">
-                            <button class="remove-default-btn" type="submit" onclick="event.stopPropagation();">
+                            <button class="remove-default-btn rating-btn" type="submit" onclick="event.stopPropagation();">
                                 {% if user in q.rating.all %}
                                 <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up-fill"></i>
                                 {% else %}
@@ -127,9 +125,14 @@
                         </form>
                         {% endif %}
 
+                        <div class="reply-btn mx-3">
+                            <i class="bi bi-chat"></i>
+                            <span>{{q.reply_set.all.count}}</span>
+                        </div>
+
                         <!-- THREE DOT MENU -->
-                        <div class="dropdown mx-3">
-                            <button type="button" class="btn m-0 p-0" data-bs-toggle="dropdown" onclick="event.stopPropagation();">
+                        <div class="dropdown">
+                            <button type="button" class="btn dot-menu-btn m-0 p-0" data-bs-toggle="dropdown" onclick="event.stopPropagation();">
                                 <i class="bi bi-three-dots"></i>
                             </button>
                             <ul class="dropdown-menu">

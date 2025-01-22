@@ -136,6 +136,14 @@ body {
     padding: 0;
 }
 
+.comment > .reply-body {
+    font: var(--h2);
+    color: var(--gray0);
+    text-decoration: none;
+    margin: 0; 
+    padding: 0;
+}
+
 .comment > .text-body {
     background-color: var(--gray95);
     font: var(--h2light);
@@ -238,8 +246,14 @@ textarea {
     margin-left: auto;
 }
 
+/* CARD */
 .card {
     border-radius: 0.50rem;
+}
+
+.card-options {
+    font: var(--h2light);
+    color: var(--gray30);
 }
 
 .dropdown-menu {
@@ -306,6 +320,15 @@ textarea {
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
+}
+.rating-btn, .dot-menu-btn {
+    padding: 4px;
+    border-radius: 0.5rem;
+}
+.rating-btn:hover, .dot-menu-btn:hover {
+    background-color: var(--gray95);
+    padding: 4px;
+    border-radius: 0.5rem;
 }
 
 

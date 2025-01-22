@@ -166,7 +166,7 @@ class FormPostAuthenticationCheck(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
             response, 
-            f"{reverse('accounts:login')}?next={reverse('polls:create_question')}")
+            f"{reverse('accounts:login')}?next={reverse('polls:index')}")
         
         response = self.client.get(reverse('polls:index'))
         self.assertQuerySetEqual(
@@ -196,7 +196,7 @@ class FormPostAuthenticationCheck(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
             response, 
-            f"{reverse('accounts:login')}?next={reverse('polls:create_reply', args=(question.id, question.question_text,))}")
+            f"{reverse('accounts:login')}?next={reverse('polls:detail', args=(question.id, question.question_text,))}")
         
         self.assertTrue(Question.objects.filter(question_text="Hello").exists())
         response = self.client.get(reverse('polls:detail', args=(question.id, question.question_text,)))
