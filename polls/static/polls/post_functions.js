@@ -5,9 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formUrl = form.getAttribute('data-url');
         const csrfToken = form.getAttribute('data-csrf-token');
+
         const questionId = form.getAttribute('data-question-id');
-        const ratingCountSpan = form.querySelector('.rating-count');
-        const ratingIcon = document.getElementById(`icon-${questionId}`);
+        const replyId = form.getAttribute('data-reply-id');
+        const questionRatingCountSpan = form.querySelector('.question-rating-count');
+        const replyRatingCountSpan = form.querySelector('.reply-rating-count');
+        const questionRatingIcon = document.getElementById(`icon-${questionId}`);
+        const replyRatingIcon = document.getElementById(`icon-${replyId}`);
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -24,17 +28,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                if (data.status === 'add_rating') {
-                    const currentCount = parseInt(ratingCountSpan.textContent, 10) || 0;
-                    ratingCountSpan.textContent = currentCount + 1; // Increment count
-                    ratingIcon.classList.remove('bi-hand-thumbs-up');
-                    ratingIcon.classList.add('bi-hand-thumbs-up-fill');
+                if (data.status === 'add_question_rating') {
+                    const currentCount = parseInt(questionRatingCountSpan.textContent, 10) || 0;
+                    questionRatingCountSpan.textContent = currentCount + 1; // Increment count
+                    questionRatingIcon.classList.remove('bi-hand-thumbs-up');
+                    questionRatingIcon.classList.add('bi-hand-thumbs-up-fill');
 
-                } else if (data.status === 'remove_rating') {
-                    const currentCount = parseInt(ratingCountSpan.textContent, 10) || 0;
-                    ratingCountSpan.textContent = Math.max(currentCount - 1, 0); // Decrement count
-                    ratingIcon.classList.remove('bi-hand-thumbs-up-fill');
-                    ratingIcon.classList.add('bi-hand-thumbs-up');
+                } else if (data.status === 'remove_question_rating') {
+                    const currentCount = parseInt(questionRatingCountSpan.textContent, 10) || 0;
+                    questionRatingCountSpan.textContent = Math.max(currentCount - 1, 0); // Decrement count
+                    questionRatingIcon.classList.remove('bi-hand-thumbs-up-fill');
+                    questionRatingIcon.classList.add('bi-hand-thumbs-up');
+                
+                } else if (data.status === 'add_reply_rating') {
+                    const currentCount = parseInt(replyRatingCountSpan.textContent, 10) || 0;
+                    replyRatingCountSpan.textContent = currentCount + 1; // Increment count
+                    replyRatingIcon.classList.remove('bi-hand-thumbs-up');
+                    replyRatingIcon.classList.add('bi-hand-thumbs-up-fill');
+
+                } else if (data.status === 'remove_reply_rating') {
+                    const currentCount = parseInt(replyRatingCountSpan.textContent, 10) || 0;
+                    replyRatingCountSpan.textContent = Math.max(currentCount - 1, 0); // Decrement count
+                    replyRatingIcon.classList.remove('bi-hand-thumbs-up-fill');
+                    replyRatingIcon.classList.add('bi-hand-thumbs-up');
 
                 } else {
                     console.error('Error updating the rating: ', data.status);

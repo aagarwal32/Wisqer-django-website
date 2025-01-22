@@ -16,16 +16,16 @@
                 <fieldset>
 
                 {% if form.errors %}
-                {% for errors in form.errors.values %}
-                {% for error in errors %}
-                <p>{{error}}</p>
-                {% endfor %}
-                {% endfor %}
+                    {% for errors in form.errors.values %}
+                        {% for error in errors %}
+                            <p>{{error}}</p>
+                        {% endfor %}
+                    {% endfor %}
                 {% endif %}
                 
                 <div class="question-inputs-border">
-                {{ form.question_text }}
-                <input type="hidden" id="questionTextInputId" value="{{form.question_text.id_for_label}}">
+                    {{ form.question_text }}
+                    <input type="hidden" id="questionTextInputId" value="{{form.question_text.id_for_label}}">
                 
 
                     <div class="collapse" id="questionBodyCollapse">
@@ -87,7 +87,7 @@
 
 
 <!--Question List-->
-    <div class="row mt-4">
+    <div class="row mt-2">
         <div class="col-sm">
             {% if latest_question_list %}
             {% for q in latest_question_list %}
@@ -98,9 +98,9 @@
                             <a href="{% url 'accounts:user_account' q.user.id %}">{{q.user.username}}</a> 
                             <span class="date-style">• {{q.pub_date}}</span>
                         </p>
-                        <p class="question-body"><strong>{{q.question_text}}</strong></p>
+                        <p class="question-body">{{q.question_text}}</p>
                         {% if q.question_body %}
-                        <p class="question-body"> {{q.question_body|truncatechars:240}}</p>
+                        <p class="question-body-2 mt-2"> {{q.question_body|truncatechars:240}}</p>
                         {% endif %}
                     </div>
 
@@ -109,7 +109,7 @@
                         {% if not user.is_authenticated %}
                         <form action="{% url 'accounts:login' %}?next={{request.path}}">
                             <button type="submit" class="remove-default-btn" onclick="event.stopPropagation();">
-                                <i class="bi bi-hand-thumbs-up"></i> <span class="rating-count">{{ q.rating.all.count }}</span>
+                                <i class="bi bi-hand-thumbs-up"></i> <span class="question-rating-count">{{ q.rating.all.count }}</span>
                             </button>
                         </form>
                         
@@ -122,7 +122,7 @@
                                 {% else %}
                                 <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up"></i>
                                 {% endif %}
-                                <span class="rating-count">{{ q.rating.all.count }}</span>
+                                <span class="question-rating-count">{{ q.rating.all.count }}</span>
                             </button>
                         </form>
                         {% endif %}

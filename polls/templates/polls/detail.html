@@ -12,85 +12,85 @@
                     {{question.question_text|truncatechars:40}}
                 </a>
             </span>
-            <div class="question-display-form">
-                {% csrf_token %}
-                <fieldset>
-                    <legend class="comment">
-                        <p class="username-style">
-                            <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
-                            <span class="date-style">• {{question.pub_date}}</span>
-                        </p>
+            <div class="card mt-2">
+                <div class="card-body comment">
+                    <p class="username-style">
+                        <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
+                        <span class="date-style">• {{question.pub_date}}
                         {% if versions|length > 1 %}
-                        <div class="d-flex mb-4">
-                            <div class="d-inline-block edited-label"><i class="bi bi-info-circle"></i>
+                            <div class="edited-label mt-1">
+                                <i class="bi bi-info-circle"></i>
                                 This question has been edited - <a data-bs-toggle="modal" 
                                 data-bs-target="#viewModalQuestionHistory" href="#">view history.</a>
                             </div>
-                        </div>
-                        {% endif %}
-                        <div class="d-flex">
-                            <div class="d-inline-block">{{question.question_text}}</div>
-                            {% if user.is_authenticated %}
-                            <div class="d-inline-block dropdown mx-3">
-                            <button type="button" class="btn"
-                            data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></button>
-                            <ul class="dropdown-menu">
-                            {% if user.is_authenticated and user != question.user %}
-                            <li>
-                            <a class="dropdown-item" href="#"><i class="bi bi-flag-fill mx-3"></i>Report</a>
-                            </li>
                             {% endif %}
-                        
-                            {% if user.is_authenticated and user == question.user %}
-                            <li>
-                            <a class="dropdown-item" data-bs-toggle="modal"
-                            href="#" data-bs-target="#updateModalQuestion">
-                            <i class="bi bi-pencil-square mx-3"></i>Edit</a>
-                            </li>
-                            <li>
-                            <a class="dropdown-item" data-bs-toggle="modal" 
-                            href="#" data-bs-target="#deleteModalQuestion">
-                            <i class="bi bi-trash mx-3"></i>Delete</a>
-                            </li>
-                            {% endif %}
-                            </ul>
-                            </div>
-                            {% endif %}  
-                        </div>
+                        </span>
+                    </p>
+                    
+                    <div class="question-body">{{question.question_text}}</div>
 
-                        {% if question.question_body %}
-                        <div class="container-sm text-body mt-3">{{question.question_body|linebreaksbr}}</div>
-                        {% endif %}      
-                    </legend>
+                    {% if question.question_body %}
+                    <div class="container-sm text-body mt-2">{{question.question_body|linebreaksbr}}</div>
+                    {% endif %}      
+                </div>
 
+                <div class="card-body d-flex justify-content-end align-items-center my-0 py-0">
                     <!-- RATING -->
                     {% if not user.is_authenticated %}
                     <form action="{% url 'accounts:login' %}?next={{request.path}}">
-                        <button type="submit" class="remove-default-btn mt-3">
-                            <i class="bi bi-hand-thumbs-up"></i> <span class="rating-count">{{ question.rating.all.count }}</span>
+                        <button type="submit" class="remove-default-btn">
+                            <i class="bi bi-hand-thumbs-up"></i> <span class="question-rating-count">{{ question.rating.all.count }}</span>
                         </button>
                     </form>
                     
                     {% else %}
                     <form class="ratingForm" data-url="{% url 'polls:question_rating' question.id question.question_text %}" 
                     data-question-id="{{question.id}}" data-csrf-token="{{csrf_token}}">
-                        <button class="remove-default-btn mt-3" type="submit">
+                        <button class="remove-default-btn" type="submit">
                             {% if user in question.rating.all %}
                             <i id="icon-{{ question.id }}" class="bi bi-hand-thumbs-up-fill"></i>
                             {% else %}
                             <i id="icon-{{ question.id }}" class="bi bi-hand-thumbs-up"></i>
                             {% endif %}
-                            <span class="rating-count">{{ question.rating.all.count }}</span>
+                            <span class="question-rating-count">{{ question.rating.all.count }}</span>
                         </button>
                     </form>
                     {% endif %}
-                </fieldset>
+                    
+                    <!-- THREE DOTS MENU -->
+                    <div class="dropdown mx-3">
+                        <button type="button" class="btn m-0 p-0" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% if user != question.user %}
+                            <li>
+                                <a class="dropdown-item" href="#"><i class="bi bi-flag-fill mx-3"></i>Report</a>
+                            </li>
+                            {% endif %}
+                        
+                            {% if user.is_authenticated and user == question.user %}
+                            <li>
+                                <a class="dropdown-item" data-bs-toggle="modal" href="#" data-bs-target="#updateModalQuestion">
+                                    <i class="bi bi-pencil-square mx-3"></i>Edit
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" data-bs-toggle="modal" href="#" data-bs-target="#deleteModalQuestion">
+                                    <i class="bi bi-trash mx-3"></i>Delete
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div> 
+                </div>
+                <!-- END CARD OPTIONS -->
             </div>
         </div>
     </div>
 
     <!--Reply Form-->
-    <div class="row mt-4 mb-4">
+    <div class="row mt-4">
         <div class="col-sm">
             {% if user.is_authenticated %}
             <div class="card">
@@ -123,7 +123,7 @@
     </div>
 
     <!--Reply List-->
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-sm">
             {% if latest_reply_list %}
             {% for reply in latest_reply_list %}
@@ -143,28 +143,50 @@
                     {{reply.reply_text|linebreaksbr}} 
                 </div>
                     
-                    <div class="card-body text-end my-0 py-0">
-                    {% if user.is_authenticated %}
+                <div class="card-body d-flex justify-content-end align-items-center my-0 py-0">
+                    <!-- RATING -->
+                    {% if not user.is_authenticated %}
+                    <form action="{% url 'accounts:login' %}?next={{request.path}}">
+                        <button type="submit" class="remove-default-btn" onclick="event.stopPropagation();">
+                            <i class="bi bi-hand-thumbs-up"></i> <span class="reply-rating-count">{{ reply.rating.all.count }}</span>
+                        </button>
+                    </form>
+                    
+                    {% else %}
+                    <form class="ratingForm" data-url="{% url 'polls:reply_rating' reply.id reply.reply_text %}"
+                    data-reply-id="{{reply.id}}" data-csrf-token="{{csrf_token}}">
+                        <button class="remove-default-btn" type="submit" onclick="event.stopPropagation();">
+                            {% if user in reply.rating.all %}
+                            <i id="icon-{{ reply.id }}" class="bi bi-hand-thumbs-up-fill"></i>
+                            {% else %}
+                            <i id="icon-{{ reply.id }}" class="bi bi-hand-thumbs-up"></i>
+                            {% endif %}
+                            <span class="reply-rating-count">{{ reply.rating.all.count }}</span>
+                        </button>
+                    </form>
+                    {% endif %}
+
+                    <!-- THREE DOT MENU -->
                     <div class="dropdown mx-3">
-                    <button type="button" class="btn m-0 p-0"
-                    data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></button>
-                    <ul class="dropdown-menu">
-                    {% if user.is_authenticated and user != reply.user %}
-                    <li>
-                    <a class="dropdown-item" href="#"><i class="bi bi-flag-fill mx-3"></i>Report</a>
-                    </li>
-                    {% endif %}
-                    {% if user.is_authenticated and user == reply.user %}
-                    <li>
-                    <a class="dropdown-item" data-bs-toggle="modal" 
-                    href="#" data-bs-target="#deleteModalReply{{reply.id}}">
-                    <i class="bi bi-trash-fill mx-3"></i>Delete</a>
-                    </li>
-                    {% endif %}
-                    </ul>
+                        <button type="button" class="btn m-0 p-0" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% if user != reply.user %}
+                                <li>
+                                    <a class="dropdown-item" href="#"><i class="bi bi-flag-fill mx-3"></i>Report</a>
+                                </li>
+                            {% endif %}
+                            {% if user.is_authenticated and user == reply.user %}
+                                <li>
+                                    <a class="dropdown-item" data-bs-toggle="modal" href="#" data-bs-target="#deleteModalReply{{reply.id}}">
+                                    <i class="bi bi-trash-fill mx-3"></i>Delete
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </div>
-                    {% endif %}
-                    </div>
+                </div>
             </div>
             <!-- DELETE REPLY MODAL -->
             <div class="modal fade" id="deleteModalReply{{reply.id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{reply.id}}" aria-hidden="true">

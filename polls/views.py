@@ -113,10 +113,10 @@ class QuestionRatingView(View):
 
         if question.rating.filter(id=request.user.id).exists():
             question.rating.remove(request.user)
-            return JsonResponse({"status": "remove_rating", "message": "removed rating from question"})
+            return JsonResponse({"status": "remove_question_rating", "message": "removed rating from question"})
         else:
             question.rating.add(request.user)
-            return JsonResponse({"status": "add_rating", "message": "added rating to question"})
+            return JsonResponse({"status": "add_question_rating", "message": "added rating to question"})
 
 
 class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -165,6 +165,18 @@ class QuestionUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         question = self.get_object()
         return question.user == self.request.user    
+
+
+class ReplyRatingView(View):
+    def post(self, request, pk, *args, **kwargs):
+        reply = get_object_or_404(Reply, pk=pk)
+
+        if reply.rating.filter(id=request.user.id).exists():
+            reply.rating.remove(request.user)
+            return JsonResponse({"status": "remove_reply_rating", "message": "removed rating from reply"})
+        else:
+            reply.rating.add(request.user)
+            return JsonResponse({"status": "add_reply_rating", "message": "added rating to reply"})
 
 
 class ReplyDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):

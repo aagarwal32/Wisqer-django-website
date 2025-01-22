@@ -375,7 +375,7 @@ class RatingValidationTests(TestCase):
         # Check if rating post was successful
         self.assertEqual(response.status_code, 200)
         json_response = response.json()
-        self.assertEqual(json_response['status'], 'add_rating')
+        self.assertEqual(json_response['status'], 'add_question_rating')
         self.assertEqual(json_response['message'], 'added rating to question')
         self.assertIn(self.user, question.rating.all())
         self.assertEqual(question.rating.count(), 1)
@@ -409,7 +409,7 @@ class RatingValidationTests(TestCase):
         # Check the JSON response
         self.assertEqual(response.status_code, 200)
         json_response = response.json()
-        self.assertEqual(json_response['status'], 'add_rating')
+        self.assertEqual(json_response['status'], 'add_question_rating')
         self.assertEqual(json_response['message'], 'added rating to question')
 
         self.assertNotIn(self.user, question.rating.all())
@@ -442,7 +442,7 @@ class RatingValidationTests(TestCase):
         # Check the JSON response
         self.assertEqual(response.status_code, 200)
         json_response = response.json()
-        self.assertEqual(json_response['status'], 'add_rating')
+        self.assertEqual(json_response['status'], 'add_question_rating')
         self.assertEqual(json_response['message'], 'added rating to question')
 
         self.assertIn(self.user, question.rating.all())
@@ -458,7 +458,7 @@ class RatingValidationTests(TestCase):
         # Check the JSON response
         self.assertEqual(response.status_code, 200)
         json_response = response.json()
-        self.assertEqual(json_response['status'], 'add_rating')
+        self.assertEqual(json_response['status'], 'add_question_rating')
         self.assertEqual(json_response['message'], 'added rating to question')
 
         self.assertIn(self.user, question.rating.all())
@@ -494,7 +494,7 @@ class RatingValidationTests(TestCase):
         # Check the JSON response
         self.assertEqual(response.status_code, 200)
         json_response = response.json()
-        self.assertEqual(json_response['status'], 'add_rating')
+        self.assertEqual(json_response['status'], 'add_question_rating')
         self.assertEqual(json_response['message'], 'added rating to question')
 
         self.assertIn(self.user2, question.rating.all())
@@ -507,7 +507,7 @@ class RatingValidationTests(TestCase):
         # Check the JSON response
         self.assertEqual(response.status_code, 200)
         json_response = response.json()
-        self.assertEqual(json_response['status'], 'remove_rating')
+        self.assertEqual(json_response['status'], 'remove_question_rating')
         self.assertEqual(json_response['message'], 'removed rating from question')
 
         self.assertNotIn(self.user, question.rating.all())
@@ -553,7 +553,7 @@ class RatingValidationTests(TestCase):
         # Check if rating post was successful
         self.assertEqual(response.status_code, 200)
         json_response = response.json()
-        self.assertEqual(json_response['status'], 'add_rating')
+        self.assertEqual(json_response['status'], 'add_reply_rating')
         self.assertEqual(json_response['message'], 'added rating to reply')
         self.assertIn(self.user, reply.rating.all())
         self.assertEqual(reply.rating.count(), 1)
