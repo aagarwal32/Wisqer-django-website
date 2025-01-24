@@ -63,6 +63,9 @@ jobs:
         POSTGRES_USER=${{ secrets.POSTGRES_USER }}
         POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
         POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}
+
+        OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+
         EOF
         kubectl delete secret django-wisqer-web-prod-env
         kubectl create secret generic django-wisqer-web-prod-env --from-env-file=./.env.prod
