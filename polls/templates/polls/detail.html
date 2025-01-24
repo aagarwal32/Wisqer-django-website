@@ -143,6 +143,19 @@
     <!--Reply List-->
     <div class="row mt-2">
         <div class="col-sm">
+            {% if user.is_authenticated and question.reply_set.all.count > 2 %}
+
+            <div class="ai-section">
+                <form class="summaryForm" data-url="{% url 'polls:wisqer_bot' question.id question.question_text %}" 
+                data-question-id="{{question.id}}" data-csrf-token="{{csrf_token}}">
+                    <button class="btn wisqer-bot-btn my-2" type="submit">
+                        <span class="summary-text-span"><i class="bi bi-stars"></i> Summarize {{question.reply_set.all.count}} replies?</span>
+                    </button>   
+                </form>
+            </div>
+
+            {% endif %}
+
             {% if latest_reply_list %}
             {% for reply in latest_reply_list %}
             <div class="card mt-2">

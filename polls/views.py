@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden, JsonResponse
@@ -8,8 +9,10 @@ from django.utils import timezone
 from django.db.models import F
 from urllib.parse import urlencode, quote
 from typing import Any
+
 from reversion.models import Version
 import reversion
+from openai import OpenAI
 
 from django.views.generic.edit import FormView, DeleteView, UpdateView
 from django.views.generic import ListView, DetailView
@@ -112,6 +115,38 @@ class QuestionReplyView(TemplateView):
         context['latest_reply_list'] = latest_reply_list
         context['title'] = question_obj.question_text
         return context
+    
+
+class WisqerBotView(View):
+    def post(self, request, pk, *args, **kwargs):
+        # retrieve api key
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            return JsonResponse({"error": "OpenAI API key is missing or not set."}, status=500)
+        
+        client = OpenAI(api_key=api_key)
+
+        # retrieve replies in plain text
+        question = get_object_or_404(Question, pk=pk)
+        replies_plain_text = "\n".join(reply.reply_text for reply in question.reply_set.all())
+
+        # prepare chat messages
+        system = [{"role": "system", "content": "You are a Summary AI that summarizes a list of replies. Start each summary with 'The replies say'."}]
+        user = [{"role": "user", "content": f"Summarize this briefly:\n\n{replies_plain_text}"}]
+
+        try:
+            # make api request
+            chat_completion = client.chat.completions.create(
+                messages = system + user,
+                model="gpt-3.5-turbo",
+                max_tokens=500,
+                top_p=0.9,
+            )
+            response = chat_completion.choices[0].message.content.strip()
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+        return JsonResponse({"message": response})
 
 
 class QuestionRatingView(View):

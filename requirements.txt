@@ -10,5 +10,6 @@ django-bootstrap-v5
 django-bootstrap-icons
 django-reversion
 django-storages
+openai
 boto3
 six

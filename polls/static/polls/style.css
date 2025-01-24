@@ -290,6 +290,14 @@ textarea {
     border-radius: 0.50rem;
 }
 
+.btn-primary:focus {
+    outline: none;
+    background-color: white;
+    border: 2px solid rgba(0, 0, 0, .125);
+    color: darkmagenta;
+    box-shadow: 0 0 0 0.2rem rgba(139, 0, 139, 0.25);
+}
+
 .btn-secondary {
     background-color: white;
     font-size: 20px;
@@ -331,6 +339,21 @@ textarea {
     border-radius: 0.5rem;
 }
 
+.wisqer-bot-btn {
+    /* From https://css.glass */
+    background: rgba(250, 210, 250, 0.2);
+    border-radius: 1rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 2px solid rgba(250, 210, 250, 0.3);
+    text-align: left;
+    color: darkmagenta;
+}
+.wisqer-bot-btn:hover {
+    color: darkmagenta;
+    border-color: darkmagenta;
+}
 
 /* custom margin selectors */
 .mt-6 {

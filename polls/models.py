@@ -23,6 +23,7 @@ class Question(models.Model):
     pub_date = models.DateTimeField("date published")
     rating = models.ManyToManyField(User, blank=True, related_name="question_rating")
     bookmark = models.ManyToManyField(User, blank=True, related_name="question_bookmark")
+    ai_summary = models.ManyToManyField(User, blank=True, related_name="question_ai_summary")
 
     def was_published_recently(self):
         now = timezone.now()
