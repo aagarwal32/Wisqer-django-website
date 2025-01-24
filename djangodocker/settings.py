@@ -67,7 +67,17 @@ INSTALLED_APPS = [
     "bootstrap5",
     "reversion",
     "storages",
+    "rest_framework",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'wisqerbot': '10/h',
+    },
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

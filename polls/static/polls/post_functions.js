@@ -70,10 +70,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const formUrl = updateSummaryForm.getAttribute('data-url');
         const csrfToken = updateSummaryForm.getAttribute('data-csrf-token');
         const summaryTextSpan = updateSummaryForm.querySelector('.summary-text-span');
+        const loadButton = updateSummaryForm.querySelector('#loadButton');
+        const loader = updateSummaryForm.querySelector('#loader');
 
         updateSummaryForm.addEventListener('submit', function (e) {
             e.preventDefault();
-
+            
+            loadButton.disabled = true;
+            loader.style.display = 'inline-block';
             fetch(formUrl, {
                 method: 'POST',
                 headers: {
@@ -83,25 +87,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 //body: JSON.stringify({})
             }).then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`)
+                    if (response.status === 429) {
+                        // handle throttling of api requests
+                        return response.json().then(data => {
+                            // prepare message for throttled user
+                            const waitTime = data.wait_time || 60*60;
+                            console.log(`${data.wait_time}, waitTime = ${waitTime}`);
+                            summaryTextSpan.style.color = "red";
+                            loadButton.style.borderColor = "red";
+                            summaryTextSpan.textContent = `Please wait ${Math.floor(waitTime/60)} minutes before requesting another summary.`;
+
+                            loadButton.disabled = true;
+
+                            // disable button until wait time is over
+                            setTimeout(() => {
+                                loadButton.disabled = false;
+                                summaryTextSpan.textContent = 'Generate new summary';
+                                summaryTextSpan.style.color = "darkmagenta";
+                            }, waitTime * 1000);
+                            throw new Error('Too many requests');
+                        });
+                                     
+                    } else {
+                        throw new Error(`HTTP error! Status: ${response.status}`)
+                    }
                 }
                 return response.json();
             })
             .then(data => {
                 if (data.message) {
-                    const icon = document.createElement('i');
-                    icon.className = 'bi-stars';
-                    icon.style.marginRight = '5px';
 
-                    const text = 'WisqerAI: ' + data.message;
+                    const text = data.message;
                     summaryTextSpan.style.color = "darkmagenta";
-                    summaryTextSpan.appendChild(icon);
 
                     function displayGeneratedText(summaryTextSpan, text, i=0) {
                         if (i === 0) {
                             summaryTextSpan.textContent = '';
                         }
-                        
+
                         summaryTextSpan.textContent += text[i];
 
                         // if end of string
@@ -116,8 +139,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (data.error) {
                     summaryTextSpan.textContent = data.error;
                 }
+
+                loadButton.disabled = false;
+                loader.style.display = 'none';
+
             }).catch(error => {
                 console.error('Error generating summary:', error);
+                loadButton.disabled = false;
+                loader.style.display = 'none';
             });
         });
     }

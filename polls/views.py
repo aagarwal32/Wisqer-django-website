@@ -14,6 +14,11 @@ from reversion.models import Version
 import reversion
 from openai import OpenAI
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.throttling import UserRateThrottle
+from rest_framework.exceptions import Throttled
+
 from django.views.generic.edit import FormView, DeleteView, UpdateView
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import TemplateView
@@ -117,7 +122,13 @@ class QuestionReplyView(TemplateView):
         return context
     
 
-class WisqerBotView(View):
+class WisqerBotThrottle(UserRateThrottle):
+    scope = "wisqerbot"
+    rate = '10/h'
+
+class WisqerBotView(APIView):
+    throttle_classes = [WisqerBotThrottle]
+
     def post(self, request, pk, *args, **kwargs):
         # retrieve api key
         api_key = os.environ.get("OPENAI_API_KEY")
@@ -147,6 +158,18 @@ class WisqerBotView(View):
             return JsonResponse({"error": str(e)}, status=500)
 
         return JsonResponse({"message": response})
+    
+    def handle_exception(self, exc):
+        # handle throttling
+        if isinstance(exc, Throttled):
+            wait_time = int(exc.wait) if exc.wait is not None else None
+            print("Throttled exception caught! Wait time:", wait_time)
+            return JsonResponse({
+                "error": "Too many requests. Try again later.",
+                "wait_time": wait_time
+            }, status=429)
+        # For other exceptions
+        return super().handle_exception(exc)
 
 
 class QuestionRatingView(View):
