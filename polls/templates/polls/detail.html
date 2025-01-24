@@ -147,7 +147,7 @@
 
             <div class="ai-section">
                 <form class="summaryForm" data-url="{% url 'polls:wisqer_bot' question.id question.question_text %}" 
-                data-question-id="{{question.id}}" data-csrf-token="{{csrf_token}}">
+                data-question-id="{{question.id}}" data-csrf-token="{{csrf_token}}" data-login-url="{% url 'accounts:login' %}">
                     <div class="btn-container">
                         <button id="loadButton" class="btn wisqer-bot-btn my-2" type="submit">
                             <div class="loader" id="loader"></div>

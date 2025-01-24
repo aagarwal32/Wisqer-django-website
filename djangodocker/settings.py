@@ -75,7 +75,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'wisqerbot': '10/h',
+        'wisqerbot': '6/h',
     },
 }
 

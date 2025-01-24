@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const updateSummaryForm = document.querySelector('.summaryForm');
     if (updateSummaryForm) {
         const formUrl = updateSummaryForm.getAttribute('data-url');
+        const loginUrl = updateSummaryForm.getAttribute('data-login-url');
         const csrfToken = updateSummaryForm.getAttribute('data-csrf-token');
         const summaryTextSpan = updateSummaryForm.querySelector('.summary-text-span');
         const loadButton = updateSummaryForm.querySelector('#loadButton');
@@ -87,14 +88,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 //body: JSON.stringify({})
             }).then(response => {
                 if (!response.ok) {
-                    if (response.status === 429) {
+                    summaryTextSpan.style.color = "red";
+                    loadButton.style.borderColor = "red";
+
+                    if (response.status === 401) {
+                        summaryTextSpan.textContent = "Please ";
+                        loadButton.disabled = true;
+
+                        const loginLink = document.createElement('a');
+                        loginLink.href = loginUrl;
+                        loginLink.textContent = "login";
+                        loginLink.style.color = "green";
+                        loginLink.style.textDecoration = "none";
+
+                        // Append the login link to the message
+                        summaryTextSpan.appendChild(loginLink);
+
+                        summaryTextSpan.textContent += " to use this feature";
+
+                        throw new Error('User not logged-in');
+
+                    } else if (response.status === 429) {
                         // handle throttling of api requests
                         return response.json().then(data => {
                             // prepare message for throttled user
                             const waitTime = data.wait_time || 60*60;
                             console.log(`${data.wait_time}, waitTime = ${waitTime}`);
-                            summaryTextSpan.style.color = "red";
-                            loadButton.style.borderColor = "red";
                             summaryTextSpan.textContent = `Please wait ${Math.floor(waitTime/60)} minutes before requesting another summary.`;
 
                             loadButton.disabled = true;

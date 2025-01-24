@@ -124,12 +124,16 @@ class QuestionReplyView(TemplateView):
 
 class WisqerBotThrottle(UserRateThrottle):
     scope = "wisqerbot"
-    rate = '10/h'
+    rate = '6/h'
 
 class WisqerBotView(APIView):
     throttle_classes = [WisqerBotThrottle]
 
     def post(self, request, pk, *args, **kwargs):
+        # handle non-logged in users
+        if not request.user.is_authenticated:
+            return JsonResponse({"error": "User not logged-in."}, status=401)
+
         # retrieve api key
         api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
