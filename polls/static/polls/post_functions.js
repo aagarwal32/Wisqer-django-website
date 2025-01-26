@@ -68,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const updateSummaryForm = document.querySelector('.summaryForm');
     if (updateSummaryForm) {
         const formUrl = updateSummaryForm.getAttribute('data-url');
-        const loginUrl = updateSummaryForm.getAttribute('data-login-url');
         const csrfToken = updateSummaryForm.getAttribute('data-csrf-token');
         const summaryTextSpan = updateSummaryForm.querySelector('.summary-text-span');
         const loadButton = updateSummaryForm.querySelector('#loadButton');
@@ -92,19 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     loadButton.style.borderColor = "red";
 
                     if (response.status === 401) {
-                        summaryTextSpan.textContent = "Please ";
+                        summaryTextSpan.textContent = "Please login to use this feature";
                         loadButton.disabled = true;
-
-                        const loginLink = document.createElement('a');
-                        loginLink.href = loginUrl;
-                        loginLink.textContent = "login";
-                        loginLink.style.color = "green";
-                        loginLink.style.textDecoration = "none";
-
-                        // Append the login link to the message
-                        summaryTextSpan.appendChild(loginLink);
-
-                        summaryTextSpan.textContent += " to use this feature";
 
                         throw new Error('User not logged-in');
 
@@ -123,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 loadButton.disabled = false;
                                 summaryTextSpan.textContent = 'Generate new summary';
                                 summaryTextSpan.style.color = "darkmagenta";
+                                loadButton.style.borderColor = "darkmagenta";
                             }, waitTime * 1000);
                             throw new Error('Too many requests');
                         });

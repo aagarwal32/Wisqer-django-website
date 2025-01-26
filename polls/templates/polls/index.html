@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
 <!--Question Form-->
@@ -17,7 +18,7 @@
             <div class="card">
             <div class="d-flex justify-content-between align-items-end card-body comment">
             
-            <div class="left-section">
+            <div class="left-section flex-grow-1">
             <form action="{% url 'polls:create_question' %}" 
             method="POST" id="question_form_id" novalidate>
                 {% csrf_token %}
@@ -35,8 +36,8 @@
                     {{ form.question_text }}
                     <input type="hidden" id="questionTextInputId" value="{{form.question_text.id_for_label}}">
                 
-
                     <div class="collapse" id="questionBodyCollapse">
+                        <hr>
                         <div>
                         {{ form.question_body }}
                         </div>
@@ -94,9 +95,9 @@
                     <div class="card-body comment">
                         <p class="username-style">
                             <a href="{% url 'accounts:user_account' q.user.id %}">{{q.user.username}}</a> 
-                            <span class="date-style">• {{q.pub_date}}</span>
+                            <span class="date-style">• {{q.pub_date|naturaltime}}</span>
                         </p>
-                        <p class="question-body mt-1">{{q.question_text}}</p>
+                        <p class="question-body mt-2">{{q.question_text}}</p>
                         {% if q.question_body %}
                         <p class="question-body-2 mt-2"> {{q.question_body|truncatechars:240}}</p>
                         {% endif %}
