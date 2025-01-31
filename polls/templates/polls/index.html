@@ -16,79 +16,94 @@
             {% endif %}
 
             <div class="card">
-            <div class="d-flex justify-content-between align-items-end card-body comment">
-            
-            <div class="left-section flex-grow-1">
-            <form action="{% url 'polls:create_question' %}" 
-            method="POST" id="question_form_id" novalidate>
-                {% csrf_token %}
-                <fieldset>
+                <div class="d-flex flex-nowrap justify-content-between align-items-end card-body comment"
+                    style="overflow-x: auto; white-space: nowrap;">
+                    
+                    <div style="min-width: 200px;" class="left-section flex-grow-1">
+                        <form action="{% url 'polls:create_question' %}" 
+                        method="POST" id="question_form_id" novalidate>
+                            {% csrf_token %}
+                            <fieldset>
 
-                {% if form.errors %}
-                    {% for errors in form.errors.values %}
-                        {% for error in errors %}
-                            <p>{{error}}</p>
-                        {% endfor %}
-                    {% endfor %}
-                {% endif %}
-                
-                <div class="question-inputs-border">
-                    {{ form.question_text }}
-                    <input type="hidden" id="questionTextInputId" value="{{form.question_text.id_for_label}}">
-                
-                    <div class="collapse" id="questionBodyCollapse">
-                        <hr>
-                        <div>
-                        {{ form.question_body }}
+                                {% if form.errors %}
+                                    {% for errors in form.errors.values %}
+                                        {% for error in errors %}
+                                            <p>{{error}}</p>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                <div class="question-inputs-border">
+                                    {{ form.question_text }}
+                                    <input type="hidden" id="questionTextInputId" value="{{form.question_text.id_for_label}}">
+                                
+                                    <div class="collapse" id="questionBodyCollapse">
+                                        <hr>
+                                        <div>
+                                        {{ form.question_body }}
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                            </fieldset>
+                        </form>
+                    </div>
+
+                    <div class="right-section d-flex flex-column">
+
+                        <div class="top-right-section collapse countChars-value mb-4"></div>
+
+                        <div class="bottom-right-section d-flex align-items-end">
+                            <div class="d-flex align-items-center mx-2">
+                                <button type="submit" form="question_form_id" class="btn btn-primary">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- ADD IMAGE UPLOAD CAPABILITY -->
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-primary">
+                                    <i class="bi bi-image"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                
-                </fieldset>
-            </form>
-            </div>
-
-            <div class="right-section d-flex justify-content-end">
-                <div class="d-flex align-items-center mx-2">
-                    <button type="submit" form="question_form_id" class="btn btn-primary">
-                        Post
-                    </button>
-                </div>
-                
-                <div class="sorting-options d-flex align-items-center mx-1">
-                    <div class="dropdown">
-                        <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                            <!--{{current_sort_option|capfirst}}-->
-                            <i class="bi bi-funnel-fill"></i>
-                        </button>
-                    <ul class="dropdown-menu mt-3">
-                    {% for sorting_option, label in sorting_labels.items %}
-                    <li>
-                        <a href="?sort_by={{sorting_option}}" class="dropdown-item">
-                            {% if label == "Oldest" %}
-                            <i class="bi bi-sort-down mx-3"></i>
-                            {% else %}
-                            <i class="bi bi-sort-up mx-3"></i>
-                            {% endif %}
-                            {{label}}
-                        </a>
-                    </li>
-                    {% endfor %}
-                    </ul>
+                        
                     </div>
                 </div>
             </div>
         </div>
-        </div>
     </div>
-    </div>
-
 
 
 <!--Question List-->
     <div class="row mt-2">
         <div class="col-sm">
             {% if latest_question_list %}
+                <div class="d-flex justify-content-start align-items-center">
+                    <div class="dropdown mx-2">
+                        <button style="color: var(--gray30); font: var(--h2light);" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
+                            <!--{{current_sort_option|capfirst}}-->
+                            <i class="bi bi-funnel-fill"></i> {{current_sort_option|capfirst}}
+                        </button>
+                        <ul class="dropdown-menu mt-3">
+                        {% for sorting_option, label in sorting_labels.items %}
+                        <li>
+                            <a href="?sort_by={{sorting_option}}" class="dropdown-item">
+                                {% if label == "Oldest" %}
+                                <i class="bi bi-sort-down mx-3"></i>
+                                {% else %}
+                                <i class="bi bi-sort-up mx-3"></i>
+                                {% endif %}
+                                {{label}}
+                            </a>
+                        </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div style="color: var(--gray30); font: var(--h2light);">Showing {{latest_question_list|length}} Questions</div>
+                </div>
+              
             {% for q in latest_question_list %}
                 <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' q.id q.question_text %}"
                 onclick="window.location.href=this.dataset.url">

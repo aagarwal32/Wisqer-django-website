@@ -5,6 +5,38 @@ function autoResizeTextarea(textarea) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    var charCountToggle = new bootstrap.Collapse(
+        document.querySelector('.countChars-value'), {
+            toggle: false
+    });
+    
+    // show character count upon form focus
+    const charCountForms = document.querySelectorAll('.countChars')
+    const charCount = document.querySelector('.countChars-value');
+    charCountForms.forEach(countForm => {
+        countForm.addEventListener('focus', function() {
+            charCountToggle.show();
+        });
+
+        countForm.addEventListener('input', () => {
+            const remainingChars = countForm.maxLength - countForm.value.length;
+            charCount.textContent = remainingChars;
+            charCount.style.marginLeft = "12px";
+
+            if (remainingChars >= 50) {
+                charCount.style.color = "rgba(0, 0, 0, .50)";
+            }
+            else if (remainingChars < 50 && remainingChars != 0) {
+                charCount.style.color = "rgba(200, 120, 0, 0.75)";
+            }
+            else {
+                charCount.style.color = "red";
+            }
+        });
+    });
+
+
     const textareas = document.querySelectorAll('textarea.autoExpand');
 
     textareas.forEach(function (textarea) {
