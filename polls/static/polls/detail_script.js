@@ -19,10 +19,14 @@ document.addEventListener('DOMContentLoaded', function () {
             charCountToggle.show();
         });
 
+        countForm.addEventListener('hover', () => {
+            countForm.style.backgroundColor = "rgba(0, 0, 0, .03)";
+        })
+
         countForm.addEventListener('input', () => {
             const remainingChars = countForm.maxLength - countForm.value.length;
             charCount.textContent = remainingChars;
-            charCount.style.marginLeft = "12px";
+            //charCount.style.marginLeft = "4px";
 
             if (remainingChars >= 50) {
                 charCount.style.color = "rgba(0, 0, 0, .50)";

@@ -71,13 +71,12 @@ class QuestionCreateView(LoginRequiredMixin, FormView):
         )
     
     def form_invalid(self, form):
-        latest_question_list = Question.objects.filter(
-            pub_date__lte=timezone.now()
-        ).order_by('-pub_date')
-        context = self.get_context_data(form=form)
-        context['latest_question_list'] = latest_question_list
-        context['errors'] = form.errors
-        return render(self.request, 'polls/index.html', context)
+        if form.errors:
+            for errors in form.errors.values():
+                for error in errors:
+                    messages.error(self.request, f"{error}")
+
+        return HttpResponseRedirect(reverse('polls:index'))
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -296,21 +295,13 @@ class ReplyCreateView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
     
     def form_invalid(self, form):
-        question = get_object_or_404(Question, pk=self.kwargs['question_id'])
-        context = self.get_context_data(form=form)
-        context['question'] = question
-        versions = Version.objects.get_for_object(question)
-        context['versions'] = versions
-        context['reply_form'] = form
+        if form.errors:
+            for errors in form.errors.values():
+                for error in errors:
+                    messages.error(self.request, f"{error}")
 
-        latest_reply_list = Reply.objects.filter(
-            pub_date__lte=timezone.now(),
-            question=question
-        ).order_by('-pub_date')
+        return HttpResponseRedirect(reverse('polls:detail', args=(self.kwargs['question_id'], self.kwargs['question_text'],)))
 
-        context['latest_reply_list'] = latest_reply_list
-        context['title'] = f"Could not reply to {question.question_text}"
-        return self.render_to_response(context)
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:

@@ -15,23 +15,23 @@
             </div>
             {% endif %}
 
+            {% if messages %}
+            <div class="alert alert-warning">
+                {% for message in messages %}
+                {{message}}
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <div class="card">
                 <div class="d-flex flex-nowrap justify-content-between align-items-end card-body comment"
-                    style="overflow-x: auto; white-space: nowrap;">
+                    style="overflow-x: auto; white-space: nowrap; scrollbar-width: none; gap: 8px;">
                     
-                    <div style="min-width: 200px;" class="left-section flex-grow-1">
+                    <div class="left-section flex-grow-1">
                         <form action="{% url 'polls:create_question' %}" 
                         method="POST" id="question_form_id" novalidate>
                             {% csrf_token %}
                             <fieldset>
-
-                                {% if form.errors %}
-                                    {% for errors in form.errors.values %}
-                                        {% for error in errors %}
-                                            <p>{{error}}</p>
-                                        {% endfor %}
-                                    {% endfor %}
-                                {% endif %}
                                 
                                 <div class="question-inputs-border">
                                     {{ form.question_text }}
@@ -53,17 +53,29 @@
 
                         <div class="top-right-section collapse countChars-value mb-4"></div>
 
-                        <div class="bottom-right-section d-flex align-items-end">
-                            <div class="d-flex align-items-center mx-2">
-                                <button type="submit" form="question_form_id" class="btn btn-primary">
+                        <div class="bottom-right-section d-flex align-items-end" style="gap: 8px;">
+                            <div class="d-flex align-items-center">
+                                <button type="submit" form="question_form_id" class="btn btn-primary" data-bs-toggle="tooltip" title="Post">
                                     <i class="bi bi-chevron-right"></i>
                                 </button>
                             </div>
                             
                             <!-- ADD IMAGE UPLOAD CAPABILITY -->
                             <div class="d-flex align-items-center">
-                                <button class="btn btn-primary">
+                                <button class="btn btn-primary" data-bs-toggle="tooltip" title="Add Image (Coming Soon)">
                                     <i class="bi bi-image"></i>
+                                </button>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-primary" data-bs-toggle="tooltip" title="Add Link (Coming Soon)">
+                                    <i class="bi bi-link-45deg"></i>
+                                </button>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-primary" data-bs-toggle="tooltip" title="Add Poll (Coming Soon)">
+                                    <i class="bi bi-bar-chart"></i>
                                 </button>
                             </div>
                         </div>
@@ -90,9 +102,9 @@
                         <li>
                             <a href="?sort_by={{sorting_option}}" class="dropdown-item">
                                 {% if label == "Oldest" %}
-                                <i class="bi bi-sort-down mx-3"></i>
+                                <i class="bi bi-hourglass-bottom mx-3"></i>
                                 {% else %}
-                                <i class="bi bi-sort-up mx-3"></i>
+                                <i class="bi bi-hourglass-top mx-3"></i>
                                 {% endif %}
                                 {{label}}
                             </a>

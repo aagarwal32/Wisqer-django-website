@@ -106,21 +106,21 @@
             </div>
             {% endif %}
 
+            {% if messages %}
+            <div class="alert alert-warning">
+                {% for message in messages %}
+                {{message}}
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <div class="card">
                 <div class="d-flex justify-content-between align-items-end card-body comment">
                     <div class="left-section flex-grow-1">
                         <form action="{% url 'polls:create_reply' question.id question.question_text %}" 
                         method="POST" id="reply_form_id" novalidate>
                             {% csrf_token %}
-                            <fieldset>
-                                {% if reply_form.errors %}
-                                    {% for errors in reply_form.errors.values %}
-                                        {% for error in errors %}
-                                            <p>{{error}}</p>
-                                        {% endfor %}
-                                    {% endfor %}
-                                {% endif %}
-                                
+                            <fieldset>                               
                                 <div class="question-inputs-border">
                                     {{ reply_form.reply_text }}
                                     <input type="hidden" id="replyTextInputId" value="{{reply_form.reply_text.id_for_label}}">
@@ -165,13 +165,12 @@
             {% for reply in latest_reply_list %}
             <div class="card mt-2">
                 <div class="card-body comment">
-                    {% if highlighted_reply_id and reply.id == highlighted_reply_id %}
-                    <span class="selected-question">selected reply</span>
-                    {% endif %}
-
                     <p class="username-style">
                         <a href="{% url 'accounts:user_account' reply.user.id %}">{{reply.user.username}}</a> 
                         <span class="date-style">• {{reply.pub_date|naturaltime}}</span>
+                        {% if highlighted_reply_id and reply.id == highlighted_reply_id %}
+                            <span class="selected-question mx-2">selected reply</span>
+                        {% endif %}
                     </p>
 
                     <p class="reply-body mt-2">{{reply.reply_text|linebreaksbr}}</p> 

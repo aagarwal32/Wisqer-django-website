@@ -2,46 +2,46 @@
 
 {% block content %}
 <div class="center-content-auth">
-<div class="shadow p-5 mt-7 bg-body rounded">
-<h1 style="color: darkmagenta;">Login to Wisqer</h1>
+    <div class="shadow p-5 mt-7 bg-body rounded">
+    <h1 style="color: darkmagenta;">Login to Wisqer</h1>
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+    {% if messages %}
+        <div class="alert alert-secondary">
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
+        </div>
+    {% endif %}
 
-<form action="{% url 'accounts:login' %}" method="post" novalidate>
-    {% csrf_token %}
-    {% if form.non_field_errors %}
-    <div class="text-danger">
-        {% for error in form.non_field_errors %}
-        {{ error }}
+    <form action="{% url 'accounts:login' %}" method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="text-danger">
+            {% for error in form.non_field_errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% for field in form %}
+        {% if field.errors %}
+        <div class="text-danger">
+            {{field.errors}}
+        </div>
+        {% endif %}
+        <div class="form-floating mt-3 mb-3">
+            {{field}}
+            <label for="{{field.id_for_label}}">{{field.label}}</label>
+        </div>
         {% endfor %}
-    </div>
-    {% endif %}
-    
-    {% for field in form %}
-    {% if field.errors %}
-    <div class="text-danger">
-        {{field.errors}}
-    </div>
-    {% endif %}
-    <div class="form-floating mt-3 mb-3">
-        {{field}}
-        <label for="{{field.id_for_label}}">{{field.label}}</label>
-    </div>
-    {% endfor %}
 
-    <input type="hidden" name="next" value="{{next}}">
-    <button type="submit" class="btn btn-primary mb-5">Login</button>
-</form>
+        <input type="hidden" name="next" value="{{next}}">
+        <button type="submit" class="btn btn-primary mb-5">Login</button>
+    </form>
 
-<h6>Don't have an account? 
-    <a href="{% url 'accounts:register' %}">Register here</a>.
-</h6>
-</div>
+    <h6>Don't have an account? 
+        <a href="{% url 'accounts:register' %}">Register here</a>.
+    </h6>
+    </div>
 </div>
 {% endblock content %}

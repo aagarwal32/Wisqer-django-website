@@ -1,6 +1,6 @@
 :root {
     --ff: "Arial", verdana;
-    --h1: 500 1.1rem/1.2em var(--ff);
+    --h1: 500 1.0rem/1.2em var(--ff);
     --h2: normal 0.875rem/1.4em var(--ff);
     --h2light: 100 0.875rem/1.2em var(--ff);
     --h3: normal 0.75rem/1.2em var(--ff);
@@ -70,6 +70,23 @@ body {
 
 .logo {
     color: darkmagenta !important;
+}
+
+/* SEARCH BAR */
+/* Ensure the search container shrinks and grows flexibly */
+.search-container {
+    min-width: 150px; /* Minimum width */
+    max-width: 300px; /* Maximum width */
+}
+
+/* Optional: Adjust the placeholder text for smaller screens */
+@media (max-width: 576px) {
+    #search-input::placeholder {
+        font-size: 12px; /* Smaller placeholder text */
+    }
+    #search-input {
+        width: 150px;
+    }
 }
 
 
@@ -159,6 +176,28 @@ body {
 
 
 /* QUESTION/REPLY FORMS AND INPUTS*/
+.left-section {
+    min-width: 230px; /* Default for very small screens */
+}
+
+@media (min-width: 400px) { /* For screens wider than 400px */
+    .left-section {
+        min-width: 270px;
+    }
+}
+
+@media (min-width: 480px) { /* For screens wider than 500px */
+    .left-section {
+        min-width: 320px;
+    }
+}
+
+@media (min-width: 600px) { /* For screens wider than 800px */
+    .left-section {
+        min-width: 430px;
+    }
+}
+
 .question-form-custom {
     border-radius: .50rem;
     border-color: var(--gray100);
@@ -175,22 +214,23 @@ body {
 
 /* Add custom border when the parent div is focused */
 .question-inputs-border {
-    border: 2px solid rgba(0, 0, 0, .125); /* Default border */
-    border-radius: .50rem; /* Optional: Rounded corners */
-    padding: 5px; /* Adjust padding for overall space */
-    transition: border-color 0.3s ease; /* Smooth transition */
+    border: 2px solid rgba(0, 0, 0, .125);
+    border-radius: .50rem;
+    padding: 5px;
+    transition: border-color 0.3s ease;
 }
 
 /* Highlight border on focus */
 .question-inputs-border:focus-within, .question-inputs-border:hover {
-    border-color: darkmagenta; /* Blue border on focus */
+    border-color: darkmagenta;
+    background-color: rgba(0, 0, 0, .03);
 }
 
 .sorting-options {
-    border: 2px solid rgba(0, 0, 0, .125); /* Default border */
-    border-radius: .50rem; /* Optional: Rounded corners */
-    padding: 5px; /* Adjust padding for overall space */
-    transition: border-color 0.3s ease; /* Smooth transition */
+    border: 2px solid rgba(0, 0, 0, .125);
+    border-radius: .50rem;
+    padding: 5px;
+    transition: border-color 0.3s ease;
 }
 
 
@@ -228,7 +268,8 @@ body {
     font: var(--h3); 
     color: var(--gray0);
     background-color: var(--gray97);
-    padding: 4px 10px;
+    border: solid 1px darkgrey;
+    padding: 4px 8px;
     border-radius: 15px;
     margin: 0;
 }
@@ -245,12 +286,6 @@ textarea {
     overflow-y: scroll;
     resize: none;
     min-height: 38px;
-}
-
-
-
-.user-greeting {
-    margin-left: auto;
 }
 
 /* CARD */
@@ -292,7 +327,7 @@ textarea {
 
 .btn-primary:hover {
     border-color: darkmagenta;
-    background-color: white;
+    background-color: rgba(0, 0, 0, .03);
     color: darkmagenta;
     border-radius: 0.50rem;
 }
