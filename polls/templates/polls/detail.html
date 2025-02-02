@@ -114,29 +114,27 @@
             </div>
             {% endif %}
 
-            <div class="card">
-                <div class="d-flex justify-content-between align-items-end card-body comment">
-                    <div class="left-section flex-grow-1">
-                        <form action="{% url 'polls:create_reply' question.id question.question_text %}" 
-                        method="POST" id="reply_form_id" novalidate>
-                            {% csrf_token %}
-                            <fieldset>                               
-                                <div class="question-inputs-border">
-                                    {{ reply_form.reply_text }}
-                                    <input type="hidden" id="replyTextInputId" value="{{reply_form.reply_text.id_for_label}}">
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
+            <div class="d-flex justify-content-between align-items-end comment">
+                <div class="left-section flex-grow-1">
+                    <form action="{% url 'polls:create_reply' question.id question.question_text %}" 
+                    method="POST" id="reply_form_id" novalidate>
+                        {% csrf_token %}
+                        <fieldset>                               
+                            <div class="question-inputs-border d-flex">
+                                {{ reply_form.reply_text }}
+                                <input type="hidden" id="replyTextInputId" value="{{reply_form.reply_text.id_for_label}}">
 
-                    <div class="right-section d-flex justify-content-end">
-                        <div class="d-flex align-items-center mx-2">
-                            <button type="submit" form="reply_form_id" class="btn btn-primary">
-                                <i class="bi bi-chevron-right"></i>
-                            </button> 
-                        </div>
-                        <div class="d-flex align-items-center collapse countChars-value"></div>
-                    </div>
+                                <div class="right-section d-flex align-items-end justify-content-end" style="gap: 8px;">
+                                    <div class="d-flex align-items-center justify-content-center collapse countChars-value"></div>
+                                    <div class="d-flex align-items-center">
+                                        <button type="submit" form="reply_form_id" class="btn btn-primary">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </button> 
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
                 </div>
             </div>
         </div>

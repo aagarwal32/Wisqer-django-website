@@ -15,4 +15,5 @@ urlpatterns = [
     path("wisqerai/<int:pk>/<str:question_text>/", WisqerBotView.as_view(), name="wisqer_bot"),
     path("reply/<int:pk>/<str:reply_text>/rate", ReplyRatingView.as_view(), name="reply_rating"),
     path("reply/<int:pk>/<str:reply_text>/delete/", ReplyDeleteView.as_view(), name="reply_delete"),
+    path("search/", views.search_view, name='search'),
 ]

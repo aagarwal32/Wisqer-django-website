@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden, JsonResponse
 from django.urls import reverse, reverse_lazy
-from django.db.models.query import QuerySet
+from django.db.models import Q
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import F
@@ -310,3 +310,24 @@ class ReplyCreateView(LoginRequiredMixin, FormView):
             login_url = f"{reverse_lazy('accounts:login')}?next={path}"
             return redirect(login_url)
         return super().dispatch(request, *args, **kwargs)
+
+
+def search_view(request):
+    query = request.GET.get('q', '') # get search query from URL
+    if query:
+        results = Question.objects.filter(
+            Q(question_text__icontains=query)
+        )[:5]
+
+        results_data = [
+            {
+                'id': result.id,
+                'question_text': result.question_text,
+                'url': reverse('polls:detail', args=[result.id, result.question_text])
+            }
+            for result in results
+        ]
+    else:
+        results_data = []
+
+    return JsonResponse({'results': results_data})

@@ -66,23 +66,18 @@
         {% endfor %}
     </div>
     {% if user.is_authenticated and user.id == account_user.id %}
-    <div style="background-color: rgba(250, 230, 230, 0.9); border-radius: 0.5rem;" class="tab-pane container fade d-flex align-items-end justify-content-center mt-4" id="settings_list"><br>
-        <div class="left-section m-2">
+    <div style="background-color: rgba(250, 240, 240, 0.9); border-radius: 0.5rem;" class="tab-pane container fade d-flex align-items-end justify-content-center mt-4" id="settings_list"><br>
+        <div class="m-2">
             <h5>Delete Account</h5>
-            <h6><i style="color: red;" class="bi bi-exclamation-diamond-fill"></i> Warning</h6>
-            <h6>Account deletion is permanent. You cannot recover your account after deleting! Your posts and replies will remain and become anonymized.</h6>
-        </div>
-
-        <div class="right-section d-flex justify-content-end my-2">
-            <button class="btn btn-danger text-nowrap" data-bs-toggle="modal" 
+            <hr>
+            <h6 class="mx-2"><i style="color: red;" class="bi bi-exclamation-diamond-fill"></i> Account deletion is permanent. You cannot recover your account after deleting! Your posts and replies will remain and become anonymized.</p>
+            <button class="btn btn-danger" data-bs-toggle="modal" 
             data-bs-target="#deleteAccountModal" href="#">Delete Account</button>
         </div>
     </div>
     {% endif %}
 </div>
 {% endif %}
-<div class="mb-3"></div>
-<hr>
 
 
 <!-- Delete Account Modal -->

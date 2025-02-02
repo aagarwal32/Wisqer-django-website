@@ -12,16 +12,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
     // show character count upon form focus
-    const charCountForms = document.querySelectorAll('.countChars')
+    const charCountForms = document.querySelectorAll('.countChars');
+    const questionInputBorder = document.querySelector('.question-inputs-border');
     const charCount = document.querySelector('.countChars-value');
     charCountForms.forEach(countForm => {
         countForm.addEventListener('focus', function() {
             charCountToggle.show();
         });
 
-        countForm.addEventListener('hover', () => {
-            countForm.style.backgroundColor = "rgba(0, 0, 0, .03)";
-        })
+        questionInputBorder.addEventListener('mouseover', () => {
+            countForm.style.backgroundColor = "rgba(0, 0, 0, .005)";
+        });
 
         countForm.addEventListener('input', () => {
             const remainingChars = countForm.maxLength - countForm.value.length;

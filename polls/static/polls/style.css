@@ -73,22 +73,55 @@ body {
 }
 
 /* SEARCH BAR */
-/* Ensure the search container shrinks and grows flexibly */
-.search-container {
-    min-width: 150px; /* Minimum width */
-    max-width: 300px; /* Maximum width */
-}
+/* search container shrinks and grows flexibly */
 
-/* Optional: Adjust the placeholder text for smaller screens */
+/* Adjust the placeholder text for smaller screens */
 @media (max-width: 576px) {
     #search-input::placeholder {
-        font-size: 12px; /* Smaller placeholder text */
+        font-size: 14px; /* Smaller placeholder text */
     }
     #search-input {
-        width: 150px;
+        width: 125px;
     }
 }
 
+@media (min-width: 900px) {
+    #search-input::placeholder {
+        font-size: 14px; /* Smaller placeholder text */
+    }
+    #search-input {
+        width: 400px;
+    }
+    .search-box {
+        margin-left: auto;
+    }
+}
+
+#search-input {
+    border: none;
+    outline: none;
+    padding: 2px;
+    box-shadow: none;
+}
+
+.search-box {
+    padding: 6px;
+    border: solid 2px rgba(0, 0, 0, .125);
+    border-radius: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.search-box:focus-within, .search-box:hover {
+    border-color: darkmagenta;
+}
+
+#search-results {
+    border-radius: 1rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    margin-left: auto;
+}
 
 /* MAIN PAGE CONTAINERS*/
 .base-page {
@@ -175,29 +208,7 @@ body {
 }
 
 
-/* QUESTION/REPLY FORMS AND INPUTS*/
-.left-section {
-    min-width: 230px; /* Default for very small screens */
-}
-
-@media (min-width: 400px) { /* For screens wider than 400px */
-    .left-section {
-        min-width: 270px;
-    }
-}
-
-@media (min-width: 480px) { /* For screens wider than 500px */
-    .left-section {
-        min-width: 320px;
-    }
-}
-
-@media (min-width: 600px) { /* For screens wider than 800px */
-    .left-section {
-        min-width: 430px;
-    }
-}
-
+/* QUESTION/REPLY FORMS AND INPUTS */
 .question-form-custom {
     border-radius: .50rem;
     border-color: var(--gray100);
@@ -223,7 +234,19 @@ body {
 /* Highlight border on focus */
 .question-inputs-border:focus-within, .question-inputs-border:hover {
     border-color: darkmagenta;
-    background-color: rgba(0, 0, 0, .03);
+    background-color: rgba(0, 0, 0, .02);
+}
+
+.bottom-left-section {
+    border: 2px solid rgba(0, 0, 0, .125);
+    background-color: white;
+    border-radius: .50rem;
+    padding: 2px;
+    transition: border-color 0.3s ease;
+}
+
+.bottom-left-section:hover {
+    border-color: darkmagenta;
 }
 
 .sorting-options {
@@ -384,6 +407,20 @@ textarea {
     -webkit-box-shadow: none;
     box-shadow: none !important;
     outline: 0 !important;
+}
+
+.btn-icon {
+    background: none;
+	border: none;
+	padding: 2px;
+	cursor: pointer;
+    color: darkmagenta;
+    font: var(--h1);
+}
+
+.btn-icon:hover {
+    background-color: rgba(0, 0, 0, .03);
+    border-radius: 0.50rem;
 }
 
 .remove-default-btn {

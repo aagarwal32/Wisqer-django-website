@@ -23,8 +23,12 @@
             <a class="navbar-brand logo flex-shrink-0" href="{% url 'polls:index' %}">WISQER</a>
 
             <div class="d-flex justify-content-center flex-grow-1">
-                <div class="search-box">
-                    <input id="search-input" class="form-control" placeholder="search anything..." />
+                <div class="search-box d-flex justify-content-center align-items-center" style="gap: 8px;">
+                    <i class="bi bi-search" style="font-size: large;"></i>
+                    <form method="get" id="search-form" class="form-inline">
+                        <input id="search-input" type="text" class="form-control" placeholder="search questions..." autocomplete="off"/>
+                        <div id="search-results" class="list-group mt-3" style="position: absolute; display: none; z-index: 1000; background-color: white;"></div>
+                    </form>
                 </div>
             </div>
 
@@ -40,7 +44,7 @@
                         <a class="nav-link navbar-text text-end" href="{% url 'accounts:user_account' request.user.id %}"><i class="bi bi-person-fill"></i> {{ request.user.username }}</a>
                     </li>
                     <li>
-                        <a class="nav-link navbar-text text-end" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                        <a class="nav-link navbar-text text-end" href="{% url 'accounts:logout' %}">Logout</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
@@ -54,6 +58,55 @@
             </div>
         </div>
     </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.querySelector('#search-input');
+            const searchResults = document.querySelector('#search-results');
+
+            searchInput.addEventListener('input', function() {
+                const query = searchInput.value.trim();
+                if (query.length < 2) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+
+                // send ajax request to view
+                fetch(`/search/?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // clear previous results
+                        while (searchResults.firstChild) {
+                            searchResults.removeChild(searchResults.firstChild);
+                        }
+
+                        if (data.results.length > 0) {
+                            // create result elements
+                            data.results.forEach(result => {
+                                const item = document.createElement('a');
+                                item.href = result.url;
+                                item.classList.add('list-group-item', 'list-group-item-action');
+                                item.textContent = result.question_text;
+                                searchResults.appendChild(item);
+                            });
+                            searchResults.style.display = 'block'; // show results
+                        } else {
+                            searchResults.style.display = 'none'; // hide if no results
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching search results:', error);
+                        searchResults.style.display = 'none';
+                    });
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!searchResults.contains(event.target) && event.target != searchInput) {
+                    searchResults.style.display = 'none';
+                }
+            });
+        });
+    </script>
     
     <div class="base-page">
         {% block content %}

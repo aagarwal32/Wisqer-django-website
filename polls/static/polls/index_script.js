@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         questionInputBorder.addEventListener('mouseover', () => {
             countForm.style.backgroundColor = "rgba(0, 0, 0, .005)";
-        })
+        });
 
         countForm.addEventListener('input', () => {
             const remainingChars = countForm.maxLength - countForm.value.length;
