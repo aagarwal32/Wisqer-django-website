@@ -316,7 +316,7 @@ def search_view(request):
     query = request.GET.get('q', '') # get search query from URL
     if query:
         results = Question.objects.filter(
-            Q(question_text__icontains=query)
+            Q(question_text__icontains=query) | Q(question_body__icontains=query)
         )[:5]
 
         results_data = [

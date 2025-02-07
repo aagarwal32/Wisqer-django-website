@@ -3,6 +3,25 @@
 {% load humanize %}
 
 {% block content %}
+<div class="container-fluid mt-7 left-content">
+    <div class="row">
+        <div class="col-sm">
+            <div class="left-menu d-flex flex-column justify-content-between align-items-between">
+                <a class="item mt-3" href="#"><i class="bi bi-house-fill"></i> Home</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
 <!--Question Form-->
 <div class="container-fluid mt-7 center-content">
     <div class="row">
@@ -95,7 +114,7 @@
                     <div class="dropdown">
                         <button style="color: var(--gray30); font: var(--h2light);" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                             <!--{{current_sort_option|capfirst}}-->
-                            <i class="bi bi-funnel-fill"></i> {{current_sort_option|capfirst}}
+                            <i class="bi bi-filter-right"></i> {{current_sort_option|capfirst}}
                         </button>
                         <ul class="dropdown-menu mt-3">
                         {% for sorting_option, label in sorting_labels.items %}
@@ -117,7 +136,8 @@
                 </div>
               
             {% for q in latest_question_list %}
-                <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' q.id q.question_text %}"
+                <hr>
+                <div class="card card-clickable" data-url="{% url 'polls:detail' q.id q.question_text %}"
                 onclick="window.location.href=this.dataset.url">
                     <div class="card-body comment">
                         <p class="username-style">
@@ -126,61 +146,63 @@
                         </p>
                         <p class="question-body mt-2">{{q.question_text}}</p>
                         {% if q.question_body %}
-                        <p class="question-body-2 mt-2"> {{q.question_body|truncatechars:240}}</p>
+                        <p class="question-body-2 mt-2"> {{q.question_body|truncatechars:140}}</p>
                         {% endif %}
                     </div>
 
-                    <div class="card-body card-options d-flex justify-content-end align-items-center my-0 py-0">
-                        <!-- RATING -->
-                        {% if not user.is_authenticated %}
-                        <form action="{% url 'accounts:login' %}?next={{request.path}}">
-                            <button type="submit" class="remove-default-btn rating-btn" onclick="event.stopPropagation();">
-                                <i class="bi bi-hand-thumbs-up"></i> <span class="question-rating-count">{{ q.rating.all.count }}</span>
-                            </button>
-                        </form>
-                        
-                        {% else %}
-                        <form class="ratingForm" data-url="{% url 'polls:question_rating' q.id q.question_text %}"
-                        data-question-id="{{q.id}}" data-csrf-token="{{csrf_token}}">
-                            <button class="remove-default-btn rating-btn" type="submit" onclick="event.stopPropagation();">
-                                {% if user in q.rating.all %}
-                                <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up-fill"></i>
-                                {% else %}
-                                <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up"></i>
-                                {% endif %}
-                                <span class="question-rating-count">{{ q.rating.all.count }}</span>
-                            </button>
-                        </form>
-                        {% endif %}
+                    <div class="card-body d-flex justify-content-end align-items-center my-0 py-0">
+                        <div class="card-options d-flex justify-content-end align-items-center my-0 py-0">
+                            <!-- RATING -->
+                            {% if not user.is_authenticated %}
+                            <form action="{% url 'accounts:login' %}?next={{request.path}}">
+                                <button type="submit" class="remove-default-btn rating-btn" onclick="event.stopPropagation();">
+                                    <i class="bi bi-hand-thumbs-up"></i> <span class="question-rating-count">{{ q.rating.all.count }}</span>
+                                </button>
+                            </form>
+                            
+                            {% else %}
+                            <form class="ratingForm" data-url="{% url 'polls:question_rating' q.id q.question_text %}"
+                            data-question-id="{{q.id}}" data-csrf-token="{{csrf_token}}">
+                                <button class="remove-default-btn rating-btn" type="submit" onclick="event.stopPropagation();">
+                                    {% if user in q.rating.all %}
+                                    <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up-fill"></i>
+                                    {% else %}
+                                    <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up"></i>
+                                    {% endif %}
+                                    <span class="question-rating-count">{{ q.rating.all.count }}</span>
+                                </button>
+                            </form>
+                            {% endif %}
 
-                        <div class="reply-btn mx-3">
-                            <i class="bi bi-chat"></i>
-                            <span>{{q.reply_set.all.count}}</span>
-                        </div>
+                            <div class="reply-btn mx-3">
+                                <i class="bi bi-chat"></i>
+                                <span>{{q.reply_set.all.count}}</span>
+                            </div>
 
-                        <!-- THREE DOT MENU -->
-                        <div class="dropdown">
-                            <button type="button" class="btn dot-menu-btn m-0 p-0" data-bs-toggle="dropdown" onclick="event.stopPropagation();">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                                {% if user != q.user %}
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="event.stopPropagation();">
-                                            <i class="bi bi-flag-fill mx-3"></i>Report
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if user.is_authenticated and user == q.user %}
-                                    <li>
-                                        <a class="dropdown-item" data-bs-toggle="modal" href="#" data-bs-target="#deleteModalQuestion{{q.id}}" onclick="event.stopPropagation();">
-                                            <i class="bi bi-trash-fill mx-3"></i>Delete
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            </ul>
+                            <!-- THREE DOT MENU -->
+                            <div class="dropdown">
+                                <button type="button" class="btn dot-menu-btn m-0 p-0" data-bs-toggle="dropdown" onclick="event.stopPropagation();">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    {% if user != q.user %}
+                                        <li>
+                                            <a class="dropdown-item" href="#" onclick="event.stopPropagation();">
+                                                <i class="bi bi-flag-fill mx-3"></i>Report
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    {% if user.is_authenticated and user == q.user %}
+                                        <li>
+                                            <a class="dropdown-item" data-bs-toggle="modal" href="#" data-bs-target="#deleteModalQuestion{{q.id}}" onclick="event.stopPropagation();">
+                                                <i class="bi bi-trash-fill mx-3"></i>Delete
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <!-- END CARD OPTIONS -->
                         </div>
-                        <!-- END CARD OPTIONS -->
                     </div>
                 </div>
                 <!-- DELETE QUESTION MODAL -->
@@ -202,6 +224,7 @@
                     </div>
                 </div>
             {% endfor %}
+            <hr>
 
             {% else %}
             <p>No questions are available.</p>

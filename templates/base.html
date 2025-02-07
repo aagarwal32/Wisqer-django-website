@@ -20,6 +20,20 @@
 <body>
     <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
         <div class="container-fluid px-3">
+            <button id="left-menu-toggler" class="btn navbar-toggler" type="button" style="display: none;">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="left-menu left-menu-collapse" style="position: absolute; display: none; z-index: 1000;">
+                <a class="item" href="#"><i class="bi bi-house-fill"></i> Home</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
+            </div>
             <a class="navbar-brand logo flex-shrink-0" href="{% url 'polls:index' %}">WISQER</a>
 
             <div class="d-flex justify-content-center flex-grow-1">
@@ -27,7 +41,7 @@
                     <i class="bi bi-search" style="font-size: large;"></i>
                     <form method="get" id="search-form" class="form-inline">
                         <input id="search-input" type="text" class="form-control" placeholder="search questions..." autocomplete="off"/>
-                        <div id="search-results" class="list-group mt-3" style="position: absolute; display: none; z-index: 1000; background-color: white;"></div>
+                        <div id="search-results" class="list-group mt-4" style="position: absolute; display: none; z-index: 1000;"></div>
                     </form>
                 </div>
             </div>
@@ -63,6 +77,34 @@
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.querySelector('#search-input');
             const searchResults = document.querySelector('#search-results');
+            const leftContent = document.querySelector('.left-content');
+            const leftMenuToggler = document.querySelector('#left-menu-toggler');
+            const leftMenuCollapse = document.querySelector('.left-menu-collapse');
+
+            function trackWindowWidth() {
+                const windowWidth = window.innerWidth;
+                if (windowWidth < 1150) {
+                    leftContent.style.display = "none";
+                    leftMenuToggler.style.display = "inline";
+
+                } else {
+                    leftContent.style.display = "block";
+                    leftMenuToggler.style.display = "none";
+                    leftMenuCollapse.style.display = "none";
+                }
+            }
+            window.addEventListener("resize", trackWindowWidth);
+            trackWindowWidth();
+
+            function openLeftMenu() {
+                const isHidden = getComputedStyle(leftMenuCollapse).display === 'none';
+                leftMenuCollapse.style.display = isHidden ? 'block' : 'none';
+            }
+
+            leftMenuToggler.addEventListener("click", function(event) {
+                event.stopPropagation();
+                openLeftMenu();
+            })
 
             searchInput.addEventListener('input', function() {
                 const query = searchInput.value.trim();
@@ -105,6 +147,12 @@
                     searchResults.style.display = 'none';
                 }
             });
+            document.addEventListener('click', function(event) {
+                if (!leftMenuCollapse.contains(event.target) && event.target != leftMenuToggler) {
+                    leftMenuCollapse.style.display = 'none';
+                }
+            });
+
         });
     </script>
     

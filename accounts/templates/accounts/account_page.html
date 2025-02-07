@@ -2,7 +2,7 @@
 {% load humanize %}
 
 {% block content %}
-<div class="center-content">
+<div class="center-content" style="margin: 24px;">
 {% if account_user.username == '[deleted]' %}
 <h5 class="mt-7">This account has been deleted.</h5>
 <hr>
@@ -36,7 +36,8 @@
 <div class="tab-content">
     <div class="tab-pane container active" id="question_list"><br>
         {% for question in user_question_list %}
-        <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' question.id question.question_text %}" 
+        <hr>
+        <div class="card card-clickable" data-url="{% url 'polls:detail' question.id question.question_text %}" 
         onclick="window.location.href=this.dataset.url">
             <div class="card-body comment">
                 <p class="username-style">
@@ -45,15 +46,17 @@
                 </p>
                 <p class="question-body mt-2">{{question.question_text}}</p>
                 {% if question.question_body %}
-                    <p class="question-body-2 mt-2"> {{question.question_body|truncatechars:240}}</p>
+                    <p class="question-body-2 mt-2"> {{question.question_body|truncatechars:140}}</p>
                 {% endif %}
             </div>
         </div>
         {% endfor %}
+        <hr>
     </div>
     <div class="tab-pane container fade" id="reply_list"><br>
         {% for reply in user_reply_list %}
-        <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' reply.question.id reply.question.question_text %}?reply_id={{reply.id}}" 
+        <hr>
+        <div class="card card-clickable" data-url="{% url 'polls:detail' reply.question.id reply.question.question_text %}?reply_id={{reply.id}}" 
         onclick="window.location.href=this.dataset.url">
             <div class="card-body comment">
                 <p class="username-style">
@@ -64,6 +67,7 @@
             </div>
         </div>
         {% endfor %}
+        <hr>
     </div>
     {% if user.is_authenticated and user.id == account_user.id %}
     <div style="background-color: rgba(250, 240, 240, 0.9); border-radius: 0.5rem;" class="tab-pane container fade d-flex align-items-end justify-content-center mt-4" id="settings_list"><br>
