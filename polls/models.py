@@ -20,6 +20,7 @@ class Question(models.Model):
     )
     question_text = models.CharField(max_length=200)
     question_body = models.CharField(max_length=2000, blank=True)
+    question_img = models.ImageField(null=True, blank=True, upload_to="images/")
     pub_date = models.DateTimeField("date published")
     rating = models.ManyToManyField(User, blank=True, related_name="question_rating")
     bookmark = models.ManyToManyField(User, blank=True, related_name="question_bookmark")

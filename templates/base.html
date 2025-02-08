@@ -24,21 +24,17 @@
                 <i class="bi bi-list"></i>
             </button>
             <div class="left-menu left-menu-collapse" style="position: absolute; display: none; z-index: 1000;">
-                <a class="item" href="#"><i class="bi bi-house-fill"></i> Home</a><br>
-                
-                <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
-                
-                <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br>
-                
-                <a class="item" href="#"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
-                
+                <a class="item" href="#"><i class="bi bi-house-fill"></i> Home</a><br><br>
+                <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br><br>
+                <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br><br>
+                <a class="item" href="#"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br><br>
                 <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
             </div>
             <a class="navbar-brand logo flex-shrink-0" href="{% url 'polls:index' %}">WISQER</a>
 
             <div class="d-flex justify-content-center flex-grow-1">
                 <div class="search-box d-flex justify-content-center align-items-center" style="gap: 8px;">
-                    <i class="bi bi-search" style="font-size: large;"></i>
+                    <i class="bi bi-search" style="font-size:0.8rem; margin-left: 4px;"></i>
                     <form method="get" id="search-form" class="form-inline">
                         <input id="search-input" type="text" class="form-control" placeholder="search questions..." autocomplete="off"/>
                         <div id="search-results" class="list-group mt-4" style="position: absolute; display: none; z-index: 1000;"></div>

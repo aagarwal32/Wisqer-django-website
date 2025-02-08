@@ -130,10 +130,13 @@ body {
 }
 
 .search-box {
-    padding: 6px;
+    padding: 2px 4px 2px 4px;
     border: solid 2px rgba(0, 0, 0, .125);
     border-radius: 1rem;
     transition: border-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .search-box:focus-within, .search-box:hover {
@@ -179,7 +182,7 @@ body {
     border-radius: 1rem;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     background-color: white;
-    margin-top: 230px !important;
+    margin-top: 325px !important;
     padding: 14px !important;
     border-right: none !important;
 }
@@ -239,6 +242,60 @@ body {
     text-decoration: none;
     margin: 0;
     padding: 0;
+}
+
+#imageAttachMarker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#imageAttachIcon {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#imageAttachMarker span {
+    margin-left: auto;
+    padding-left: 8px;
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.image-preview__image, #imageAttachIcon {
+    display: none;
+    animation: zoomIn 0.3s ease-in-out;
+}
+.image-preview {
+    animation: zoomIn 0.3s ease-in-out;
+}
+
+.image-holder {
+    width: 100%;
+    border-radius: 1rem;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.question-image {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 550px;
 }
 
 .comment > .reply-body {

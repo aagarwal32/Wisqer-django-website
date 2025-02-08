@@ -4,10 +4,11 @@ from .models import Choice, Question, Reply
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
-        fields = ['question_text', 'question_body']
+        fields = ['question_text', 'question_body', 'question_img']
         labels = {
             'question_text': "",
             'question_body': "",
+            'question_img': "",
         }
         widgets = {
             'question_text': forms.Textarea(attrs={
@@ -19,7 +20,10 @@ class QuestionForm(forms.ModelForm):
                 'placeholder':'Body',
                 'class':'form-control autoExpand countChars',
                 'rows':'1'
-                })
+                }),
+            'question_img': forms.ClearableFileInput(attrs={
+                'class': 'd-none'
+                }),
         }
 
 class ReplyForm(forms.ModelForm):

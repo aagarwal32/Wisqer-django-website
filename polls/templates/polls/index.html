@@ -18,14 +18,13 @@
                 <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
             </div>
         </div>
-    </div>
-    
+    </div>  
 </div>
 
 <!--Question Form-->
 <div class="container-fluid mt-7 center-content">
     <div class="row">
-        <div class="col-sm">
+        <div class="col-sm px-4">
             {% if not user.is_authenticated %}
             <div class="mb-2">To create questions and access other features please
                 <a style="text-decoration: none;" href="{% url 'accounts:login' %}">login</a>
@@ -45,8 +44,7 @@
             <div class="d-flex flex-column justify-content-between align-items-between comment" style="gap: 8px;">
                 
                 <div class="top-section flex-grow-1">
-                    <form action="{% url 'polls:create_question' %}" 
-                    method="POST" id="question_form_id" novalidate>
+                    <form action="{% url 'polls:create_question' %}" method="POST" enctype="multipart/form-data" id="question_form_id" novalidate>
                         {% csrf_token %}
                         <fieldset>
                             
@@ -64,9 +62,10 @@
                                         <div class="bottom-left-section d-flex" style="gap: 8px;">
                                             <!-- ADD IMAGE UPLOAD CAPABILITY -->
                                             <div class="d-flex align-items-center">
-                                                <button class="btn-icon" type="button" data-bs-toggle="tooltip" title="Add Image (Coming Soon)">
+                                                <button class="btn-icon" type="button" id="customImageButton" data-bs-toggle="tooltip" title="Add Image">
                                                     <i class="bi bi-image"></i>
                                                 </button>
+                                                {{ form.question_img }}
                                             </div>
                 
                                             <div class="d-flex align-items-center">
@@ -102,7 +101,21 @@
                     </form>
                 </div>
             </div>
-        </div>
+
+            <div id="imageAttachMarker" class="mt-2">
+                <i id="imageAttachIcon" class="bi bi-plus-lg"></i>
+                <span style="margin-left: auto;"><button style="font-size: 10px; background-color: rgba(0, 0, 0, 0.125); padding:4px; border-radius:1rem; display: none;" 
+                    class="btn btn-close" type="button"></button>
+                </span>
+            </div> 
+
+            <div class="loader mt-2" id="loaderPreview"></div>
+
+            <div class="image-preview image-holder d-flex justify-content-center align-items-center mt-2" id="imagePreview">
+                <img src="" alt="Image Preview" class="image-preview__image question-image">
+            </div>
+
+        </div>  
     </div>
 
 
@@ -114,7 +127,7 @@
                     <div class="dropdown">
                         <button style="color: var(--gray30); font: var(--h2light);" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                             <!--{{current_sort_option|capfirst}}-->
-                            <i class="bi bi-filter-right"></i> {{current_sort_option|capfirst}}
+                            {{current_sort_option|capfirst}}
                         </button>
                         <ul class="dropdown-menu mt-3">
                         {% for sorting_option, label in sorting_labels.items %}
@@ -147,6 +160,11 @@
                         <p class="question-body mt-2">{{q.question_text}}</p>
                         {% if q.question_body %}
                         <p class="question-body-2 mt-2"> {{q.question_body|truncatechars:140}}</p>
+                        {% endif %}
+                        {% if q.question_img %}
+                        <div class="image-holder mt-2">
+                            <img src="{{q.question_img.url}}" class="question-image">
+                        </div>
                         {% endif %}
                     </div>
 

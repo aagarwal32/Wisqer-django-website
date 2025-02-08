@@ -160,6 +160,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Apply rounded corners conditionally
+document.addEventListener('DOMContentLoaded', function() {
+    const imageHolders = document.querySelectorAll('.image-holder');
+    imageHolders.forEach(holder => {
+        const img = holder.querySelector('.question-image');
+        if (img) {
+            img.onload = function() {
+                if (img.naturalWidth >= holder.clientWidth) {
+                    img.classList.add('rounded');
+                } else {
+                    img.classList.remove('rounded');
+                }
+            };
+            // Trigger the load event in case the image is already loaded
+            if (img.complete) {
+                img.onload();
+            }
+        }
+    });
+});
+
 
 // TOOLTIPS
 var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
