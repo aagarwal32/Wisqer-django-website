@@ -34,7 +34,7 @@
                 </a>
             </span>
 
-            <div class="card mt-2" style="border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 0.5rem; padding: 4px;">
+            <div class="card mt-2" style="border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 1rem; padding: 4px;">
                 <div class="card-body comment">
                     <p class="username-style">
                         <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
@@ -53,6 +53,11 @@
 
                     {% if question.question_body %}
                     <div class="container-sm text-body mt-3">{{question.question_body|linebreaksbr}}</div>
+                    {% endif %}
+                    {% if question.question_img %}
+                        <div class="image-holder mt-2">
+                            <img src="{{question.question_img.url}}" class="question-image">
+                        </div>
                     {% endif %}      
                 </div>
 
@@ -326,7 +331,7 @@
             </div>
             <div class="modal-body">
                 {% for version in versions %}
-                <div class="card mt-2">
+                <div class="card">
                     <div class="card-body comment">
                         <div class="d-flex">
                                 <p class="username-style">
@@ -338,6 +343,11 @@
                         {% if version.field_dict.question_body %}
                         <div class="modal-history-question-body mt-3">
                             {{version.field_dict.question_body|linebreaksbr}}
+                        </div>
+                        {% endif %}
+                        {% if version.field_dict.question_img %}
+                        <div class="image-holder mt-2">
+                            <img src="{{version.field_dict.question_img.url}}" class="question-image">
                         </div>
                         {% endif %}
 
@@ -352,6 +362,7 @@
                     -->
                     </div>
                 </div>
+                <hr>
                 {% endfor %}
             </div>
         </div>
@@ -362,5 +373,5 @@
 
 {% block extra_js %}
 <script src="{% static 'polls/detail_script.js' %}"></script>
-<script src="{% static 'polls/post_functions.js' %}"></script>
+<script src="{% static 'polls/app_script.js' %}"></script>
 {% endblock %}

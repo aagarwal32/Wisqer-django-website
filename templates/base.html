@@ -73,34 +73,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.querySelector('#search-input');
             const searchResults = document.querySelector('#search-results');
-            const leftContent = document.querySelector('.left-content');
-            const leftMenuToggler = document.querySelector('#left-menu-toggler');
-            const leftMenuCollapse = document.querySelector('.left-menu-collapse');
-
-            function trackWindowWidth() {
-                const windowWidth = window.innerWidth;
-                if (windowWidth < 1150) {
-                    leftContent.style.display = "none";
-                    leftMenuToggler.style.display = "inline";
-
-                } else {
-                    leftContent.style.display = "block";
-                    leftMenuToggler.style.display = "none";
-                    leftMenuCollapse.style.display = "none";
-                }
-            }
-            window.addEventListener("resize", trackWindowWidth);
-            trackWindowWidth();
-
-            function openLeftMenu() {
-                const isHidden = getComputedStyle(leftMenuCollapse).display === 'none';
-                leftMenuCollapse.style.display = isHidden ? 'block' : 'none';
-            }
-
-            leftMenuToggler.addEventListener("click", function(event) {
-                event.stopPropagation();
-                openLeftMenu();
-            })
 
             searchInput.addEventListener('input', function() {
                 const query = searchInput.value.trim();

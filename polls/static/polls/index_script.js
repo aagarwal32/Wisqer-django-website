@@ -1,11 +1,14 @@
 // initialize all functions
-function initPage() {
+function initIndexPage() {
     initializeCustomButtons();
     initializeTextAreaResize();
     initializeQuestionInputForm();
     initializeImagePreview();
 }
 
+
+
+// initializes functionality for previewing image attachments
 function initializeImagePreview() {
     const previewAttachIconContainer = document.getElementById("imageAttachMarker");
     const previewAttachIcon = previewAttachIconContainer.querySelector(".bi-plus-lg");
@@ -15,14 +18,17 @@ function initializeImagePreview() {
     const inputFile = document.querySelector('input[type="file"][name="question_img"]');
     const loaderPreview = document.querySelector('#loaderPreview');
 
+    // hide elements upon removal of image attachment
     function clearElements() {
         previewCloseButton.style.display = "none";
         previewAttachIcon.style.display = "none";
         loaderPreview.style.display = 'none';
         previewImage.style.display = null;
         previewImage.setAttribute("src", "");
+        inputFile.value = "";
     }
 
+    // check for new files
     inputFile.addEventListener("change", function() {
         const file = this.files[0];
 
@@ -31,6 +37,7 @@ function initializeImagePreview() {
 
             loaderPreview.style.display = 'inline-block';
 
+            // display image and other elements upon load
             reader.addEventListener("load", function(){
                 previewImage.setAttribute("src", this.result);
                 previewAttachIcon.style.display = "block";
@@ -46,6 +53,7 @@ function initializeImagePreview() {
         }
     });
 
+    // close button that removes image attachment and clears preview
     previewCloseButton.addEventListener("click", function(){
         clearElements();
     });
@@ -132,5 +140,5 @@ function initializeQuestionInputForm() {
 }
 
 
-// call initPage to initialize all functions
-document.addEventListener('DOMContentLoaded', initPage);
+/* initIndexPage - INITIALIZE ALL ABOVE FUNCTIONS UPON CONTENT LOAD */
+document.addEventListener('DOMContentLoaded', initIndexPage);
