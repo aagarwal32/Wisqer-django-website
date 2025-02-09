@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-sm">
             <div class="left-menu d-flex flex-column justify-content-between align-items-between">
-                <a class="item mt-3" href="#"><i class="bi bi-house-fill"></i> Home</a><br>
+                <a class="item mt-3" href="{% url 'polls:index' %}"><i class="bi bi-house-fill"></i> Home</a><br>
                 
                 <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
                 
@@ -179,20 +179,42 @@
                             </form>
                             
                             {% else %}
-                            <form class="ratingForm" data-url="{% url 'polls:question_rating' q.id q.question_text %}"
+                            <form class="interactForm" data-url="{% url 'polls:question_rating' q.id q.question_text %}"
                             data-question-id="{{q.id}}" data-csrf-token="{{csrf_token}}">
                                 <button class="remove-default-btn rating-btn" type="submit" onclick="event.stopPropagation();">
                                     {% if user in q.rating.all %}
-                                    <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up-fill"></i>
+                                    <i id="rating-{{ q.id }}" class="bi bi-hand-thumbs-up-fill"></i>
                                     {% else %}
-                                    <i id="icon-{{ q.id }}" class="bi bi-hand-thumbs-up"></i>
+                                    <i id="rating-{{ q.id }}" class="bi bi-hand-thumbs-up"></i>
                                     {% endif %}
                                     <span class="question-rating-count">{{ q.rating.all.count }}</span>
                                 </button>
                             </form>
                             {% endif %}
 
-                            <div class="reply-btn mx-3">
+                            <!-- BOOKMARK -->
+                            {% if not user.is_authenticated %}
+                            <form action="{% url 'accounts:login' %}?next={{request.path}}">
+                                <button type="submit" class="remove-default-btn bookmark-btn" onclick="event.stopPropagation();">
+                                    <i class="bi bi-bookmark-plus"></i>
+                                </button>
+                            </form>
+                            
+                            {% else %}
+                            <form class="interactForm" data-url="{% url 'polls:question_bookmark' q.id q.question_text %}"
+                            data-question-id="{{q.id}}" data-csrf-token="{{csrf_token}}">
+                                <button class="remove-default-btn bookmark-btn" type="submit" onclick="event.stopPropagation();">
+                                    {% if user in q.bookmark.all %}
+                                    <i id="bookmark-{{ q.id }}" class="bi bi-bookmark-check-fill"></i>
+                                    {% else %}
+                                    <i id="bookmark-{{ q.id }}" class="bi bi-bookmark-plus"></i>
+                                    {% endif %}
+                                </button>
+                            </form>
+                            {% endif %}
+
+                            <!-- NUMBER OF REPLIES -->
+                            <div class="reply-btn">
                                 <i class="bi bi-chat"></i>
                                 <span>{{q.reply_set.all.count}}</span>
                             </div>

@@ -1,6 +1,6 @@
 // initialize functions for both index and detail pages
 function initAppPage() {
-    initializeRating();
+    initializeInteractions();
     initializeOpenAI_ResponseHandling();
     initializeImageStyling();
     initializeLeftNav();
@@ -38,9 +38,9 @@ function initializeLeftNav() {
 }
 
 // initialize and update rating from frontend
-function initializeRating() {
-    const updateRatingForms = document.querySelectorAll('.ratingForm');
-    updateRatingForms.forEach(form => {
+function initializeInteractions() {
+    const updateInteractForms = document.querySelectorAll('.interactForm');
+    updateInteractForms.forEach(form => {
 
         const formUrl = form.getAttribute('data-url');
         const csrfToken = form.getAttribute('data-csrf-token');
@@ -49,8 +49,10 @@ function initializeRating() {
         const replyId = form.getAttribute('data-reply-id');
         const questionRatingCountSpan = form.querySelector('.question-rating-count');
         const replyRatingCountSpan = form.querySelector('.reply-rating-count');
-        const questionRatingIcon = document.getElementById(`icon-${questionId}`);
-        const replyRatingIcon = document.getElementById(`icon-${replyId}`);
+        const questionRatingIcon = document.getElementById(`rating-${questionId}`);
+        const questionBookmarkIcon = document.getElementById(`bookmark-${questionId}`);
+        const replyRatingIcon = document.getElementById(`rating-${replyId}`);
+        const replyBookmarkIcon = document.getElementById(`bookmark-${replyId}`);
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -70,8 +72,12 @@ function initializeRating() {
             
             // process data
             }).then(data => {
-                updateRating(data);
+                if (data.status.includes("rating")){
+                    updateRating(data);
 
+                } else {
+                    updateBookmark(data);
+                }    
             }).catch(error => {
                 console.error('Error updating the rating: ', error);
             });
@@ -102,6 +108,29 @@ function initializeRating() {
                 replyRatingCountSpan.textContent = Math.max(currentCount - 1, 0); // Decrement count
                 replyRatingIcon.classList.remove('bi-hand-thumbs-up-fill');
                 replyRatingIcon.classList.add('bi-hand-thumbs-up');
+
+            } else {
+                console.error('Error updating the rating: ', data.status);
+            }
+        }
+
+        // determines whether to add/remove bookmark on question/reply
+        function updateBookmark(data) {
+            if (data.status === 'add_question_bookmark') {
+                questionBookmarkIcon.classList.remove('bi-bookmark-plus');
+                questionBookmarkIcon.classList.add('bi-bookmark-check-fill');
+
+            } else if (data.status === 'remove_question_bookmark') {
+                questionBookmarkIcon.classList.remove('bi-bookmark-check-fill');
+                questionBookmarkIcon.classList.add('bi-bookmark-plus');
+            
+            } else if (data.status === 'add_reply_bookmark') {
+                replyBookmarkIcon.classList.remove('bi-bookmark-plus');
+                replyBookmarkIcon.classList.add('bi-bookmark-check-fill');
+
+            } else if (data.status === 'remove_reply_bookmark') {
+                replyBookmarkIcon.classList.remove('bi-bookmark-check-fill');
+                replyBookmarkIcon.classList.add('bi-bookmark-plus');
 
             } else {
                 console.error('Error updating the rating: ', data.status);

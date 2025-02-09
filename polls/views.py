@@ -195,6 +195,18 @@ class QuestionRatingView(View):
         else:
             question.rating.add(request.user)
             return JsonResponse({"status": "add_question_rating", "message": "added rating to question"})
+        
+
+class QuestionBookmarkView(View):
+    def post(self, request, pk, *args, **kwargs):
+        question = get_object_or_404(Question, pk=pk)
+
+        if question.bookmark.filter(id=request.user.id).exists():
+            question.bookmark.remove(request.user)
+            return JsonResponse({"status": "remove_question_bookmark", "message": "removed bookmark from question"})
+        else:
+            question.bookmark.add(request.user)
+            return JsonResponse({"status": "add_question_bookmark", "message": "added bookmark to question"})
 
 
 class QuestionDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):

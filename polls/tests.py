@@ -559,43 +559,43 @@ class RatingValidationTests(TestCase):
         self.assertEqual(reply.rating.count(), 1)
 
 
-# class BookmarkValidationTests(TestCase):
-#     def setUp(self):
-#         self.client = Client()
-#         self.user1 = User.objects.create_user(
-#             username="testuser",
-#             password="secretpass123",
-#             email="testuser@example.com"
-#         )
-#         self.user2 = User.objects.create_user(
-#             username="testuser2",
-#             password="secretpass123",
-#             email="testuser2@example.com"
-#         )
-#         self.create_question_url = reverse('polls:create_question')
+class BookmarkValidationTests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user1 = User.objects.create_user(
+            username="testuser",
+            password="secretpass123",
+            email="testuser@example.com"
+        )
+        self.user2 = User.objects.create_user(
+            username="testuser2",
+            password="secretpass123",
+            email="testuser2@example.com"
+        )
+        self.create_question_url = reverse('polls:create_question')
 
-#     def test_add_bookmark_question_ajax(self):
-#         '''
-#         Tests adding a single bookmark to a question.
-#         '''
+    def test_add_bookmark_question_ajax(self):
+        '''
+        Tests adding a single bookmark to a question.
+        '''
 
-#         self.client.login(username="testuser", password="secretpass123")
+        self.client.login(username="testuser", password="secretpass123")
 
-#         form = {
-#             "question_text": "test",
-#             "pub_date": timezone.now() + datetime.timedelta(days=-1)
-#         }
-#         response = self.client.post(self.create_question_url, form, follow=True)
-#         self.assertEqual(response.status_code, 200)
+        form = {
+            "question_text": "test",
+            "pub_date": timezone.now() + datetime.timedelta(days=-1)
+        }
+        response = self.client.post(self.create_question_url, form, follow=True)
+        self.assertEqual(response.status_code, 200)
 
-#         question = Question.objects.last()
-#         question_bookmark_url = reverse('polls:question_bookmark', args=[question.id, question.question_text])
-#         response = self.client.post(question_bookmark_url)
-#         self.assertEqual(response.status_code, 200)
+        question = Question.objects.last()
+        question_bookmark_url = reverse('polls:question_bookmark', args=[question.id, question.question_text])
+        response = self.client.post(question_bookmark_url)
+        self.assertEqual(response.status_code, 200)
 
-#         json_response = response.json()
-#         self.assertEqual(json_response["status"], "add_bookmark")
-#         self.assertEqual(json_response["message"], "added bookmark to question")
-#         self.assertIn(self.user1, question.bookmark.all())
-#         self.assertEqual(question.bookmark.count(), 1)
+        json_response = response.json()
+        self.assertEqual(json_response["status"], "add_question_bookmark")
+        self.assertEqual(json_response["message"], "added bookmark to question")
+        self.assertIn(self.user1, question.bookmark.all())
+        self.assertEqual(question.bookmark.count(), 1)
 

@@ -433,6 +433,7 @@ hr {
     background-color: var(--gray97);
     padding: 2px;
     border-radius: 1rem;
+    gap: 12px;
 }
 
 .dropdown-menu {
@@ -546,11 +547,11 @@ hr {
 	cursor: pointer;
 	outline: inherit;
 }
-.rating-btn, .dot-menu-btn {
+.rating-btn, .bookmark-btn, .dot-menu-btn {
     padding: 4px;
     border-radius: 1rem;
 }
-.rating-btn:hover, .dot-menu-btn:hover {
+.rating-btn:hover, .bookmark-btn:hover, .dot-menu-btn:hover {
     background-color: var(--gray90);
     padding: 4px;
     border-radius: 1rem;
