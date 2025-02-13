@@ -7,6 +7,15 @@ This README outlines the features, deployment process, and CI/CD workflows for W
 
 ## Features:
 
+#### Optimized for mobile every step of the way.
+
+#### New Features (2025)
+- Users can perform full, site-wide search on other users, questions, and replies.
+- Users can follow other users.
+- Users can bookmark questions and replies.
+- Added left navigation menu for quick access to explore, following, bookmarks, etc. tabs.
+- Users can attach images and preview them before posting.
+
 #### Create Account, Email Verification, and Login
 - Users can view questions, replies, and edit histories without an account.
 - To create, update, or delete questions and replies, the user must have an account and be logged in.
