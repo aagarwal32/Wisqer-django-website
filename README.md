@@ -9,7 +9,12 @@ This README outlines the features, deployment process, and CI/CD workflows for W
 
 #### Optimized for mobile every step of the way.
 
+Ask a Question!             |  Get a Quick Summary of all the Replies.
+:-------------------------:|:-------------------------:
+![IMG_6034](https://github.com/user-attachments/assets/9157d655-c6a7-4706-9c46-0d9b31027a36) |  ![IMG_6035](https://github.com/user-attachments/assets/815292d0-2ebf-4570-9966-6a7e1bca5679)
+
 #### New Features (2025)
+
 - Users can perform full, site-wide search on other users, questions, and replies.
 - Users can follow other users.
 - Users can bookmark questions and replies.
