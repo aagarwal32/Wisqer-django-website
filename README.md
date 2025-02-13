@@ -46,9 +46,9 @@ Ask a Question!             |  Get a Quick Summary of all the Replies.
 - Static files are served via DigitalOcean Spaces that operates via AWS S3 API
 
 ## CI/CD workflows for automated deployments via GitHub Actions
-- In the actions tab, workflow scripts automatically...
-  1. Run Django tests to check proper functionality.
-  2. Build and push docker image to DigitalOcean's Private Container Registery.
-  3. Access secret production environment variables via GitHub secrets.
-  4. Updates the deployment image and waits for Kubernetes to terminate old pods.
-  5. Finally, the workflow accesses a single pod and performs migrations and collectstatic operations.
+In the actions tab, workflow scripts automatically...
+1. Run Django tests to check proper functionality.
+2. Build and push docker image to DigitalOcean's Private Container Registery.
+3. Access secret production environment variables via GitHub secrets.
+4. Updates the deployment image and waits for Kubernetes to terminate old pods.
+5. Finally, the workflow accesses a single pod and performs migrations and collectstatic operations.
