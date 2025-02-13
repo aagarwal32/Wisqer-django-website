@@ -3,7 +3,7 @@
 
 This README outlines the features, deployment process, and CI/CD workflows for Wisqer. The project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance the user experience.
 
-### UPDATE: Due to cost reasons, Wisqer is currently down as it is being transferred to a new cloud platform: AWS.
+### Update: Due to cost reasons, Wisqer is currently down as it is being transferred to a new cloud platform: AWS.
 
 ## Features:
 
