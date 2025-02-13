@@ -16,6 +16,7 @@ Ask a Question!             |  Get a Quick Summary of all the Replies.
 #### New Features (2025)
 
 - Users can perform full, site-wide search on other users, questions, and replies.
+- Users can request a summary of the replies from OpenAI's API. Number of requests are limited per hour.
 - Users can follow other users.
 - Users can bookmark questions and replies.
 - Added left navigation menu for quick access to explore, following, bookmarks, etc. tabs.
