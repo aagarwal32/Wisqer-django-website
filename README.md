@@ -3,9 +3,24 @@
 
 This README outlines the features, deployment process, and CI/CD workflows for Wisqer. The project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance the user experience.
 
-### WISQER is now live at www.wisqer.com !
+### Update: Due to cost reasons, Wisqer is currently down as it is being transferred to a new cloud platform: AWS.
 
 ## Features:
+
+#### Optimized for mobile every step of the way.
+
+Ask a Question!             |  Get a Quick Summary of all the Replies.
+:-------------------------:|:-------------------------:
+![IMG_6034](https://github.com/user-attachments/assets/9157d655-c6a7-4706-9c46-0d9b31027a36) |  ![IMG_6035](https://github.com/user-attachments/assets/815292d0-2ebf-4570-9966-6a7e1bca5679)
+
+#### New Features (2025)
+
+- Users can perform full, site-wide search on other users, questions, and replies.
+- Users can request a summary of the replies from OpenAI's API. Number of requests are limited per hour.
+- Users can follow other users.
+- Users can bookmark questions and replies.
+- Added left navigation menu for quick access to explore, following, bookmarks, etc. tabs.
+- Users can attach images and preview them before posting.
 
 #### Create Account, Email Verification, and Login
 - Users can view questions, replies, and edit histories without an account.
@@ -31,9 +46,9 @@ This README outlines the features, deployment process, and CI/CD workflows for W
 - Static files are served via DigitalOcean Spaces that operates via AWS S3 API
 
 ## CI/CD workflows for automated deployments via GitHub Actions
-- In the actions tab, workflow scripts automatically...
-  1. Run Django tests to check proper functionality.
-  2. Build and push docker image to DigitalOcean's Private Container Registery.
-  3. Access secret production environment variables via GitHub secrets.
-  4. Updates the deployment image and waits for Kubernetes to terminate old pods.
-  5. Finally, the workflow accesses a single pod and performs migrations and collectstatic operations.
+In the actions tab, workflow scripts automatically...
+1. Run Django tests to check proper functionality.
+2. Build and push docker image to DigitalOcean's Private Container Registery.
+3. Access secret production environment variables via GitHub secrets.
+4. Updates the deployment image and waits for Kubernetes to terminate old pods.
+5. Finally, the workflow accesses a single pod and performs migrations and collectstatic operations.
