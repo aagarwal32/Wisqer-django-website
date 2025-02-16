@@ -1,18 +1,17 @@
 FROM python:3.9.13-slim-buster
 
 ENV PYTHONUNBUFFERED=1
-COPY . /app
+ENV PORT=8080
+
 WORKDIR /app
+COPY . /app
 
-# Install necessary dependencies, including certificates
-RUN apt-get update && apt-get install -y \
-    ca-certificates && \
-    update-ca-certificates
+RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
 
-RUN python3 -m venv /opt/djangoenv
-
-RUN /opt/djangoenv/bin/pip install pip --upgrade && \
+RUN python3 -m venv /opt/djangoenv && \
+    /opt/djangoenv/bin/pip install --upgrade pip && \
     /opt/djangoenv/bin/pip install -r requirements.txt && \
     chmod +x entrypoint.sh
 
+EXPOSE ${PORT}
 CMD ["/app/entrypoint.sh"]

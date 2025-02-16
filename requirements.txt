@@ -12,6 +12,7 @@ djangorestframework
 django-reversion
 django-humanize
 django-storages
+packaging
 pillow
 openai
 boto3

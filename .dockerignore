@@ -1,11 +1,28 @@
-/.env
-/.env.prod
-.DS_Store
+# Ignore environment files (security reasons)
+.env*
+*.tfvars
 
-# local database for testing and development
+# Ignore local databases
 db.sqlite3
 
-# Byte-compiled / optimized / DLL files
+# Ignore Terraform and AWS credentials
+**/.terraform/**
+*.pem
+*.pem.pub
+
+# Ignore Mac and Windows system files
+.DS_Store
+Thumbs.db
+
+# Ignore Python cache & virtual environments
 __pycache__/
 *.py[cod]
-*$py.class
+venv/
+
+# Ignore Git-related files
+.git
+.gitignore
+
+# Ignore media/uploads (if applicable)
+/media/
+/staticfiles/

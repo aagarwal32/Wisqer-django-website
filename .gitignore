@@ -1,12 +1,29 @@
-/.env
-/.env.prod
+# Environment files
+.env*
 .DS_Store
-/media
 
-# local database for testing and development
-#db.sqlite3
+# Terraform
+**/.terraform/**
+*.tfstate
+*.tfvars
+*.terraformrc
+*.tfstate.backup
+
+# Sensitive keys
+*.pem
+*.pem.pub
+
+# Local database for testing and development
+db.sqlite3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Media files
+/media/
+/staticfiles/
+
+# Virtual environments
+/djangoenv/

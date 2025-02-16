@@ -25,14 +25,16 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get("DEBUG")) == "1"
-ENV_ALLOWED_HOST=os.environ.get("ENV_ALLOWED_HOST")
-ENV_ALLOWED_HOST_2=os.environ.get("ENV_ALLOWED_HOST_2")
-ENV_ALLOWED_HOST_3=os.environ.get("ENV_ALLOWED_HOST_3")
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
-if all([ENV_ALLOWED_HOST, ENV_ALLOWED_HOST_2, ENV_ALLOWED_HOST_3]):
-    ALLOWED_HOSTS.append(ENV_ALLOWED_HOST)
-    ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_2)
-    ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_3)
+
+# ENV_ALLOWED_HOST_1=os.environ.get("ENV_ALLOWED_HOST_1")
+# ENV_ALLOWED_HOST_2=os.environ.get("ENV_ALLOWED_HOST_2")
+# ENV_ALLOWED_HOST_3=os.environ.get("ENV_ALLOWED_HOST_3")
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'wisqer.net', 'www.wisqer.net']
+
+# if all([ENV_ALLOWED_HOST_1, ENV_ALLOWED_HOST_2, ENV_ALLOWED_HOST_3]):
+#     ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_1)
+#     ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_2)
+#     ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_3)
 
 if not DEBUG:
     SECURE_SSL_REDIRECT=False
@@ -40,12 +42,12 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS=True
     SECURE_BROWSER_XSS_FILTER=True
     SECURE_CONTENT_TYPE_NOSNIFF=True
-    CSRF_COOKIE_SECURE = True  # Ensure the CSRF cookie is only sent over HTTPS
-    SESSION_COOKIE_SECURE = True  # Ensure session cookies are also sent only over HTTPS
+    CSRF_COOKIE_SECURE = True  # ensures the CSRF cookie is only sent over HTTPS
+    SESSION_COOKIE_SECURE = True  # ensures session cookies are also sent only over HTTPS
 
     CSRF_TRUSTED_ORIGINS = [
-    'https://www.wisqer.com',
-    'https://wisqer.com',
+    'https://www.wisqer.net',
+    'https://wisqer.net',
     ]
 
 else:
@@ -114,6 +116,8 @@ WSGI_APPLICATION = "djangodocker.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+#### FOR DEVELOPMENT
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -121,6 +125,8 @@ DATABASES = {
     }
 }
 
+
+#### FOR PRODUCTION
 DB_USERNAME=os.environ.get("POSTGRES_USER")
 DB_PASSWORD=os.environ.get("POSTGRES_PASSWORD")
 DB_DATABASE=os.environ.get("POSTGRES_DB")
@@ -153,8 +159,6 @@ if DB_IS_AVAIL and not DEBUG:
             "sslmode": "require"
         }
 
-    
-#print(DATABASES)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -188,7 +192,6 @@ USE_TZ = True
 
 
 # Email Handling
-# https://pypi.org/project/Django-Verify-Email/
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -201,31 +204,31 @@ DEFAULT_FROM_EMAIL = 'noreply<no_reply@domain.com>'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-STATIC_URL = "static/"
-
 if DEBUG:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    STATIC_URL = "static/"
     STATICFILES_DIRS = [
         BASE_DIR / "polls/static",
         #BASE_DIR / "accounts/static",
     ]
 else:
-    STATICFILES_DIRS = [
-        BASE_DIR / "polls/static",
-        #BASE_DIR / "accounts/static",
-        BASE_DIR / "staticfiles",
-    ]
-    STATIC_ROOT = BASE_DIR / "staticfiles-cdn"
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_REGION_NAME = 'us-east-1'
+    AWS_S3_SIGNATURE_NAME = 's3v4'
+
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/static/'
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-if not DEBUG:
-    from .cdn.conf import * # noqa
 
 if "test" in sys.argv:
     # override static file storage when testing
