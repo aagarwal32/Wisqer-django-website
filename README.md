@@ -46,12 +46,12 @@ Ask a Question!             |  Get a Quick Summary of all the Replies.
 - The account page can also be used to delete your account which deletes your user but re-assigns your posts under a common "deleted" user.
 
 
-## Deployment Process
+## DigitalOcean Deployment Process
 - The Wisqer app is packaged into a Docker container that is distributed across clusters orchestrated via Kubernetes.
 - DigitalOcean provides an abstraction to these deployment tools and also provides a connection to an online PostgreSQL database where user created data is securely held.
 - Static files are served via DigitalOcean Spaces that operates via AWS S3 API
 
-## CI/CD workflows for automated deployments via GitHub Actions
+## DigitalOcean CI/CD workflows for automated deployments via GitHub Actions
 In the actions tab, workflow scripts automatically...
 1. Run Django tests to check proper functionality.
 2. Build and push docker image to DigitalOcean's Private Container Registery.
