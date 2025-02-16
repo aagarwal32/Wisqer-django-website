@@ -6,6 +6,10 @@ This README outlines the features, deployment process, and CI/CD workflows for W
 ### Update: Wisqer is back online! Now on AWS with new features and improvements!
 #### www.wisqer.net
 
+## Currently Known Issues
+- Slow user-uploaded image loading.
+- Left nav bar UI element flashing upon reload in some cases.
+
 ## Features:
 
 #### Optimized for mobile every step of the way.
