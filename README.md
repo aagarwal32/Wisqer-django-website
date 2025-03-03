@@ -3,12 +3,18 @@
 
 This README outlines the features, deployment process, and CI/CD workflows for Wisqer. The project focuses on building a web application where users can ask questions and reply with answers all with secure user authentication, CRUD functionalities, and additional features that enhance the user experience.
 
-### Update: Due to cost reasons, Wisqer is currently down as it is being transferred to a new cloud platform: AWS.
+### Update: Wisqer is back online! Now on AWS with new features and improvements!
+#### www.wisqer.com or www.wisqer.net
+
+### Currently Known Issues
+- Slow user-uploaded image loading.
+- Left nav bar UI element flashing upon reload in some cases.
 
 ## Features:
 
-#### Optimized for mobile every step of the way.
+### Optimized for mobile every step of the way.
 
+(These screenshots are outdated. New ones coming soon!)
 Ask a Question!             |  Get a Quick Summary of all the Replies.
 :-------------------------:|:-------------------------:
 ![IMG_6034](https://github.com/user-attachments/assets/9157d655-c6a7-4706-9c46-0d9b31027a36) |  ![IMG_6035](https://github.com/user-attachments/assets/815292d0-2ebf-4570-9966-6a7e1bca5679)
@@ -40,12 +46,12 @@ Ask a Question!             |  Get a Quick Summary of all the Replies.
 - The account page can also be used to delete your account which deletes your user but re-assigns your posts under a common "deleted" user.
 
 
-## Deployment Process
+## DigitalOcean Deployment Process
 - The Wisqer app is packaged into a Docker container that is distributed across clusters orchestrated via Kubernetes.
 - DigitalOcean provides an abstraction to these deployment tools and also provides a connection to an online PostgreSQL database where user created data is securely held.
 - Static files are served via DigitalOcean Spaces that operates via AWS S3 API
 
-## CI/CD workflows for automated deployments via GitHub Actions
+## DigitalOcean CI/CD workflows for automated deployments
 In the actions tab, workflow scripts automatically...
 1. Run Django tests to check proper functionality.
 2. Build and push docker image to DigitalOcean's Private Container Registery.
