@@ -48,7 +48,7 @@
                         {% csrf_token %}
                         <fieldset>
                             
-                            <div class="question-inputs-border">
+                            <div class="question-inputs-border question-form-container">
                                 {{ form.question_text }}
                                 <input type="hidden" id="questionTextInputId" value="{{form.question_text.id_for_label}}">
                             
@@ -82,7 +82,7 @@
                                         </div>
                                         
                                         <div class="bottom-right-section d-flex" style="gap: 8px;">
-                                            <div class="collapse countChars-value"></div>
+                                            <div class="collapse countChars-question-value"></div>
                 
                                             <div class="d-flex align-items-end">
                                                 <div class="d-flex align-items-center">

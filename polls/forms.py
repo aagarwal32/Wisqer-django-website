@@ -35,7 +35,7 @@ class ReplyForm(forms.ModelForm):
         widgets = {
             'reply_text': forms.Textarea(attrs={
                 'placeholder':'Enter your reply here',
-                'class':'form-control autoExpand countChars',
+                'class':'form-control autoExpand countCharsReply',
                 'rows':'1',
                 }),
         }

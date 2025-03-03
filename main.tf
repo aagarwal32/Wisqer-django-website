@@ -106,7 +106,7 @@ resource "aws_instance" "web" {
 
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
-  # Inject secrets from Vault into user_data script
+  # Inject secrets from AWS SSM into startup script
   user_data = templatefile("${path.module}/ec2_startup.sh", {
     DJANGO_SECRET_KEY = data.aws_ssm_parameter.django_secret_key.value,
     POSTGRES_PASSWORD = data.aws_ssm_parameter.postgres_password.value,

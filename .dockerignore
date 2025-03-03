@@ -23,6 +23,9 @@ venv/
 .git
 .gitignore
 
+# Ignore irrelevant files
+/wisqer-digitalocean-deployment/
+
 # Ignore media/uploads (if applicable)
 /media/
 /staticfiles/

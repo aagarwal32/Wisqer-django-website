@@ -12,12 +12,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     
     // show character count upon form focus
-    const charCountForms = document.querySelectorAll('.countChars');
+    const charCountForms = document.querySelectorAll('.countCharsReply');
     const questionInputBorder = document.querySelector('.question-inputs-border');
     const charCount = document.querySelector('.countChars-value');
+    
     charCountForms.forEach(countForm => {
         countForm.addEventListener('focus', function() {
-            charCountToggle.show();
+            charCountToggle.show();     
         });
 
         questionInputBorder.addEventListener('mouseover', () => {

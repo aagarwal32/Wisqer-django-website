@@ -2,7 +2,6 @@
 function initIndexPage() {
     initializeCustomButtons();
     initializeTextAreaResize();
-    initializeQuestionInputForm();
     initializeImagePreview();
 }
 
@@ -85,57 +84,6 @@ function initializeTextAreaResize() {
         });
         // adjust height on page load
         autoResizeTextarea(textarea);
-    });
-}
-
-
-function initializeQuestionInputForm() {
-    // collapse question body field
-    var questionTextInputId = document.getElementById('questionTextInputId').value;
-    var questionTextInput = document.getElementById(questionTextInputId);
-    var questionBodyCollapse = new bootstrap.Collapse(
-        document.getElementById('questionBodyCollapse'), {
-            toggle: false
-        });
-
-    // show character count upon form focus
-    var charCountToggle = new bootstrap.Collapse(
-        document.querySelector('.countChars-value'), {
-            toggle: false
-    });
-    
-    const charCountForms = document.querySelectorAll('.countChars');
-    const questionInputBorder = document.querySelector('.question-inputs-border');
-    const charCount = document.querySelector('.countChars-value');
-    charCountForms.forEach(countForm => {
-        countForm.addEventListener('focus', function() {
-            questionBodyCollapse.show();
-            // delay character count toggle to allow question input time to expand
-            setTimeout(function() {
-                charCountToggle.show();
-            }, 300)
-        });
-
-        // add background color to question input upon mouseover
-        questionInputBorder.addEventListener('mouseover', () => {
-            countForm.style.backgroundColor = "rgba(0, 0, 0, .005)";
-        });
-
-        // update character count
-        countForm.addEventListener('input', () => {
-            const remainingChars = countForm.maxLength - countForm.value.length;
-            charCount.textContent = remainingChars;
-
-            if (remainingChars >= 50) {
-                charCount.style.color = "rgba(0, 0, 0, .50)";
-            }
-            else if (remainingChars < 50 && remainingChars != 0) {
-                charCount.style.color = "rgba(200, 120, 0, 0.75)";
-            }
-            else {
-                charCount.style.color = "red";
-            }
-        });
     });
 }
 

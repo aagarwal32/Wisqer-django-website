@@ -1,30 +1,15 @@
 // initialize functions for both index and detail pages
 function initAppPage() {
+    initializeLeftNav();
     initializeInteractions();
     initializeOpenAI_ResponseHandling();
     initializeImageStyling();
-    initializeLeftNav();
+    initializeQuestionInputForm();
 }
 
 function initializeLeftNav() {
-    const leftContent = document.querySelector('.left-content');
     const leftMenuToggler = document.querySelector('#left-menu-toggler');
     const leftMenuCollapse = document.querySelector('.left-menu-collapse');
-
-    function trackWindowWidth() {
-        const windowWidth = window.innerWidth;
-        if (windowWidth < 1150) {
-            leftContent.style.display = "none";
-            leftMenuToggler.style.display = "inline";
-
-        } else {
-            leftContent.style.display = "block";
-            leftMenuToggler.style.display = "none";
-            leftMenuCollapse.style.display = "none";
-        }
-    }
-    window.addEventListener("resize", trackWindowWidth);
-    trackWindowWidth();
 
     function openLeftMenu() {
         const isHidden = getComputedStyle(leftMenuCollapse).display === 'none';
@@ -133,7 +118,7 @@ function initializeInteractions() {
                 replyBookmarkIcon.classList.add('bi-bookmark-plus');
 
             } else {
-                console.error('Error updating the rating: ', data.status);
+                console.error('Error updating the bookmark: ', data.status);
             }
         }
     });
@@ -270,6 +255,55 @@ function initializeImageStyling() {
                 img.onload();
             }
         }
+    });
+}
+
+
+function initializeQuestionInputForm() {
+    // collapse question body field
+    var questionBodyCollapse = new bootstrap.Collapse(
+        document.getElementById('questionBodyCollapse'), {
+            toggle: false
+        });
+
+    // show character count upon form focus
+    var charCountToggle = new bootstrap.Collapse(
+        document.querySelector('.countChars-question-value'), {
+            toggle: false
+    });
+    
+    const charCountQuestionForms = document.querySelectorAll('.countChars');
+    const questionFormContainer = document.querySelector('.question-form-container');
+    const charCount = document.querySelector('.countChars-question-value');
+    charCountQuestionForms.forEach(countForm => {
+        countForm.addEventListener('focus', function() {
+            questionBodyCollapse.show();
+            // delay character count toggle to allow question input time to expand
+            setTimeout(function() {
+                charCountToggle.show();
+            }, 300)
+        });
+
+        // add background color to question input upon mouseover
+        questionFormContainer.addEventListener('mouseover', () => {
+            countForm.style.backgroundColor = "rgba(0, 0, 0, .005)";
+        });
+
+        // update character count
+        countForm.addEventListener('input', () => {
+            const remainingChars = countForm.maxLength - countForm.value.length;
+            charCount.textContent = remainingChars;
+
+            if (remainingChars >= 50) {
+                charCount.style.color = "rgba(0, 0, 0, .50)";
+            }
+            else if (remainingChars < 50 && remainingChars != 0) {
+                charCount.style.color = "rgba(200, 120, 0, 0.75)";
+            }
+            else {
+                charCount.style.color = "red";
+            }
+        });
     });
 }
 

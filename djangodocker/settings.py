@@ -29,7 +29,7 @@ DEBUG = str(os.environ.get("DEBUG")) == "1"
 # ENV_ALLOWED_HOST_1=os.environ.get("ENV_ALLOWED_HOST_1")
 # ENV_ALLOWED_HOST_2=os.environ.get("ENV_ALLOWED_HOST_2")
 # ENV_ALLOWED_HOST_3=os.environ.get("ENV_ALLOWED_HOST_3")
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'wisqer.net', 'www.wisqer.net']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'wisqer.net', 'www.wisqer.net', 'wisqer.com', 'www.wisqer.com']
 
 # if all([ENV_ALLOWED_HOST_1, ENV_ALLOWED_HOST_2, ENV_ALLOWED_HOST_3]):
 #     ALLOWED_HOSTS.append(ENV_ALLOWED_HOST_1)
@@ -48,6 +48,8 @@ if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
     'https://www.wisqer.net',
     'https://wisqer.net',
+    'https://www.wisqer.com',
+    'https://wisqer.com'
     ]
 
 else:

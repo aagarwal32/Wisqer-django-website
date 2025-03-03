@@ -269,6 +269,18 @@ class ReplyRatingView(View):
             return JsonResponse({"status": "add_reply_rating", "message": "added rating to reply"})
 
 
+class ReplyBookmarkView(View):
+    def post(self, request, pk, *args, **kwargs):
+        reply = get_object_or_404(Reply, pk=pk)
+
+        if reply.bookmark.filter(id=request.user.id).exists():
+            reply.bookmark.remove(request.user)
+            return JsonResponse({"status": "remove_reply_bookmark", "message": "removed bookmark from reply"})
+        else:
+            reply.bookmark.add(request.user)
+            return JsonResponse({"status": "add_reply_bookmark", "message": "added bookmark to reply"})
+
+
 class ReplyDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url = reverse_lazy('accounts:login')
 
