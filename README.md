@@ -8,7 +8,6 @@ This README outlines the features, deployment process, and CI/CD workflows for W
 
 ### Currently Known Issues
 - Slow user-uploaded image loading.
-- Left nav bar UI element flashing upon reload in some cases.
 
 ## Features:
 
