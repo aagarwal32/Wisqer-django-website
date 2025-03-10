@@ -1,5 +1,3 @@
-
-https://github.com/user-attachments/assets/cfd2dfd6-b7bf-40bd-afbe-ba6dd97c9891
 # WISQER
 ## A social media question-and-answer website built with Django.
 
@@ -12,8 +10,7 @@ This README outlines the features, deployment process, and CI/CD workflows for W
 
 ### Optimized for mobile every step of the way.
 
-
-![out (2)](https://github.com/user-attachments/assets/366fc13a-24a6-4fcd-94c4-91e87e2dd028) 
+![out (2)](https://github.com/user-attachments/assets/a181020d-d047-4def-9713-65f6d93f57b9) ![out 2](https://github.com/user-attachments/assets/3d3be886-3c4b-463d-9b82-b2de768c1b55)
 
 
 #### New Features (2025)
