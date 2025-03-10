@@ -3,7 +3,9 @@ from django.conf import settings
 import reversion
 import datetime
 from django.utils import timezone
+from django.utils.timezone import now
 from django.contrib.auth.models import User
+from django_resized import ResizedImageField
 
 # Create your models here.
 def get_deleted_user():
@@ -20,7 +22,16 @@ class Question(models.Model):
     )
     question_text = models.CharField(max_length=200)
     question_body = models.CharField(max_length=2000, blank=True)
-    question_img = models.ImageField(null=True, blank=True, upload_to="images/")
+    
+    question_img = ResizedImageField(
+        null=True,
+        blank=True,
+        quality=75,
+        force_format="WEBP",
+        keep_meta=False,
+        upload_to="images/"
+    )
+    
     pub_date = models.DateTimeField("date published")
     rating = models.ManyToManyField(User, blank=True, related_name="question_rating")
     bookmark = models.ManyToManyField(User, blank=True, related_name="question_bookmark")
@@ -33,13 +44,22 @@ class Question(models.Model):
         return self.question_text
     
 
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
+class BookmarkTimestamp(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    question = models.ForeignKey('Question', null=True, blank=True, on_delete=models.CASCADE)
+    reply = models.ForeignKey('Reply', null=True, blank=True, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(default=now)
+
+    class Meta:
+        unique_together = ('user', 'question', 'reply')  # Prevent duplicate bookmarks
 
     def __str__(self):
-        return self.choice_text
+        if self.question:
+            return f"{self.user.username} bookmarked question {self.question.id} at {self.added_at}"
+        if self.reply:
+            return f"{self.user.username} bookmarked reply {self.reply.id} at {self.added_at}"
+        return f"{self.user.username} bookmark"
+
 
 
 @reversion.register()

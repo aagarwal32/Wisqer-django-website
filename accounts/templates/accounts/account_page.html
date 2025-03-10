@@ -3,113 +3,157 @@
 {% load static %}
 
 {% block content %}
-<div class="center-content" style="margin: 24px;">
-    {% if account_user.username == '[deleted]' %}
-    <h5 class="mt-7">This account has been deleted.</h5>
-    <hr>
-    <p>Profile details are unavailable.</p>
-
-    {% else %}
-
-    {% if user.is_authenticated and user.id == account_user.id %}
-    <h2 class="mt-7">Your Account</h2>
-    {% else %}
-    <h2 class="mt-7">{{account_user.username}}'s Account</h2>
-    {% endif %}
-
-
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs mt-4">
-        <li class="nav-item">
-        <a class="nav-link active" data-bs-toggle="tab" href="#question_list">Questions</a>
-        </li>
-        <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#reply_list">Replies</a>
-        </li>
-        {% if user.is_authenticated and user.id == account_user.id %}
-        <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="tab" href="#settings_list">Settings</a>
-        </li>
-        {% endif %}
-    </ul>
-    
-    <!-- Tab panes -->
-    <div class="tab-content">
-        <div class="tab-pane container active" id="question_list"><br>
-            {% for question in user_question_list %}
-            <div class="card card-clickable" data-url="{% url 'polls:detail' question.id question.question_text %}" 
-            onclick="window.location.href=this.dataset.url">
-                <div class="card-body comment">
-                    <p class="username-style">
-                        <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
-                        <span class="date-style">• {{question.pub_date|naturaltime}}</span>
-                    </p>
-                    <p class="question-body mt-2">{{question.question_text}}</p>
-                    {% if question.question_body %}
-                        <p class="question-body-2 mt-2"> {{question.question_body|truncatechars:140}}</p>
-                    {% endif %}
-                    {% if question.question_img %}
-                        <div class="image-holder mt-2">
-                            <img src="{{question.question_img.url}}" class="question-image">
-                        </div>
-                    {% endif %}
-                </div>
+<div class="container-fluid mt-7 left-content">
+    <div class="row">
+        <div class="col-sm">
+            <div class="left-menu d-flex flex-column justify-content-between align-items-between">
+                <a class="item mt-3" href="{% url 'polls:index' %}"><i class="bi bi-house-fill"></i> Home</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
+                
+                <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br>
+                
+                {% if user.is_authenticated and user.id == account_user.id %}
+                <a class="item" href="{% url 'polls:bookmarks' user.username %}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% endif %}
+                <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
             </div>
+        </div>
+    </div>  
+</div>
+
+
+<div class="container-fluid mt-7 center-content" style="background-color: hsl(0, 0%, 97%); padding:24px; border-radius:1rem;">
+    <div class="row">
+        <div class="col-sm">
+            {% if account_user.username == '[deleted]' %}
+            <h5>This account has been deleted.</h5>
             <hr>
-            {% endfor %}
-        </div>
-        <div class="tab-pane container fade" id="reply_list"><br>
-            {% for reply in user_reply_list %}
-            <div class="card card-clickable" data-url="{% url 'polls:detail' reply.question.id reply.question.question_text %}?reply_id={{reply.id}}" 
-            onclick="window.location.href=this.dataset.url">
-                <div class="card-body comment">
-                    <p class="username-style">
-                        <a href="{% url 'accounts:user_account' reply.user.id %}">{{reply.user.username}}</a> 
-                        <span class="date-style">• {{reply.pub_date|naturaltime}}</span>
-                    </p>
-                    <p class="reply-body mt-2">{{reply.reply_text}}</p>
-                </div>
-            </div>
-            <hr>
-            {% endfor %}
-        </div>
-        {% if user.is_authenticated and user.id == account_user.id %}
-        <div style="background-color: rgba(250, 240, 240, 0.9); border-radius: 0.5rem;" class="tab-pane container fade d-flex align-items-end justify-content-center mt-4" id="settings_list"><br>
-            <div class="m-2">
-                <h5>Delete Account</h5>
-                <hr>
-                <h6 class="mx-2"><i style="color: red;" class="bi bi-exclamation-diamond-fill"></i> Account deletion is permanent. You cannot recover your account after deleting! Your posts and replies will remain and become anonymized.</p>
-                <button class="btn btn-danger" data-bs-toggle="modal" 
-                data-bs-target="#deleteAccountModal" href="#">Delete Account</button>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-    {% endif %}
+            <p>Profile details are unavailable.</p>
+
+            {% else %}
+
+            {% if user.is_authenticated and user.id == account_user.id %}
+            <h2 class="mx-3"><i class="bi bi-person-circle"></i> Your Account</h2>
+            {% else %}
+            <h2 class="mx-3"><i class="bi bi-person-circle"></i> {{account_user.username}}'s Account</h2>
+            {% endif %}
 
 
-    <!-- Delete Account Modal -->
-    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModal" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content">
-            <div class="modal-header d-flex align-items-center justify-content-around">
-                <h5 class="modal-title">Delete Account</h5>
-            </div>
-            <form action="{% url 'accounts:user_account_delete' %}" method="post">
-                {% csrf_token %}
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs mt-3">
+                <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#question_list">Questions</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#reply_list">Replies</a>
+                </li>
+                {% if user.is_authenticated and user.id == account_user.id %}
+                <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#settings_list">Settings</a>
+                </li>
+                {% endif %}
+            </ul>
             
-            <div class="modal-body text-center">
-                <p>Are you sure you want to delete your account?</p>
-                <p>Your account will be deleted. However, your posts and replies will be anonymized.</p>
-                <p style="color: red;">This action cannot be undone.</p>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane container active" id="question_list"><br>
+                    {% for question in user_question_list %}
+                    <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' question.id question.question_text %}" 
+                    onclick="window.location.href=this.dataset.url">
+                        <div class="card-body comment">
+                            <p class="username-style">
+                                <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
+                                <span class="date-style">• {{question.pub_date|naturaltime}}</span>
+                            </p>
+                            <p class="question-body mt-2">{{question.question_text}}</p>
+                            {% if question.question_body %}
+                                <p class="question-body-2 mt-2"> {{question.question_body|truncatechars:140}}</p>
+                            {% endif %}
+                            {% if question.question_img %}
+                                <div class="image-holder mt-2">
+                                    <img src="{{question.question_img.url}}" class="question-image" loading="lazy" />
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                        <h6>Any questions you ask will appear here!</h6>
+                    {% endfor %}
+                </div>
+                <div class="tab-pane container fade" id="reply_list"><br>
+                    {% for reply in user_reply_list %}
+                    <div class="card card-clickable mt-2" data-url="{% url 'polls:detail' reply.question.id reply.question.question_text %}?reply_id={{reply.id}}" 
+                    onclick="window.location.href=this.dataset.url">
+                        <div class="card-body comment">
+                            <p class="username-style">
+                                <a href="{% url 'accounts:user_account' reply.user.id %}">{{reply.user.username}}</a> 
+                                <span class="date-style">• {{reply.pub_date|naturaltime}}</span>
+                            </p>
+                            <p class="reply-body mt-2">{{reply.reply_text}}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                        <h6>Your replies will appear here!</h6>
+                    {% endfor %}
+                </div>
+                {% if user.is_authenticated and user.id == account_user.id %}
+                <div style="background-color: rgba(245, 245, 245, 0.7); border-radius: 1rem;" class="tab-pane container fade d-flex align-items-end justify-content-center mt-4" id="settings_list"><br>
+                    <div class="m-2">
+                        <h5 class="mx-2">Delete Account</h5>
+                        <hr>
+                        <h6 class="mx-2"> Account deletion is permanent. You cannot recover your account after deleting! Your posts and replies will remain and become anonymized.</p>
+                        <a data-bs-toggle="modal" data-bs-target="#deleteAccountModal" href="#" style="color: red;">Delete Account</a>
+                    </div>
+                </div>
+                {% endif %}
             </div>
-            <div class="modal-footer d-flex align-items-center justify-content-around">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-danger">Delete Account</button>
+            {% endif %}
+
+
+            <!-- Delete Account Modal -->
+            <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModal" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header d-flex align-items-center justify-content-around">
+                        <h5 class="modal-title">Delete Account</h5>
+                    </div>
+                    <form action="{% url 'accounts:user_account_delete' %}" method="post">
+                        {% csrf_token %}
+                    
+                    <div class="modal-body text-center">
+                        <p>Are you sure you want to delete your account?</p>
+                        <p>Your account will be deleted. However, your posts and replies will be anonymized.</p>
+                        <p style="color: red;">This action cannot be undone.</p>
+                    </div>
+                    <div class="modal-footer d-flex align-items-center justify-content-around">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete Account</button>
+                    </div>
+                    </form>
+                </div>
+                </div>
             </div>
-            </form>
-        </div>
         </div>
     </div>
 </div>
+
+<script>
+    function initializeLeftNav() {
+        const leftMenuToggler = document.querySelector('#left-menu-toggler');
+        const leftMenuCollapse = document.querySelector('.left-menu-collapse');
+    
+        function openLeftMenu() {
+            const isHidden = getComputedStyle(leftMenuCollapse).display === 'none';
+            leftMenuCollapse.style.display = isHidden ? 'block' : 'none';
+        }
+    
+        leftMenuToggler.addEventListener("click", function(event) {
+            event.stopPropagation();
+            openLeftMenu();
+        })
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeLeftNav);
+</script>
 {% endblock content %}

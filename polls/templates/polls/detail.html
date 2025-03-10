@@ -13,13 +13,16 @@
                 
                 <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br>
                 
-                <a class="item" href="#"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% if user.is_authenticated %}
+                <a class="item" href="{% url 'polls:bookmarks' user.username %}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% else %}
+                <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% endif %}
                 
                 <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
             </div>
         </div>
-    </div>
-    
+    </div>  
 </div>
 
 
@@ -27,14 +30,15 @@
 <div class="container-fluid mt-7 center-content">
     <div class="row">
         <div class="col-sm text-black p">
-            <span class="back-link">
+            <span class="back-link mx-3">
                 <a href="{% url 'polls:index' %}">Home /</a>
                 <a href="{% url 'polls:detail' question.id question.question_text %}">
                     {{question.question_text|truncatechars:40}}
                 </a>
             </span>
 
-            <div class="card mt-2" style="border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 1rem; padding: 4px;">
+            <hr>
+            <div class="card">
                 <div class="card-body comment">
                     <p class="username-style">
                         <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
@@ -56,7 +60,7 @@
                     {% endif %}
                     {% if question.question_img %}
                         <div class="image-holder mt-2">
-                            <img src="{{question.question_img.url}}" class="question-image">
+                            <img src="{{question.question_img.url}}" class="question-image" loading="lazy" />
                         </div>
                     {% endif %}      
                 </div>
@@ -142,6 +146,7 @@
                 <!-- END CARD OPTIONS -->
                 </div>
             </div>
+            <hr>
         </div>
     </div>
 
@@ -396,7 +401,7 @@
                         {% endif %}
                         {% if version.field_dict.question_img %}
                         <div class="image-holder mt-2">
-                            <img src="{{version.field_dict.question_img.url}}" class="question-image">
+                            <img src="{{version.field_dict.question_img.url}}" class="question-image" loading="lazy" />
                         </div>
                         {% endif %}
 

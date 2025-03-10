@@ -13,7 +13,11 @@
                 
                 <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br>
                 
-                <a class="item" href="#"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% if user.is_authenticated %}
+                <a class="item" href="{% url 'polls:bookmarks' user.username %}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% else %}
+                <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% endif %}
                 
                 <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
             </div>
@@ -22,7 +26,7 @@
 </div>
 
 <!--Question Form-->
-<div class="container-fluid mt-7 center-content">
+<div class="container-fluid mt-6 center-content">
     <div class="row">
         <div class="col-sm px-4">
             {% if not user.is_authenticated %}
@@ -120,10 +124,10 @@
 
 
 <!--Question List-->
-    <div class="row mt-2">
+    <div class="row mt-1">
         <div class="col-sm">
             {% if latest_question_list %}
-                <div class="d-flex justify-content-start align-items-center">
+                <div class="d-flex justify-content-start align-items-center mx-1">
                     <div class="dropdown">
                         <button style="color: var(--gray30); font: var(--h2light);" type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                             <!--{{current_sort_option|capfirst}}-->
@@ -163,7 +167,7 @@
                         {% endif %}
                         {% if q.question_img %}
                         <div class="image-holder mt-2">
-                            <img src="{{q.question_img.url}}" class="question-image">
+                            <img src="{{q.question_img.url}}" class="question-image" loading="lazy" />
                         </div>
                         {% endif %}
                     </div>

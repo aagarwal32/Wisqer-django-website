@@ -6,6 +6,7 @@ app_name = "polls"
 urlpatterns = [
     # /polls/
     path("", QuestionListView.as_view(), name="index"),
+    path("<str:username>/bookmarks/", BookmarkListView.as_view(), name="bookmarks"),
     path("post/", QuestionCreateView.as_view(), name="create_question"),
     path("post/<int:question_id>/<str:question_text>/", QuestionReplyView.as_view(), name="detail"),
     path("post/<int:pk>/<str:question_text>/rate", QuestionRatingView.as_view(), name="question_rating"),

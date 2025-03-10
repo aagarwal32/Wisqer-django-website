@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import F
 from urllib.parse import urlencode, quote
+from operator import attrgetter
+from itertools import chain
 from typing import Any
 
 from reversion.models import Version
@@ -24,7 +26,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.base import TemplateView
 from django.views import View
 
-from .models import Question, Reply
+from .models import Question, Reply, BookmarkTimestamp
 from .forms import QuestionForm, ReplyForm
 
 
@@ -48,6 +50,15 @@ class QuestionListView(ListView):
         context['current_sort_option'] = self.request.GET.get('sort_by', 'newest')
         context['sorting_labels'] = {'newest': 'Newest', 'oldest':'Oldest',}
         return context
+
+
+class BookmarkListView(LoginRequiredMixin, ListView):
+    model=BookmarkTimestamp
+    template_name = 'polls/bookmarks.html'
+    context_object_name = 'bookmarks'
+
+    def get_queryset(self):
+        return BookmarkTimestamp.objects.filter(user=self.request.user).order_by("-added_at")
 
 
 class QuestionCreateView(LoginRequiredMixin, FormView):
@@ -203,9 +214,11 @@ class QuestionBookmarkView(View):
 
         if question.bookmark.filter(id=request.user.id).exists():
             question.bookmark.remove(request.user)
+            BookmarkTimestamp.objects.filter(user=request.user, question=question).delete()
             return JsonResponse({"status": "remove_question_bookmark", "message": "removed bookmark from question"})
         else:
             question.bookmark.add(request.user)
+            BookmarkTimestamp.objects.create(user=request.user, question=question)
             return JsonResponse({"status": "add_question_bookmark", "message": "added bookmark to question"})
 
 
@@ -275,9 +288,11 @@ class ReplyBookmarkView(View):
 
         if reply.bookmark.filter(id=request.user.id).exists():
             reply.bookmark.remove(request.user)
+            BookmarkTimestamp.objects.filter(user=request.user, reply=reply).delete()
             return JsonResponse({"status": "remove_reply_bookmark", "message": "removed bookmark from reply"})
         else:
             reply.bookmark.add(request.user)
+            BookmarkTimestamp.objects.create(user=request.user, reply=reply)
             return JsonResponse({"status": "add_reply_bookmark", "message": "added bookmark to reply"})
 
 

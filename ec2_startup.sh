@@ -48,8 +48,8 @@ docker run -d -p 80:8080 \
 
 # Main loop to periodically check for new images
 while true; do
+  aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 340752824077.dkr.ecr.us-east-1.amazonaws.com
   if check_for_new_image; then
-    aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 340752824077.dkr.ecr.us-east-1.amazonaws.com
     docker pull 340752824077.dkr.ecr.us-east-1.amazonaws.com/wisqer-ecr:latest
     docker stop $(docker ps -q) || true
     docker run -d -p 80:8080 \
