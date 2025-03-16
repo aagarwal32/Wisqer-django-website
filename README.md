@@ -6,17 +6,16 @@ This README outlines the features, deployment process, and CI/CD workflows for W
 ### Update: Wisqer is back online! Now on AWS with new features and improvements!
 #### www.wisqer.com or www.wisqer.net
 
-### Currently Known Issues
-- Slow user-uploaded image loading.
-
-## Features:
+## Features and Media:
 
 ### Optimized for mobile every step of the way.
 
-(These screenshots are outdated. New ones coming soon!)
-Ask a Question!             |  Get a Quick Summary of all the Replies.
-:-------------------------:|:-------------------------:
-![IMG_6034](https://github.com/user-attachments/assets/9157d655-c6a7-4706-9c46-0d9b31027a36) |  ![IMG_6035](https://github.com/user-attachments/assets/815292d0-2ebf-4570-9966-6a7e1bca5679)
+![out (2)](https://github.com/user-attachments/assets/a181020d-d047-4def-9713-65f6d93f57b9) ![out 2](https://github.com/user-attachments/assets/3d3be886-3c4b-463d-9b82-b2de768c1b55)
+
+![IMG_6160](https://github.com/user-attachments/assets/2d3c216f-2ff5-4ef9-a9d4-5be1b137e67b)
+
+![wisqer-macbook-ss](https://github.com/user-attachments/assets/c53357fc-dd7f-48a2-a276-d570657f6828)
+
 
 #### New Features (2025)
 
