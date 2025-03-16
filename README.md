@@ -12,10 +12,9 @@ This README outlines the features, deployment process, and CI/CD workflows for W
 
 ![out (2)](https://github.com/user-attachments/assets/a181020d-d047-4def-9713-65f6d93f57b9) ![out 2](https://github.com/user-attachments/assets/3d3be886-3c4b-463d-9b82-b2de768c1b55)
 
-![IMG_6160](https://github.com/user-attachments/assets/2d3c216f-2ff5-4ef9-a9d4-5be1b137e67b)
+![IMG_6169](https://github.com/user-attachments/assets/9067f0b5-2719-49c1-b18b-4e4a3e8f2382)
 
-![wisqer-macbook-ss](https://github.com/user-attachments/assets/c53357fc-dd7f-48a2-a276-d570657f6828)
-
+![IMG_6172](https://github.com/user-attachments/assets/8c7b82a3-8218-4f42-9f32-e860742f4d9e)
 
 #### New Features (2025)
 
