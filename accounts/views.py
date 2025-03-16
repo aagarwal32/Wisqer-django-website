@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.urls import reverse, reverse_lazy
 
 from accounts.forms import UserCreationForm
@@ -19,6 +19,7 @@ from django.views.generic.base import TemplateView
 from django.views import View
 
 from polls.models import Question, Reply
+from accounts.models import UserFollowing
 from . tokens import generate_token
 User = get_user_model()
 
@@ -160,3 +161,44 @@ class AccountDeleteView(LoginRequiredMixin, View):
 
         return HttpResponseRedirect(self.success_url)
     
+
+# FOLLOW VIEWS
+def toggle_follow(request, target_user, status_prefix, message_prefix):
+    current_user = request.user
+    # prevent following yourself
+    if current_user == target_user:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    follow = UserFollowing.objects.filter(user_id=current_user, following_user_id=target_user)
+    if follow.exists():
+        follow.delete()
+        return JsonResponse({
+            "status": f"remove_{status_prefix}_follow", 
+            "message": f"removed follow from {message_prefix}"
+        })
+    else:
+        UserFollowing.objects.create(user_id=current_user, following_user_id=target_user)
+        return JsonResponse({
+            "status": f"add_{status_prefix}_follow", 
+            "message": f"added follow to {message_prefix}"
+        })
+
+
+# Follow view for question users
+class QuestionUserFollowView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Question, pk=pk)
+        target_user = post.user
+        return toggle_follow(request, target_user, "question_user", "question user")
+
+# Follow view for reply users
+class ReplyUserFollowView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Reply, pk=pk)
+        target_user = post.user
+        return toggle_follow(request, target_user, "reply_user", "reply user")
+
+# Follow view for account users
+class AccountUserFollowView(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        target_user = get_object_or_404(User, pk=pk)
+        return toggle_follow(request, target_user, "account_user", "account user")

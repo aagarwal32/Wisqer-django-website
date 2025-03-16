@@ -27,6 +27,7 @@ from django.views.generic.base import TemplateView
 from django.views import View
 
 from .models import Question, Reply, BookmarkTimestamp
+from accounts.models import UserFollowing
 from .forms import QuestionForm, ReplyForm
 
 
@@ -59,6 +60,23 @@ class BookmarkListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return BookmarkTimestamp.objects.filter(user=self.request.user).order_by("-added_at")
+    
+
+class FollowListView(LoginRequiredMixin, TemplateView):
+    template_name = 'polls/following.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_user = self.request.user
+        
+        # 'following' - where the current user is following someone
+        following = UserFollowing.objects.filter(user_id=current_user).order_by('-created')
+        # 'followers' - where someone is following the current user
+        followers = UserFollowing.objects.filter(following_user_id=current_user).order_by('-created')
+        
+        context['following'] = following
+        context['followers'] = followers
+        return context
 
 
 class QuestionCreateView(LoginRequiredMixin, FormView):

@@ -7,7 +7,7 @@
 
     --gray100: hsl(0, 0%, 100%);
     --gray97: hsl(0, 0%, 97%);
-    --gray90: hsl(0, 0%, 90%);
+    --gray93: hsl(0, 0%, 93%);
 
     --gray70: hsl(0, 0%, 70%);
     --gray40: hsl(0, 0%, 40%);
@@ -162,6 +162,7 @@ body {
 .base-page .left-content {
     width: 15%;
     margin-left: 0; margin-right: 0;
+    padding-left: 48px;
     width: 250px;
     display: none;
 }
@@ -190,8 +191,8 @@ body {
     animation: Bounce 0.3s ease-in-out;
 }
 
-/* Large screens (1150px and above) */
-@media (min-width: 1150px) {
+/* Large screens (1200px and above) */
+@media (min-width: 1200px) {
     .left-content {
         display: block !important;
     }
@@ -200,6 +201,9 @@ body {
     }
     .left-menu-collapse {
         display: none !important;
+    }
+    .logo {
+        margin-left: 48px !important;
     }
 }
 
@@ -418,7 +422,6 @@ body {
 }
 
 
-
 textarea.autoExpand {
     resize: none;
     min-height: 38px;
@@ -445,7 +448,7 @@ hr {
 .card-options {
     font: var(--h2);
     color: var(--gray30);
-    background-color: hsl(0, 0%, 92%);
+    background-color: var(--gray93);
     padding: 2px;
     border-radius: 1rem;
     gap: 12px;
@@ -607,6 +610,27 @@ hr {
     color: darkmagenta;
     border-color: darkmagenta;
 }
+
+.follow-button, .unfollow-button {
+    font: var(--h3); 
+    color: var(--gray0);
+    background-color: var(--gray97);
+    border: solid 1px darkgrey;
+    padding: 4px 8px;
+    border-radius: 15px;
+    margin: 0;
+}
+.follow-button:hover {
+    border: solid 1px darkgreen;
+    background-color: white;
+    color: darkgreen;
+}
+.unfollow-button:hover {
+    border: solid 1px darkred;
+    background-color: white;
+    color: darkred;
+}
+
 
 /* custom margin selectors */
 .mt-6 {

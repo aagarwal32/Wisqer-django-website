@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load humanize %}
+{% load follow_tags %}
 
 {% block content %}
 <div class="container-fluid mt-7 left-content">
@@ -11,7 +12,11 @@
                 
                 <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
                 
-                <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br>
+                {% if user.is_authenticated %}
+                <a class="item" href="{% url 'polls:following' user.username %}"><i class="bi bi-people-fill"></i> Following</a><br>
+                {% else %}
+                <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-people-fill"></i> Following</a><br>
+                {% endif %}
                 
                 {% if user.is_authenticated %}
                 <a class="item" href="{% url 'polls:bookmarks' user.username %}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
@@ -40,18 +45,48 @@
             <hr>
             <div class="card">
                 <div class="card-body comment">
-                    <p class="username-style">
-                        <a href="{% url 'accounts:user_account' question.user.id %}">{{question.user.username}}</a> 
-                        <span class="date-style">• {{question.pub_date|naturaltime}}
-                        {% if versions|length > 1 %}
-                            <div class="edited-label mt-1">
-                                <i class="bi bi-info-circle"></i>
-                                This question has been edited - <a data-bs-toggle="modal" 
-                                data-bs-target="#viewModalQuestionHistory" href="#">view history.</a>
-                            </div>
-                            {% endif %}
-                        </span>
-                    </p>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <p class="username-style" style="margin: 0;">
+                            <a href="{% url 'accounts:user_account' question.user.id %}">{{ question.user.username }}</a>
+                            <span class="date-style">• {{ question.pub_date|naturaltime }}
+                        </p>
+                        
+                        <!-- FOLLOW -->
+                        {% if not user.is_authenticated %}
+                        <form action="{% url 'accounts:login' %}?next={{request.path}}" style="margin-left: auto;">
+                            <button type="submit" class="remove-default-btn follow-button" onclick="event.stopPropagation();">
+                                <i class="bi bi-plus-lg"></i> Follow
+                            </button>
+                        </form>
+
+                        {% elif question.user.id == user.id %}
+                        {% elif question.user.username == '[deleted]' %}
+                        
+                        {% else %}
+                        <form class="interactForm" data-url="{% url 'accounts:user_question_follow' question.id question.question_text %}"
+                        data-question-id="{{question.id}}" data-csrf-token="{{csrf_token}}" style="margin-left: auto;">
+                            
+                                {% if user|is_following:question.user %}
+                                    <button id="follow-submit-{{question.id}}" class="remove-default-btn unfollow-button" type="submit" onclick="event.stopPropagation();">
+                                        <i id="follow-{{ question.id }}" class="bi bi-person-fill-check"></i> <span class="question-follow-text"></span>
+                                    </button>
+                                {% else %}
+                                    <button id="follow-submit-{{question.id}}" class="remove-default-btn follow-button" type="submit" onclick="event.stopPropagation();">
+                                        <i id="follow-{{ question.id }}" class="bi bi-plus-lg"></i> <span class="question-follow-text">Follow</span>
+                                    </button>
+                                {% endif %}
+     
+                        </form>
+                        {% endif %}
+                    </div>
+                    
+                    {% if versions|length > 1 %}
+                        <div class="edited-label mt-1 mb-3">
+                            <i class="bi bi-info-circle"></i>
+                            This question has been edited - <a data-bs-toggle="modal" 
+                            data-bs-target="#viewModalQuestionHistory" href="#">view history.</a>
+                        </div>
+                    {% endif %}
                     
                     <div class="question-body mt-1">{{question.question_text}}</div>
 
@@ -131,7 +166,7 @@
                                 {% if user.is_authenticated and user == question.user %}
                                 <li>
                                     <a class="dropdown-item" data-bs-toggle="modal" href="#" data-bs-target="#updateModalQuestion">
-                                        <i class="bi bi-pencil-square mx-3"></i>Edit
+                                        <i class="bi bi-pencil-fill mx-3"></i>Edit
                                     </a>
                                 </li>
                                 <li>
@@ -219,13 +254,43 @@
             <hr>
             <div class="card">
                 <div class="card-body comment">
-                    <p class="username-style">
-                        <a href="{% url 'accounts:user_account' reply.user.id %}">{{reply.user.username}}</a> 
-                        <span class="date-style">• {{reply.pub_date|naturaltime}}</span>
-                        {% if highlighted_reply_id and reply.id == highlighted_reply_id %}
-                            <span class="selected-question mx-2">selected reply</span>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <p class="username-style" style="margin: 0;">
+                            <a href="{% url 'accounts:user_account' reply.user.id %}">{{reply.user.username}}</a> 
+                            <span class="date-style">• {{reply.pub_date|naturaltime}}</span>
+                            {% if highlighted_reply_id and reply.id == highlighted_reply_id %}
+                                <span class="selected-question mx-2">selected reply</span>
+                            {% endif %}
+                        </p>
+
+                        <!-- FOLLOW -->
+                        {% if not user.is_authenticated %}
+                        <form action="{% url 'accounts:login' %}?next={{request.path}}" style="margin-left: auto;">
+                            <button type="submit" class="remove-default-btn follow-button" onclick="event.stopPropagation();">
+                                <i class="bi bi-plus-lg"></i> Follow
+                            </button>
+                        </form>
+
+                        {% elif reply.user.id == user.id %}
+                        {% elif reply.user.username == '[deleted]' %}
+                        
+                        {% else %}
+                        <form class="interactForm" data-url="{% url 'accounts:user_reply_follow' reply.id reply.reply_text %}"
+                        data-reply-id="{{reply.id}}" data-csrf-token="{{csrf_token}}" style="margin-left: auto;">
+                            
+                                {% if user|is_following:reply.user %}
+                                    <button id="follow-submit-{{reply.id}}" class="remove-default-btn unfollow-button" type="submit" onclick="event.stopPropagation();">
+                                        <i id="follow-reply-{{ reply.id }}" class="bi bi-person-fill-check"></i> <span class="reply-follow-text"></span>
+                                    </button>
+                                {% else %}
+                                    <button id="follow-submit-{{reply.id}}" class="remove-default-btn follow-button" type="submit" onclick="event.stopPropagation();">
+                                        <i id="follow-reply-{{ reply.id }}" class="bi bi-plus-lg"></i> <span class="reply-follow-text">Follow</span>
+                                    </button>
+                                {% endif %}
+     
+                        </form>
                         {% endif %}
-                    </p>
+                    </div>     
 
                     <p class="reply-body mt-2">{{reply.reply_text|linebreaksbr}}</p> 
                 </div>
@@ -245,9 +310,9 @@
                         data-reply-id="{{reply.id}}" data-csrf-token="{{csrf_token}}">
                             <button class="remove-default-btn rating-btn" type="submit" onclick="event.stopPropagation();">
                                 {% if user in reply.rating.all %}
-                                <i id="rating-{{ reply.id }}" class="bi bi-hand-thumbs-up-fill"></i>
+                                <i id="rating-reply-{{ reply.id }}" class="bi bi-hand-thumbs-up-fill"></i>
                                 {% else %}
-                                <i id="rating-{{ reply.id }}" class="bi bi-hand-thumbs-up"></i>
+                                <i id="rating-reply-{{ reply.id }}" class="bi bi-hand-thumbs-up"></i>
                                 {% endif %}
                                 <span class="reply-rating-count">{{ reply.rating.all.count }}</span>
                             </button>
@@ -267,9 +332,9 @@
                         data-reply-id="{{reply.id}}" data-csrf-token="{{csrf_token}}">
                             <button class="remove-default-btn bookmark-btn" type="submit" onclick="event.stopPropagation();">
                                 {% if user in reply.bookmark.all %}
-                                <i id="bookmark-{{ reply.id }}" class="bi bi-bookmark-check-fill"></i>
+                                <i id="bookmark-reply-{{ reply.id }}" class="bi bi-bookmark-check-fill"></i>
                                 {% else %}
-                                <i id="bookmark-{{ reply.id }}" class="bi bi-bookmark-plus"></i>
+                                <i id="bookmark-reply-{{ reply.id }}" class="bi bi-bookmark-plus"></i>
                                 {% endif %}
                             </button>
                         </form>

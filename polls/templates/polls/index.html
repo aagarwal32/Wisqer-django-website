@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load humanize %}
+{% load follow_tags %}
 
 {% block content %}
 <div class="container-fluid mt-7 left-content">
@@ -11,7 +12,11 @@
                 
                 <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
                 
-                <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br>
+                {% if user.is_authenticated %}
+                <a class="item" href="{% url 'polls:following' user.username %}"><i class="bi bi-people-fill"></i> Following</a><br>
+                {% else %}
+                <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-people-fill"></i> Following</a><br>
+                {% endif %}
                 
                 {% if user.is_authenticated %}
                 <a class="item" href="{% url 'polls:bookmarks' user.username %}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
@@ -157,18 +162,48 @@
                 <div class="card card-clickable" data-url="{% url 'polls:detail' q.id q.question_text %}"
                 onclick="window.location.href=this.dataset.url">
                     <div class="card-body comment">
-                        <p class="username-style">
-                            <a href="{% url 'accounts:user_account' q.user.id %}">{{q.user.username}}</a> 
-                            <span class="date-style">• {{q.pub_date|naturaltime}}</span>
-                        </p>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <p class="username-style" style="margin: 0;">
+                                <a href="{% url 'accounts:user_account' q.user.id %}">{{ q.user.username }}</a>
+                                <span class="date-style">• {{ q.pub_date|naturaltime }}
+                            </p>
+                            
+                            <!-- FOLLOW -->
+                            {% if not user.is_authenticated %}
+                            <form action="{% url 'accounts:login' %}?next={{request.path}}" style="margin-left: auto;">
+                                <button type="submit" class="remove-default-btn follow-button" onclick="event.stopPropagation();">
+                                    <i class="bi bi-plus-lg"></i> Follow
+                                </button>
+                            </form>
+
+                            {% elif q.user.id == user.id %}
+                            {% elif q.user.username == '[deleted]' %}
+                            
+                            {% else %}
+                            <form class="interactForm" data-url="{% url 'accounts:user_question_follow' q.id q.question_text %}"
+                            data-question-id="{{q.id}}" data-csrf-token="{{csrf_token}}" style="margin-left: auto;">
+                                
+                                    {% if user|is_following:q.user %}
+                                        <button id="follow-submit-{{q.id}}" class="remove-default-btn unfollow-button" type="submit" onclick="event.stopPropagation();">
+                                            <i id="follow-{{ q.id }}" class="bi bi-person-fill-check"></i> <span class="question-follow-text"></span>
+                                        </button>
+                                    {% else %}
+                                        <button id="follow-submit-{{q.id}}" class="remove-default-btn follow-button" type="submit" onclick="event.stopPropagation();">
+                                            <i id="follow-{{ q.id }}" class="bi bi-plus-lg"></i> <span class="question-follow-text">Follow</span>
+                                        </button>
+                                    {% endif %}
+         
+                            </form>
+                            {% endif %}
+                        </div>
                         <p class="question-body mt-2">{{q.question_text}}</p>
                         {% if q.question_body %}
-                        <p class="question-body-2 mt-2"> {{q.question_body|truncatechars:140}}</p>
+                            <p class="question-body-2 mt-2"> {{q.question_body|truncatechars:140}}</p>
                         {% endif %}
                         {% if q.question_img %}
-                        <div class="image-holder mt-2">
-                            <img src="{{q.question_img.url}}" class="question-image" loading="lazy" />
-                        </div>
+                            <div class="image-holder mt-2">
+                                <img src="{{q.question_img.url}}" class="question-image" loading="lazy" />
+                            </div>
                         {% endif %}
                     </div>
 

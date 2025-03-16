@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load humanize %}
+{% load follow_tags %}
 {% load static %}
 
 {% block content %}
@@ -11,11 +12,18 @@
                 
                 <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
                 
-                <a class="item" href="#"><i class="bi bi-people-fill"></i> Following</a><br>
-                
-                {% if user.is_authenticated and user.id == account_user.id %}
-                <a class="item" href="{% url 'polls:bookmarks' user.username %}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% if user.is_authenticated %}
+                <a class="item" href="{% url 'polls:following' user.username %}"><i class="bi bi-people-fill"></i> Following</a><br>
+                {% else %}
+                <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-people-fill"></i> Following</a><br>
                 {% endif %}
+                
+                {% if user.is_authenticated %}
+                <a class="item" href="{% url 'polls:bookmarks' user.username %}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% else %}
+                <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
+                {% endif %}
+
                 <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
             </div>
         </div>
@@ -27,17 +35,19 @@
     <div class="row">
         <div class="col-sm">
             {% if account_user.username == '[deleted]' %}
-            <h5>This account has been deleted.</h5>
-            <hr>
-            <p>Profile details are unavailable.</p>
+                <h5>This account has been deleted.</h5>
+                <hr>
+                <p>Profile details are unavailable.</p>
 
             {% else %}
 
-            {% if user.is_authenticated and user.id == account_user.id %}
-            <h2 class="mx-3"><i class="bi bi-person-circle"></i> Your Account</h2>
-            {% else %}
-            <h2 class="mx-3"><i class="bi bi-person-circle"></i> {{account_user.username}}'s Account</h2>
-            {% endif %}
+                {% if user.is_authenticated and user.id == account_user.id %}
+                    <h2 class="mx-3"><i class="bi bi-person-circle"></i> Your Account</h2>
+                {% else %}
+                    <h2 class="mx-3"><i class="bi bi-person-circle"></i> {{account_user.username}}'s Account</h2>
+                    {% if account_user|is_following_by:user %} <span class="follow-button mx-3">Follows you</span> {% endif %}</span>
+                {% endif %}
+                <span class="mx-3">Following: {{account_user.following.all.count}} | Followers: {{account_user.followers.all.count}}</span>
 
 
             <!-- Nav tabs -->
@@ -78,7 +88,7 @@
                         </div>
                     </div>
                     {% empty %}
-                        <h6>Any questions you ask will appear here!</h6>
+                        <h6>No questions yet...</h6>
                     {% endfor %}
                 </div>
                 <div class="tab-pane container fade" id="reply_list"><br>
@@ -94,7 +104,7 @@
                         </div>
                     </div>
                     {% empty %}
-                        <h6>Your replies will appear here!</h6>
+                        <h6>No replies yet...</h6>
                     {% endfor %}
                 </div>
                 {% if user.is_authenticated and user.id == account_user.id %}

@@ -32,12 +32,23 @@ function initializeInteractions() {
 
         const questionId = form.getAttribute('data-question-id');
         const replyId = form.getAttribute('data-reply-id');
+
         const questionRatingCountSpan = form.querySelector('.question-rating-count');
         const replyRatingCountSpan = form.querySelector('.reply-rating-count');
+
         const questionRatingIcon = document.getElementById(`rating-${questionId}`);
+        const replyRatingIcon = document.getElementById(`rating-reply-${replyId}`);
+        
         const questionBookmarkIcon = document.getElementById(`bookmark-${questionId}`);
-        const replyRatingIcon = document.getElementById(`rating-${replyId}`);
-        const replyBookmarkIcon = document.getElementById(`bookmark-${replyId}`);
+        const replyBookmarkIcon = document.getElementById(`bookmark-reply-${replyId}`);
+
+        const questionFollowIcon = document.getElementById(`follow-${questionId}`);
+        const replyFollowIcon = document.getElementById(`follow-reply-${replyId}`);
+
+        const questionFollowTextSpan = form.querySelector('.question-follow-text');
+        const replyFollowTextSpan = form.querySelector('.reply-follow-text');
+
+        const followSubmitButton = document.getElementById(`follow-submit-${questionId}`);
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -57,14 +68,12 @@ function initializeInteractions() {
             
             // process data
             }).then(data => {
-                if (data.status.includes("rating")){
-                    updateRating(data);
+                if (data.status.includes("rating")){ updateRating(data); } 
+                else if (data.status.includes("follow")){ updateFollow(data); } 
+                else {updateBookmark(data); }
 
-                } else {
-                    updateBookmark(data);
-                }    
             }).catch(error => {
-                console.error('Error updating the rating: ', error);
+                console.error('Error updating: ', error);
             });
         });
 
@@ -96,6 +105,45 @@ function initializeInteractions() {
 
             } else {
                 console.error('Error updating the rating: ', data.status);
+            }
+        }
+
+        // determines whether to add/remove follow on question/reply user
+        function updateFollow(data) {
+            if (data.status === 'add_question_user_follow') {
+                questionFollowIcon.classList.remove('bi-plus-lg');
+                questionFollowTextSpan.textContent = "";
+                questionFollowIcon.classList.add('bi-person-fill-check');
+
+                followSubmitButton.classList.remove('follow-button');
+                followSubmitButton.classList.add('unfollow-button');
+
+            } else if (data.status === 'remove_question_user_follow') {
+                questionFollowIcon.classList.remove('bi-person-fill-check');
+                questionFollowIcon.classList.add('bi-plus-lg');
+                questionFollowTextSpan.textContent = "Follow";
+
+                followSubmitButton.classList.remove('unfollow-button');
+                followSubmitButton.classList.add('follow-button');
+            
+            } else if (data.status === 'add_reply_user_follow') {
+                replyFollowIcon.classList.remove('bi-plus-lg');
+                replyFollowTextSpan.textContent = "";
+                replyFollowIcon.classList.add('bi-person-fill-check');
+
+                followSubmitButton.classList.remove('follow-button');
+                followSubmitButton.classList.add('unfollow-button');
+
+            } else if (data.status === 'remove_reply_user_follow') {
+                replyFollowIcon.classList.remove('bi-person-fill-check');
+                replyFollowIcon.classList.add('bi-plus-lg');
+                replyFollowTextSpan.textContent = "Follow";
+
+                followSubmitButton.classList.remove('unfollow-button');
+                followSubmitButton.classList.add('follow-button');
+
+            } else {
+                console.error('Error updating the follow: ', data.status);
             }
         }
 
