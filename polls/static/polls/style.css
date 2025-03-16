@@ -75,6 +75,13 @@ body {
     color: darkmagenta !important;
 }
 
+/* POST HEADER INFO */
+@media only screen and (max-width: 400px) {
+    .post-header-info .selected-question {
+        display: none;
+    }
+}
+
 /* SEARCH BAR */
 /* search container shrinks and grows flexibly */
 
@@ -181,7 +188,7 @@ body {
     color: darkmagenta;
 }
 
-.left-menu-collapse {
+.w-left-menu-collapse {
     border-radius: 1rem;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     background-color: white;
@@ -196,10 +203,10 @@ body {
     .left-content {
         display: block !important;
     }
-    #left-menu-toggler {
+    #w-left-menu-toggler {
         display: none !important;
     }
-    .left-menu-collapse {
+    .w-left-menu-collapse {
         display: none !important;
     }
     .logo {

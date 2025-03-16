@@ -2,6 +2,7 @@ import os
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden, JsonResponse
+from django.contrib.auth import get_user_model
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q
 from django.contrib import messages
@@ -28,6 +29,7 @@ from django.views import View
 
 from .models import Question, Reply, BookmarkTimestamp
 from accounts.models import UserFollowing
+User = get_user_model()
 from .forms import QuestionForm, ReplyForm
 
 
@@ -62,12 +64,12 @@ class BookmarkListView(LoginRequiredMixin, ListView):
         return BookmarkTimestamp.objects.filter(user=self.request.user).order_by("-added_at")
     
 
-class FollowListView(LoginRequiredMixin, TemplateView):
+class FollowListView(TemplateView):
     template_name = 'polls/following.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        current_user = self.request.user
+        current_user = get_object_or_404(User, pk=kwargs['pk'])
         
         # 'following' - where the current user is following someone
         following = UserFollowing.objects.filter(user_id=current_user).order_by('-created')
@@ -77,6 +79,10 @@ class FollowListView(LoginRequiredMixin, TemplateView):
         context['following'] = following
         context['followers'] = followers
         return context
+    
+
+class AboutView(TemplateView):
+    template_name = 'polls/about.html'
 
 
 class QuestionCreateView(LoginRequiredMixin, FormView):

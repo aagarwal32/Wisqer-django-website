@@ -10,10 +10,10 @@
             <div class="left-menu d-flex flex-column justify-content-between align-items-between">
                 <a class="item mt-3" href="{% url 'polls:index' %}"><i class="bi bi-house-fill"></i> Home</a><br>
                 
-                <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
+                <a class="item" href="#" data-bs-toggle="tooltip" title="Explore Tab (Coming Soon)"><i class="bi bi-compass-fill"></i> Explore</a><br>
                 
                 {% if user.is_authenticated %}
-                <a class="item" href="{% url 'polls:following' user.username %}"><i class="bi bi-people-fill"></i> Following</a><br>
+                <a class="item" href="{% url 'polls:following' user.username user.id %}"><i class="bi bi-people-fill"></i> Following</a><br>
                 {% else %}
                 <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-people-fill"></i> Following</a><br>
                 {% endif %}
@@ -24,7 +24,7 @@
                 <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
                 {% endif %}
                 
-                <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
+                <a class="item" href="{% url 'polls:about' %}"><i class="bi bi-info-circle-fill"></i> About</a><br>
             </div>
         </div>
     </div>  
@@ -52,7 +52,7 @@
                         </p>
                         
                         <!-- FOLLOW -->
-                        {% if not user.is_authenticated %}
+                        {% if not user.is_authenticated and not question.user.username == '[deleted]' %}
                         <form action="{% url 'accounts:login' %}?next={{request.path}}" style="margin-left: auto;">
                             <button type="submit" class="remove-default-btn follow-button" onclick="event.stopPropagation();">
                                 <i class="bi bi-plus-lg"></i> Follow
@@ -64,17 +64,17 @@
                         
                         {% else %}
                         <form class="interactForm" data-url="{% url 'accounts:user_question_follow' question.id question.question_text %}"
-                        data-question-id="{{question.id}}" data-csrf-token="{{csrf_token}}" style="margin-left: auto;">
+                        data-account-id="{{question.user.id}}" data-csrf-token="{{csrf_token}}" style="margin-left: auto;">
                             
-                                {% if user|is_following:question.user %}
-                                    <button id="follow-submit-{{question.id}}" class="remove-default-btn unfollow-button" type="submit" onclick="event.stopPropagation();">
-                                        <i id="follow-{{ question.id }}" class="bi bi-person-fill-check"></i> <span class="question-follow-text"></span>
-                                    </button>
-                                {% else %}
-                                    <button id="follow-submit-{{question.id}}" class="remove-default-btn follow-button" type="submit" onclick="event.stopPropagation();">
-                                        <i id="follow-{{ question.id }}" class="bi bi-plus-lg"></i> <span class="question-follow-text">Follow</span>
-                                    </button>
-                                {% endif %}
+                            {% if user|is_following:question.user %}
+                                <button class="follow-submit-{{question.user.id}} remove-default-btn unfollow-button" type="submit" onclick="event.stopPropagation();">
+                                    <i class="follow-{{ question.user.id }} bi bi-person-fill-check"></i> <span class="follow-text-{{ question.user.id }}"></span>
+                                </button>
+                            {% else %}
+                                <button class="follow-submit-{{question.user.id}} remove-default-btn follow-button" type="submit" onclick="event.stopPropagation();">
+                                    <i class="follow-{{ question.user.id }} bi bi-plus-lg"></i> <span class="follow-text-{{ question.user.id }}">Follow</span>
+                                </button>
+                            {% endif %}
      
                         </form>
                         {% endif %}
@@ -186,11 +186,11 @@
     </div>
 
     <!--Reply Form-->
-    <div class="row mt-4">
+    <div class="row mt-4" style="padding-left: 4px; padding-right:4px;">
         <div class="col-sm">
             {% if not user.is_authenticated %}
             <div class="mb-2">To create replies and access other features please
-                <a style="text-decoration: none;" href="{% url 'accounts:login' %}">login</a>
+                <a style="text-decoration: none;" href="{% url 'accounts:login' %}">log in</a>
                 or
                 <a style="text-decoration: none;" href="{% url 'accounts:register' %}">register</a>
             </div>
@@ -254,17 +254,17 @@
             <hr>
             <div class="card">
                 <div class="card-body comment">
-                    <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="post-header-info" style="display: flex; align-items: center; gap: 4px; flex-wrap:wrap;">
                         <p class="username-style" style="margin: 0;">
                             <a href="{% url 'accounts:user_account' reply.user.id %}">{{reply.user.username}}</a> 
                             <span class="date-style">• {{reply.pub_date|naturaltime}}</span>
                             {% if highlighted_reply_id and reply.id == highlighted_reply_id %}
-                                <span class="selected-question mx-2">selected reply</span>
+                                <span class="selected-question mx-2">selected</span>
                             {% endif %}
                         </p>
 
                         <!-- FOLLOW -->
-                        {% if not user.is_authenticated %}
+                        {% if not user.is_authenticated and not reply.user.username == '[deleted]' %}
                         <form action="{% url 'accounts:login' %}?next={{request.path}}" style="margin-left: auto;">
                             <button type="submit" class="remove-default-btn follow-button" onclick="event.stopPropagation();">
                                 <i class="bi bi-plus-lg"></i> Follow
@@ -276,17 +276,17 @@
                         
                         {% else %}
                         <form class="interactForm" data-url="{% url 'accounts:user_reply_follow' reply.id reply.reply_text %}"
-                        data-reply-id="{{reply.id}}" data-csrf-token="{{csrf_token}}" style="margin-left: auto;">
+                        data-account-id="{{reply.user.id}}" data-csrf-token="{{csrf_token}}" style="margin-left: auto;">
                             
-                                {% if user|is_following:reply.user %}
-                                    <button id="follow-submit-{{reply.id}}" class="remove-default-btn unfollow-button" type="submit" onclick="event.stopPropagation();">
-                                        <i id="follow-reply-{{ reply.id }}" class="bi bi-person-fill-check"></i> <span class="reply-follow-text"></span>
-                                    </button>
-                                {% else %}
-                                    <button id="follow-submit-{{reply.id}}" class="remove-default-btn follow-button" type="submit" onclick="event.stopPropagation();">
-                                        <i id="follow-reply-{{ reply.id }}" class="bi bi-plus-lg"></i> <span class="reply-follow-text">Follow</span>
-                                    </button>
-                                {% endif %}
+                            {% if user|is_following:reply.user %}
+                                <button class="follow-submit-{{reply.user.id}} remove-default-btn unfollow-button" type="submit" onclick="event.stopPropagation();">
+                                    <i class="follow-{{ reply.user.id }} bi bi-person-fill-check"></i> <span class="follow-text-{{ reply.user.id }}"></span>
+                                </button>
+                            {% else %}
+                                <button class="follow-submit-{{reply.user.id}} remove-default-btn follow-button" type="submit" onclick="event.stopPropagation();">
+                                    <i class="follow-{{ reply.user.id }} bi bi-plus-lg"></i> <span class="follow-text-{{ reply.user.id }}">Follow</span>
+                                </button>
+                            {% endif %}
      
                         </form>
                         {% endif %}

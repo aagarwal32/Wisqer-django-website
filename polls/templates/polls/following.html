@@ -9,10 +9,10 @@
             <div class="left-menu d-flex flex-column justify-content-between align-items-between">
                 <a class="item mt-3" href="{% url 'polls:index' %}"><i class="bi bi-house-fill"></i> Home</a><br>
                 
-                <a class="item" href="#"><i class="bi bi-compass-fill"></i> Explore</a><br>
+                <a class="item" href="#" data-bs-toggle="tooltip" title="Explore Tab (Coming Soon)"><i class="bi bi-compass-fill"></i> Explore</a><br>
                 
                 {% if user.is_authenticated %}
-                <a class="item" href="{% url 'polls:following' user.username %}"><i class="bi bi-people-fill"></i> Following</a><br>
+                <a class="item" href="{% url 'polls:following' user.username user.id %}"><i class="bi bi-people-fill"></i> Following</a><br>
                 {% else %}
                 <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-people-fill"></i> Following</a><br>
                 {% endif %}
@@ -23,7 +23,7 @@
                 <a class="item" href="{% url 'accounts:login' %}?next={{request.path}}"><i class="bi bi-bookmark-fill"></i> Bookmarks</a><br>
                 {% endif %}
                 
-                <a class="item" href="#"><i class="bi bi-info-circle-fill"></i> About</a><br>
+                <a class="item" href="{% url 'polls:about' %}"><i class="bi bi-info-circle-fill"></i> About</a><br>
             </div>
         </div>
     </div>
@@ -34,42 +34,44 @@
 <!--Bookmarks list-->
 <div class="container-fluid mt-7 center-content" style="background-color: hsl(0, 0%, 97%); padding:24px; border-radius:1rem;">
     <div class="row">
-        <div class="col-sm" style="display: flex; justify-content:space-around; gap:24px;">
+        <div class="col-sm" style="display: flex; justify-content:space-around; gap:12px;">
             <!-- Following -->
             <div class="following-section">
-                <h2>Following</h2>
+                <h2 class="mx-2">Following</h2>
                     {% for follow in following %}
 
                         <div class="card card-clickable mt-2" data-url="{% url 'accounts:user_account' follow.following_user_id.id %}"
                         onclick="window.location.href=this.dataset.url">
                             <div class="card-body comment">
                                 <p class="username-style">
-                                    <i class="bi bi-person-circle mx-2"></i> {{ follow.following_user_id.username }}
-                                    <span class="date-style">• you followed {{follow.created|naturaltime}}</span>
+                                    <i class="bi bi-person-circle mx-1"></i> {{ follow.following_user_id.username }}
+                                    <div class="date-style mx-1">{{follow.created|naturaltime}}</div>
                                 </p>
                             </div>
                         </div>
                     {% empty %}
-                        <li>You are not following anyone.</li>
+                        <div class="card" style="padding: 8px;">No following.</div>
                     {% endfor %}
             </div>
 
+            <div style="width: 0px; height: 100%; border-right:1px solid black;"></div>
+
             <!-- Followers -->
             <div class="followers-section">
-                <h2>Followers</h2>
+                <h2 class="mx-2">Followers</h2>
                     {% for follow in followers %}
 
                         <div class="card card-clickable mt-2" data-url="{% url 'accounts:user_account' follow.user_id.id %}"
                         onclick="window.location.href=this.dataset.url">
                             <div class="card-body comment">
                                 <p class="username-style">
-                                    <i class="bi bi-person-circle mx-2"></i> {{ follow.user_id.username }}
-                                    <span class="date-style">• followed you {{follow.created|naturaltime}}</span>
+                                    <span><i class="bi bi-person-circle mx-1"></i> {{ follow.user_id.username }}</span>
+                                    <div class="date-style mx-1">{{follow.created|naturaltime}}</div>
                                 </p>
                             </div>
                         </div>
                     {% empty %}
-                        <li>No one is following you yet.</li>
+                        <div class="card" style="padding: 8px;">No followers.</div>
                     {% endfor %}
             </div>
         </div>

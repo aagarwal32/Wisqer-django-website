@@ -163,7 +163,7 @@ class AccountDeleteView(LoginRequiredMixin, View):
     
 
 # FOLLOW VIEWS
-def toggle_follow(request, target_user, status_prefix, message_prefix):
+def toggle_follow(request, target_user):
     current_user = request.user
     # prevent following yourself
     if current_user == target_user:
@@ -171,16 +171,10 @@ def toggle_follow(request, target_user, status_prefix, message_prefix):
     follow = UserFollowing.objects.filter(user_id=current_user, following_user_id=target_user)
     if follow.exists():
         follow.delete()
-        return JsonResponse({
-            "status": f"remove_{status_prefix}_follow", 
-            "message": f"removed follow from {message_prefix}"
-        })
+        return JsonResponse({"status": f"remove_user_follow", "message": f"removed follow from user"})
     else:
         UserFollowing.objects.create(user_id=current_user, following_user_id=target_user)
-        return JsonResponse({
-            "status": f"add_{status_prefix}_follow", 
-            "message": f"added follow to {message_prefix}"
-        })
+        return JsonResponse({"status": f"add_user_follow", "message": f"added follow to user"})
 
 
 # Follow view for question users
@@ -188,17 +182,17 @@ class QuestionUserFollowView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         post = get_object_or_404(Question, pk=pk)
         target_user = post.user
-        return toggle_follow(request, target_user, "question_user", "question user")
+        return toggle_follow(request, target_user)
 
 # Follow view for reply users
 class ReplyUserFollowView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         post = get_object_or_404(Reply, pk=pk)
         target_user = post.user
-        return toggle_follow(request, target_user, "reply_user", "reply user")
+        return toggle_follow(request, target_user)
 
 # Follow view for account users
 class AccountUserFollowView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         target_user = get_object_or_404(User, pk=pk)
-        return toggle_follow(request, target_user, "account_user", "account user")
+        return toggle_follow(request, target_user)

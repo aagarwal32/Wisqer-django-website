@@ -7,7 +7,8 @@ urlpatterns = [
     # /polls/
     path("", QuestionListView.as_view(), name="index"),
     path("<str:username>/bookmarks/", BookmarkListView.as_view(), name="bookmarks"),
-    path("<str:username>/following/", FollowListView.as_view(), name="following"),
+    path("<str:username>/<int:pk>/following/", FollowListView.as_view(), name="following"),
+    path("about/", AboutView.as_view(), name="about"),
     path("post/", QuestionCreateView.as_view(), name="create_question"),
     path("post/<int:question_id>/<str:question_text>/", QuestionReplyView.as_view(), name="detail"),
     path("post/<int:pk>/<str:question_text>/rate", QuestionRatingView.as_view(), name="question_rating"),

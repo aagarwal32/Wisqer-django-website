@@ -1,25 +1,9 @@
 // initialize functions for both index and detail pages
 function initAppPage() {
-    initializeLeftNav();
     initializeInteractions();
     initializeOpenAI_ResponseHandling();
     initializeImageStyling();
     initializeQuestionInputForm();
-}
-
-function initializeLeftNav() {
-    const leftMenuToggler = document.querySelector('#left-menu-toggler');
-    const leftMenuCollapse = document.querySelector('.left-menu-collapse');
-
-    function openLeftMenu() {
-        const isHidden = getComputedStyle(leftMenuCollapse).display === 'none';
-        leftMenuCollapse.style.display = isHidden ? 'block' : 'none';
-    }
-
-    leftMenuToggler.addEventListener("click", function(event) {
-        event.stopPropagation();
-        openLeftMenu();
-    })
 }
 
 // initialize and update rating from frontend
@@ -32,6 +16,7 @@ function initializeInteractions() {
 
         const questionId = form.getAttribute('data-question-id');
         const replyId = form.getAttribute('data-reply-id');
+        const accountId = form.getAttribute('data-account-id');
 
         const questionRatingCountSpan = form.querySelector('.question-rating-count');
         const replyRatingCountSpan = form.querySelector('.reply-rating-count');
@@ -41,14 +26,6 @@ function initializeInteractions() {
         
         const questionBookmarkIcon = document.getElementById(`bookmark-${questionId}`);
         const replyBookmarkIcon = document.getElementById(`bookmark-reply-${replyId}`);
-
-        const questionFollowIcon = document.getElementById(`follow-${questionId}`);
-        const replyFollowIcon = document.getElementById(`follow-reply-${replyId}`);
-
-        const questionFollowTextSpan = form.querySelector('.question-follow-text');
-        const replyFollowTextSpan = form.querySelector('.reply-follow-text');
-
-        const followSubmitButton = document.getElementById(`follow-submit-${questionId}`);
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -69,7 +46,7 @@ function initializeInteractions() {
             // process data
             }).then(data => {
                 if (data.status.includes("rating")){ updateRating(data); } 
-                else if (data.status.includes("follow")){ updateFollow(data); } 
+                else if (data.status.includes("follow")){ updateFollow(data, accountId); } 
                 else {updateBookmark(data); }
 
             }).catch(error => {
@@ -109,39 +86,35 @@ function initializeInteractions() {
         }
 
         // determines whether to add/remove follow on question/reply user
-        function updateFollow(data) {
-            if (data.status === 'add_question_user_follow') {
-                questionFollowIcon.classList.remove('bi-plus-lg');
-                questionFollowTextSpan.textContent = "";
-                questionFollowIcon.classList.add('bi-person-fill-check');
-
-                followSubmitButton.classList.remove('follow-button');
-                followSubmitButton.classList.add('unfollow-button');
-
-            } else if (data.status === 'remove_question_user_follow') {
-                questionFollowIcon.classList.remove('bi-person-fill-check');
-                questionFollowIcon.classList.add('bi-plus-lg');
-                questionFollowTextSpan.textContent = "Follow";
-
-                followSubmitButton.classList.remove('unfollow-button');
-                followSubmitButton.classList.add('follow-button');
+        function updateFollow(data, accountId) {
+            const followIcons = document.querySelectorAll(`.follow-${accountId}`);
+            const followTextSpans = document.querySelectorAll(`.follow-text-${accountId}`);
+            const followSubmitButtons = document.querySelectorAll(`.follow-submit-${accountId}`);
             
-            } else if (data.status === 'add_reply_user_follow') {
-                replyFollowIcon.classList.remove('bi-plus-lg');
-                replyFollowTextSpan.textContent = "";
-                replyFollowIcon.classList.add('bi-person-fill-check');
-
-                followSubmitButton.classList.remove('follow-button');
-                followSubmitButton.classList.add('unfollow-button');
-
-            } else if (data.status === 'remove_reply_user_follow') {
-                replyFollowIcon.classList.remove('bi-person-fill-check');
-                replyFollowIcon.classList.add('bi-plus-lg');
-                replyFollowTextSpan.textContent = "Follow";
-
-                followSubmitButton.classList.remove('unfollow-button');
-                followSubmitButton.classList.add('follow-button');
-
+            if (data.status === 'add_user_follow') {
+                followIcons.forEach(icon => {
+                    icon.classList.remove('bi-plus-lg');
+                    icon.classList.add('bi-person-fill-check');
+                });
+                followTextSpans.forEach(span => {
+                    span.textContent = "";
+                });
+                followSubmitButtons.forEach(button => {
+                    button.classList.remove('follow-button');
+                    button.classList.add('unfollow-button');
+                });
+            } else if (data.status === 'remove_user_follow') {
+                followIcons.forEach(icon => {
+                    icon.classList.remove('bi-person-fill-check');
+                    icon.classList.add('bi-plus-lg');
+                });
+                followTextSpans.forEach(span => {
+                    span.textContent = "Follow";
+                });
+                followSubmitButtons.forEach(button => {
+                    button.classList.remove('unfollow-button');
+                    button.classList.add('follow-button');
+                });
             } else {
                 console.error('Error updating the follow: ', data.status);
             }
