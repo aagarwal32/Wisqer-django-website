@@ -49,7 +49,7 @@ class QuestionListView(ListView):
         # Add the form to the context data for the GET request
         context = super().get_context_data(**kwargs)
         context['form'] = kwargs.get('form', QuestionForm())
-        context['title'] = 'wisqer'
+        context['title'] = 'Wisqer - Curious?'
         context['current_sort_option'] = self.request.GET.get('sort_by', 'newest')
         context['sorting_labels'] = {'newest': 'Newest', 'oldest':'Oldest',}
         return context

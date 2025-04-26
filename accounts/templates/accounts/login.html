@@ -3,7 +3,7 @@
 {% block content %}
 <div class="center-content-auth">
     <div class="shadow p-5 mt-7 bg-body" style="border-radius: 1rem;">
-    <h1 style="color: darkmagenta;">Login to Wisqer</h1>
+    <h1 style="color: darkmagenta;">Welcome back!</h1>
 
     {% if messages %}
         <div class="alert alert-secondary">
@@ -36,11 +36,11 @@
         {% endfor %}
 
         <input type="hidden" name="next" value="{{next}}">
-        <button type="submit" class="btn btn-primary mb-5">Login</button>
+        <button type="submit" class="btn btn-primary mb-4 w-100">Log In</button>
     </form>
 
     <h6>Don't have an account? 
-        <a href="{% url 'accounts:register' %}">Register here</a>.
+        <a href="{% url 'accounts:register' %}" style="text-decoration: none;">Register here</a>.
     </h6>
     </div>
 </div>

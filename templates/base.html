@@ -16,6 +16,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon_io/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon_io/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon_io/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'favicon_io/site.webmanifest' %}">
+
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-custom fixed-top">
@@ -41,7 +46,7 @@
                 
                 <a class="item" href="{% url 'polls:about' %}"><i class="bi bi-info-circle-fill"></i> About</a><br>
             </div>
-            <a class="navbar-brand logo flex-shrink-0" href="{% url 'polls:index' %}">WISQER</a>
+            <a class="navbar-brand logo flex-shrink-0" href="{% url 'polls:index' %}" style="font-weight: 500; font-size:1.35rem;">WISQER</a>
 
             <div class="d-flex justify-content-center flex-grow-1">
                 <div class="search-box d-flex justify-content-center align-items-center" style="gap: 8px;">
